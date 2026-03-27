@@ -15,11 +15,11 @@
       --bg:        #080808;
       --bg-card:   #141414;
       --bg-card2:  #1e1e1e;
+      --bg-card3:  #161616;
       --bg-input:  #111111;
       --gold:      #d4ae52;
       --gold-lt:   #f0d080;
       --gold-dim:  rgba(212,174,82,0.18);
-      --ivory:     #ffffff;
       --text:      #f5f2e8;
       --text-dim:  #8a877c;
       --border:    #2a2a2a;
@@ -36,12 +36,9 @@
     }
     html { scroll-behavior: smooth; }
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-      font-weight: 500;
-      min-height: 100vh;
-      overflow-x: hidden;
+      font-weight: 500; min-height: 100vh; overflow-x: hidden;
       padding-bottom: env(safe-area-inset-bottom, 20px);
       -webkit-font-smoothing: antialiased;
     }
@@ -50,8 +47,7 @@
     .header {
       background: linear-gradient(180deg, #1a1a18 0%, #0a0a0a 100%);
       border-bottom: 1px solid #2a2a20;
-      padding: 20px 16px 0;
-      text-align: center;
+      padding: 20px 16px 0; text-align: center;
       position: sticky; top: 0; z-index: 100;
       box-shadow: 0 4px 24px rgba(0,0,0,0.8);
     }
@@ -61,116 +57,110 @@
       font-family: 'Georgia', serif;
     }
     .header p {
-      font-size: 16px; color: var(--text-dim);
-      letter-spacing: 3px; margin: 6px 0 0;
-      font-weight: 600; text-transform: uppercase;
+      font-size: 16px; color: var(--text-dim); letter-spacing: 3px;
+      margin: 6px 0 0; font-weight: 600; text-transform: uppercase;
     }
-    .piano-svg {
-      display: block; width: 100%; max-width: 420px;
-      margin: 12px auto 0;
-    }
+    .piano-svg { display: block; width: 100%; max-width: 420px; margin: 12px auto 0; }
 
     /* ─── LAYOUT ─── */
     .container {
       max-width: 580px; margin: 0 auto;
-      padding: 16px 14px;
-      display: flex; flex-direction: column; gap: 14px;
+      padding: 16px 14px; display: flex; flex-direction: column; gap: 14px;
     }
 
     /* ─── CARD ─── */
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-lt);
+      background: var(--bg-card); border: 1px solid var(--border-lt);
       border-radius: 16px; padding: 20px 18px;
     }
     .card-title {
       font-size: 16px; font-weight: 700; letter-spacing: 3px;
-      color: var(--gold-lt); text-transform: uppercase;
-      margin-bottom: 18px;
+      color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px;
     }
 
-    /* ─── SONG SECTION ─── */
-    .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    /* ─── 曲追加行 ─── */
+    .add-row { display: flex; gap: 8px; margin-bottom: 14px; }
     .song-input {
-      flex: 1; background: var(--bg-input);
-      border: 1px solid var(--border-lt); border-radius: 10px;
-      color: #fff; font-size: 22px; font-weight: 600;
-      padding: 16px; font-family: inherit;
-      outline: none; transition: border-color 0.2s; min-width: 0;
+      flex: 1; background: var(--bg-input); border: 1px solid var(--border-lt);
+      border-radius: 10px; color: #fff; font-size: 22px; font-weight: 600;
+      padding: 16px; font-family: inherit; outline: none;
+      transition: border-color 0.2s; min-width: 0;
     }
     .song-input::placeholder { color: var(--text-dim); font-weight: 400; }
     .song-input:focus { border-color: var(--gold); }
-
     .btn-add {
       background: var(--gold); border: none; border-radius: 10px;
-      color: #000; font-size: 34px; line-height: 1;
-      font-weight: 800; width: 62px; flex-shrink: 0;
-      cursor: pointer; transition: background 0.15s;
+      color: #000; font-size: 34px; font-weight: 800;
+      width: 62px; flex-shrink: 0; cursor: pointer; transition: background 0.15s;
     }
     .btn-add:active { background: var(--gold-lt); }
 
-    .song-list { display: flex; flex-direction: column; gap: 7px; }
+    /* ─── 曲リスト（song-list） ─── */
+    .song-list { display: flex; flex-direction: column; gap: 10px; }
 
-    .song-item {
-      display: flex; align-items: center; gap: 12px;
+    /* ─── 1曲ごとのカード ─── */
+    .song-card {
       background: var(--bg-card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px 12px;
-      cursor: pointer; transition: all 0.2s;
-      user-select: none; min-height: 68px;
+      border-radius: 14px; overflow: hidden; transition: border-color 0.2s;
     }
-    .song-item.selected {
-      border-color: var(--gold); background: var(--gold-dim);
+    .song-card.selected { border-color: var(--gold); }
+
+    /* 曲名行 */
+    .song-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 12px; cursor: pointer; user-select: none;
+      transition: background 0.15s; min-height: 64px;
     }
+    .song-card.selected .song-row { background: var(--gold-dim); }
 
     .radio-dot {
-      width: 22px; height: 22px;
-      border: 2px solid var(--border-lt); border-radius: 50%;
-      flex-shrink: 0; transition: all 0.2s;
+      width: 22px; height: 22px; border: 2px solid var(--border-lt);
+      border-radius: 50%; flex-shrink: 0; transition: all 0.2s;
       display: flex; align-items: center; justify-content: center;
     }
-    .song-item.selected .radio-dot {
-      border-color: var(--gold); background: var(--gold);
-    }
+    .song-card.selected .radio-dot { border-color: var(--gold); background: var(--gold); }
     .radio-dot::after {
       content: ''; width: 8px; height: 8px;
-      border-radius: 50%; background: #000;
-      opacity: 0; transition: opacity 0.2s;
+      border-radius: 50%; background: #000; opacity: 0; transition: opacity 0.2s;
     }
-    .song-item.selected .radio-dot::after { opacity: 1; }
+    .song-card.selected .radio-dot::after { opacity: 1; }
 
     .song-name {
-      flex: 1; font-size: 22px; font-weight: 700;
-      color: var(--text); overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
+      flex: 1; font-size: 22px; font-weight: 700; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .song-item.selected .song-name { color: var(--gold-lt); }
+    .song-card.selected .song-name { color: var(--gold-lt); }
 
-    /* 練習終了ボタン */
     .btn-grad {
-      background: var(--grad-dim);
-      border: 1px solid var(--grad-bdr);
+      background: var(--grad-dim); border: 1px solid var(--grad-bdr);
       border-radius: 8px; color: var(--grad-clr);
-      font-size: 14px; font-weight: 800;
-      padding: 8px 10px; cursor: pointer; flex-shrink: 0;
-      white-space: nowrap; transition: all 0.2s;
-      line-height: 1.2;
+      font-size: 14px; font-weight: 800; padding: 8px 10px;
+      cursor: pointer; flex-shrink: 0; white-space: nowrap;
+      transition: all 0.2s; line-height: 1.2;
     }
-    .btn-grad:active {
-      background: rgba(94,192,128,0.3); border-color: var(--grad-clr);
-    }
+    .btn-grad:active { background: rgba(94,192,128,0.3); border-color: var(--grad-clr); }
 
-    /* 削除ボタン */
     .btn-del {
-      background: none; border: none;
-      color: var(--text-dim); font-size: 22px;
-      padding: 6px 8px; cursor: pointer; flex-shrink: 0;
-      border-radius: 8px; transition: all 0.15s; line-height: 1;
+      background: none; border: none; color: var(--text-dim);
+      font-size: 22px; padding: 6px 8px; cursor: pointer;
+      flex-shrink: 0; border-radius: 8px; transition: all 0.15s; line-height: 1;
     }
     .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
+    /* ─── 曲ごとのグラフエリア ─── */
+    .song-chart-area {
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.18); padding: 10px 12px 12px;
+    }
+    .song-chart-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .song-chart-wrap { position: relative; height: 160px; }
+
     .empty-msg {
       text-align: center; color: var(--text-dim);
-      font-size: 18px; font-weight: 500; padding: 16px 0 4px;
+      font-size: 18px; font-weight: 500; padding: 20px 0 8px;
     }
 
     /* ─── TIMER ─── */
@@ -187,25 +177,21 @@
     }
     .timer-song-label {
       margin-top: 14px; font-size: 26px; font-weight: 700;
-      color: var(--gold-lt); letter-spacing: 1px;
-      min-height: 34px; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap; padding: 0 12px;
+      color: var(--gold-lt); letter-spacing: 1px; min-height: 34px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 12px;
     }
-
     .btn-start {
       width: 100%;
       background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
-      border: none; border-radius: 14px;
-      color: #000000; font-size: 24px; font-weight: 800;
-      letter-spacing: 3px; padding: 0 20px; height: 82px;
-      cursor: pointer; text-transform: uppercase;
+      border: none; border-radius: 14px; color: #000000;
+      font-size: 24px; font-weight: 800; letter-spacing: 3px;
+      padding: 0 20px; height: 82px; cursor: pointer; text-transform: uppercase;
       transition: all 0.2s; position: relative; overflow: hidden;
       box-shadow: 0 4px 20px rgba(212,174,82,0.25);
     }
     .btn-start::before {
       content: ''; position: absolute; inset: 0;
-      background: rgba(255,255,255,0.1);
-      opacity: 0; transition: opacity 0.15s;
+      background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.15s;
     }
     .btn-start:active::before { opacity: 1; }
     .btn-start:active { transform: scale(0.97); }
@@ -219,10 +205,8 @@
       box-shadow: none; font-size: 22px;
     }
     .timer-ring {
-      display: none; width: 14px; height: 14px;
-      border-radius: 50%; background: var(--gold);
-      display: inline-block; margin-right: 10px;
-      vertical-align: middle;
+      width: 14px; height: 14px; border-radius: 50%; background: var(--gold);
+      display: inline-block; margin-right: 10px; vertical-align: middle;
       animation: pulse 1.2s ease-in-out infinite;
     }
     .btn-start:not(.running) .timer-ring { display: none; }
@@ -238,15 +222,11 @@
       border-radius: 12px; padding: 5px; gap: 5px; margin-bottom: 16px;
     }
     .tab {
-      flex: 1; background: none; border: none;
-      color: var(--text-dim); font-size: 20px; font-weight: 700;
-      padding: 14px 6px; border-radius: 8px;
+      flex: 1; background: none; border: none; color: var(--text-dim);
+      font-size: 20px; font-weight: 700; padding: 14px 6px; border-radius: 8px;
       cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
     }
-    .tab.active {
-      background: var(--bg-card2); color: var(--gold-lt);
-      border: 1px solid var(--border-lt);
-    }
+    .tab.active { background: var(--bg-card2); color: var(--gold-lt); border: 1px solid var(--border-lt); }
     .stats-list { display: flex; flex-direction: column; gap: 8px; }
     .stat-row {
       display: flex; justify-content: space-between; align-items: center;
@@ -258,160 +238,85 @@
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       flex: 1; padding-right: 12px;
     }
-    .stat-mins {
-      font-size: 36px; font-weight: 700; color: var(--gold-lt);
-      font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0;
-    }
+    .stat-mins { font-size: 36px; font-weight: 700; color: var(--gold-lt); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
     .stat-unit { font-size: 18px; font-weight: 600; color: var(--text-dim); margin-left: 4px; }
     .stats-total {
       display: flex; justify-content: flex-end; align-items: baseline;
-      gap: 6px; padding: 14px 4px 0;
-      border-top: 1px solid var(--border); margin-top: 12px;
+      gap: 6px; padding: 14px 4px 0; border-top: 1px solid var(--border); margin-top: 12px;
     }
     .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); letter-spacing: 1px; }
     .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
 
-    /* ─── CHART ─── */
-    .chart-wrap { position: relative; height: 240px; }
-
-    /* ─── カスタム凡例 ─── */
-    .chart-legend {
-      display: flex; flex-wrap: wrap;
-      gap: 8px 16px;
-      margin-top: 16px; padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-    .legend-item {
-      display: flex; align-items: center; gap: 8px; min-width: 0;
-    }
-    .legend-swatch {
-      width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0;
-    }
-    .legend-label-wrap {
-      display: flex; align-items: baseline; gap: 5px; min-width: 0;
-    }
-    .legend-name {
-      font-size: 15px; font-weight: 700; color: var(--text);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      max-width: 130px;
-    }
-    .legend-mins {
-      font-size: 13px; font-weight: 700; color: var(--gold-lt);
-      white-space: nowrap; flex-shrink: 0;
-    }
-    .legend-archived { font-size: 12px; color: var(--grad-clr); flex-shrink: 0; }
-    .chart-no-data {
-      text-align: center; color: var(--text-dim);
-      font-size: 16px; font-weight: 600; padding: 40px 0;
-    }
-
-    /* ─── ARCHIVE SECTION ─── */
-    .archive-header {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
-    }
+    /* ─── ARCHIVE ─── */
+    .archive-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
     .archive-header .card-title { margin-bottom: 0; flex: 1; }
     .archive-count {
       background: var(--grad-dim); border: 1px solid var(--grad-bdr);
       color: var(--grad-clr); font-size: 15px; font-weight: 800;
       padding: 4px 12px; border-radius: 20px;
     }
-
-    .archive-list { display: flex; flex-direction: column; gap: 14px; }
-
+    .archive-list { display: flex; flex-direction: column; gap: 16px; }
     .archive-card {
-      background: var(--bg-card2);
-      border: 1px solid rgba(94,192,128,0.25);
-      border-radius: 12px; overflow: hidden;
+      background: var(--bg-card2); border: 1px solid rgba(94,192,128,0.25);
+      border-radius: 14px; overflow: hidden;
     }
     .archive-card-header {
-      display: flex; align-items: center; gap: 10px;
-      padding: 16px 16px 0;
+      display: flex; align-items: center; gap: 10px; padding: 16px 16px 0;
     }
-    .archive-icon {
-      font-size: 24px; flex-shrink: 0;
-    }
+    .archive-icon { font-size: 24px; flex-shrink: 0; }
     .archive-name {
       flex: 1; font-size: 22px; font-weight: 700; color: var(--text);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .archive-stats-badge {
-      background: rgba(212,174,82,0.12);
-      border: 1px solid rgba(212,174,82,0.3);
+      background: rgba(212,174,82,0.12); border: 1px solid rgba(212,174,82,0.3);
       border-radius: 8px; padding: 4px 10px;
       font-size: 14px; font-weight: 700; color: var(--gold-lt);
       white-space: nowrap; flex-shrink: 0;
     }
-
     .archive-body { padding: 14px 16px 16px; }
-
-    .archive-date-row {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-    }
-    .archive-date-label {
-      font-size: 16px; font-weight: 700; color: var(--text-dim);
-      white-space: nowrap; flex-shrink: 0;
-    }
+    .archive-date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .archive-date-label { font-size: 16px; font-weight: 700; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
     .archive-date-input {
-      flex: 1; background: var(--bg-input);
-      border: 1px solid var(--border-lt); border-radius: 8px;
-      color: var(--gold-lt); font-size: 17px; font-weight: 700;
-      padding: 10px 12px; font-family: inherit;
-      outline: none; transition: border-color 0.2s;
+      flex: 1; background: var(--bg-input); border: 1px solid var(--border-lt);
+      border-radius: 8px; color: var(--gold-lt); font-size: 17px; font-weight: 700;
+      padding: 10px 12px; font-family: inherit; outline: none; transition: border-color 0.2s;
     }
     .archive-date-input:focus { border-color: var(--gold); }
-
-    .archive-memo-label {
-      font-size: 16px; font-weight: 700; color: var(--text-dim);
-      margin-bottom: 8px;
-    }
+    .archive-memo-label { font-size: 16px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
     .archive-memo {
-      width: 100%; background: var(--bg-input);
-      border: 1px solid var(--border-lt); border-radius: 10px;
-      color: var(--text); font-size: 18px; font-weight: 600;
-      padding: 14px; font-family: inherit;
-      outline: none; resize: vertical; min-height: 90px;
-      transition: border-color 0.2s; line-height: 1.5;
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
+      border-radius: 10px; color: var(--text); font-size: 18px; font-weight: 600;
+      padding: 14px; font-family: inherit; outline: none;
+      resize: vertical; min-height: 80px; transition: border-color 0.2s; line-height: 1.5;
     }
     .archive-memo::placeholder { color: var(--text-dim); font-weight: 400; }
     .archive-memo:focus { border-color: var(--grad-clr); }
-
-    .archive-actions {
-      display: flex; gap: 10px; margin-top: 12px; align-items: center;
-    }
+    .archive-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
     .btn-memo-save {
-      flex: 1; background: var(--grad-dim);
-      border: 1px solid var(--grad-bdr); border-radius: 10px;
-      color: var(--grad-clr); font-size: 18px; font-weight: 800;
-      padding: 14px; cursor: pointer; transition: all 0.2s;
-      letter-spacing: 1px;
+      flex: 1; background: var(--grad-dim); border: 1px solid var(--grad-bdr);
+      border-radius: 10px; color: var(--grad-clr); font-size: 18px; font-weight: 800;
+      padding: 14px; cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
     }
-    .btn-memo-save:active {
-      background: rgba(94,192,128,0.3); border-color: var(--grad-clr);
-    }
+    .btn-memo-save:active { background: rgba(94,192,128,0.3); border-color: var(--grad-clr); }
     .btn-archive-del {
-      background: none; border: 1px solid var(--border-lt);
-      border-radius: 10px; color: var(--text-dim);
-      font-size: 18px; font-weight: 700; padding: 14px 18px;
-      cursor: pointer; transition: all 0.2s;
+      background: none; border: 1px solid var(--border-lt); border-radius: 10px;
+      color: var(--text-dim); font-size: 18px; font-weight: 700;
+      padding: 14px 18px; cursor: pointer; transition: all 0.2s;
     }
     .btn-archive-del:active { color: var(--danger); border-color: var(--danger); background: rgba(192,53,53,0.1); }
 
-    /* ─── TOAST ─── */
-    .toast {
-      position: fixed;
-      bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--gold); color: #000000;
-      padding: 14px 28px; border-radius: 28px;
-      font-size: 19px; font-weight: 800; letter-spacing: 1px;
-      z-index: 999;
-      transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
-      white-space: nowrap; pointer-events: none;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    /* ─── アーカイブ内グラフ ─── */
+    .archive-chart-section {
+      margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border);
     }
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    .archive-chart-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .archive-chart-wrap { position: relative; height: 160px; }
 
-    /* ─── GRADUATION MODAL ─── */
+    /* ─── MODAL ─── */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.85); z-index: 500;
@@ -420,38 +325,27 @@
     .modal-overlay.show { display: flex; }
     .modal {
       background: var(--bg-card); border: 1px solid var(--grad-bdr);
-      border-radius: 20px; padding: 28px 24px; width: 100%;
-      max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     }
-    .modal-title {
-      font-size: 26px; font-weight: 800; color: var(--grad-clr);
-      text-align: center; margin-bottom: 8px;
-    }
+    .modal-title { font-size: 26px; font-weight: 800; color: var(--grad-clr); text-align: center; margin-bottom: 8px; }
     .modal-song {
-      font-size: 22px; font-weight: 700; color: var(--gold-lt);
-      text-align: center; margin-bottom: 24px;
-      padding: 10px 16px; background: var(--gold-dim);
+      font-size: 22px; font-weight: 700; color: var(--gold-lt); text-align: center;
+      margin-bottom: 24px; padding: 10px 16px; background: var(--gold-dim);
       border-radius: 10px; word-break: break-all;
     }
-    .modal-label {
-      font-size: 17px; font-weight: 700; color: var(--text-dim);
-      margin-bottom: 8px; margin-top: 16px;
-    }
+    .modal-label { font-size: 17px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; margin-top: 16px; }
     .modal-input {
-      width: 100%; background: var(--bg-input);
-      border: 1px solid var(--border-lt); border-radius: 10px;
-      color: var(--gold-lt); font-size: 19px; font-weight: 700;
-      padding: 14px; font-family: inherit;
-      outline: none; transition: border-color 0.2s;
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
+      border-radius: 10px; color: var(--gold-lt); font-size: 19px; font-weight: 700;
+      padding: 14px; font-family: inherit; outline: none; transition: border-color 0.2s;
     }
     .modal-input:focus { border-color: var(--grad-clr); }
     .modal-textarea {
-      width: 100%; background: var(--bg-input);
-      border: 1px solid var(--border-lt); border-radius: 10px;
-      color: var(--text); font-size: 19px; font-weight: 600;
-      padding: 14px; font-family: inherit;
-      outline: none; resize: vertical; min-height: 100px;
-      transition: border-color 0.2s; line-height: 1.5;
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
+      border-radius: 10px; color: var(--text); font-size: 19px; font-weight: 600;
+      padding: 14px; font-family: inherit; outline: none;
+      resize: vertical; min-height: 100px; transition: border-color 0.2s; line-height: 1.5;
     }
     .modal-textarea::placeholder { color: var(--text-dim); font-weight: 400; }
     .modal-textarea:focus { border-color: var(--grad-clr); }
@@ -459,19 +353,31 @@
     .btn-modal-ok {
       flex: 2;
       background: linear-gradient(135deg, #3a9055 0%, #5ec080 50%, #3a9055 100%);
-      border: none; border-radius: 12px;
-      color: #000; font-size: 20px; font-weight: 800;
-      padding: 18px; cursor: pointer; transition: all 0.2s;
-      letter-spacing: 1px;
+      border: none; border-radius: 12px; color: #000;
+      font-size: 20px; font-weight: 800; padding: 18px; cursor: pointer;
+      transition: all 0.2s; letter-spacing: 1px;
     }
     .btn-modal-ok:active { transform: scale(0.97); }
     .btn-modal-cancel {
-      flex: 1; background: none;
-      border: 1px solid var(--border-lt); border-radius: 12px;
-      color: var(--text-dim); font-size: 20px; font-weight: 700;
-      padding: 18px; cursor: pointer; transition: all 0.2s;
+      flex: 1; background: none; border: 1px solid var(--border-lt);
+      border-radius: 12px; color: var(--text-dim);
+      font-size: 20px; font-weight: 700; padding: 18px; cursor: pointer; transition: all 0.2s;
     }
     .btn-modal-cancel:active { background: var(--bg-card2); }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--gold); color: #000000;
+      padding: 14px 28px; border-radius: 28px;
+      font-size: 19px; font-weight: 800; letter-spacing: 1px; z-index: 999;
+      transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
+      white-space: nowrap; pointer-events: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
     /* ─── SCROLLBAR ─── */
     ::-webkit-scrollbar { width: 3px; }
@@ -487,17 +393,18 @@
       .stat-song        { font-size: 19px; }
       .stat-mins        { font-size: 30px; }
       .btn-grad         { font-size: 12px; padding: 7px 8px; }
+      .song-chart-wrap  { height: 140px; }
+      .archive-chart-wrap { height: 140px; }
     }
     @media (max-width: 340px) {
-      .timer-time       { font-size: 52px; }
-      .btn-start        { height: 70px; font-size: 19px; }
-      .song-name        { font-size: 17px; }
+      .timer-time  { font-size: 52px; }
+      .btn-start   { height: 70px; font-size: 19px; }
+      .song-name   { font-size: 17px; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <h1>Piano Practice</h1>
   <p>ピアノ練習記録</p>
@@ -539,7 +446,7 @@
 
 <div class="container">
 
-  <!-- ① 曲の選択 -->
+  <!-- ① 曲の選択（各曲に専用グラフ付き） -->
   <div class="card">
     <div class="card-title">♩ 曲の選択</div>
     <div class="add-row">
@@ -582,16 +489,7 @@
     </div>
   </div>
 
-  <!-- ④ 直近7日グラフ -->
-  <div class="card">
-    <div class="card-title">♩ 直近7日間の練習推移</div>
-    <div class="chart-wrap">
-      <canvas id="practiceChart"></canvas>
-    </div>
-    <div class="chart-legend" id="chartLegend"></div>
-  </div>
-
-  <!-- ⑤ 練習終了した曲（アーカイブ） -->
+  <!-- ④ 練習終了した曲（各曲に専用グラフ付き） -->
   <div class="card" id="archiveCard" style="display:none">
     <div class="archive-header">
       <div class="card-title">🎓 練習終了した曲</div>
@@ -619,7 +517,6 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -629,6 +526,7 @@
 const SONGS_KEY    = 'piano_songs_v1';
 const SESSIONS_KEY = 'piano_sessions_v1';
 const ARCHIVE_KEY  = 'piano_archive_v1';
+const COLORS_KEY   = 'piano_song_colors_v1';
 
 const db = {
   getSongs:    () => JSON.parse(localStorage.getItem(SONGS_KEY)    || '[]'),
@@ -654,7 +552,7 @@ function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-function pad(n) { return String(n).padStart(2,'0'); }
+function pad(n) { return String(n).padStart(2, '0'); }
 
 function daysAgo(n) {
   const d = new Date();
@@ -671,20 +569,174 @@ function getMonthStart() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`;
 }
-function formatDateJP(str) {
-  if (!str) return '';
-  const [y, m, d] = str.split('-');
-  return `${y}年${parseInt(m)}月${parseInt(d)}日`;
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function totalMinsForSong(songName) {
   return db.getSessions()
     .filter(s => s.songName === songName)
     .reduce((sum, s) => sum + s.duration, 0);
 }
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+/* ─── 直近7日（基準日から遡る） ─── */
+function last7Days(baseDate) {
+  const base = baseDate ? new Date(baseDate + 'T12:00:00') : new Date();
+  return Array.from({length: 7}, (_, i) => {
+    const d = new Date(base);
+    d.setDate(d.getDate() - (6 - i));
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  });
+}
+function dayLabel(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const w = ['日','月','火','水','木','金','土'];
+  return `${d.getMonth()+1}/${d.getDate()}(${w[d.getDay()]})`;
+}
+
+/* =====================================================
+   COLOR SYSTEM（曲ごとに色を永続割り当て）
+===================================================== */
+const PALETTE = [
+  { bg:'rgba(212,174, 82,0.90)', bd:'#d4ae52' },  // ゴールド
+  { bg:'rgba( 94,156,220,0.90)', bd:'#5e9cdc' },  // ブルー
+  { bg:'rgba(220, 94, 94,0.90)', bd:'#dc5e5e' },  // レッド
+  { bg:'rgba( 80,200,140,0.90)', bd:'#50c88c' },  // グリーン
+  { bg:'rgba(210,130, 55,0.90)', bd:'#d28237' },  // オレンジ
+  { bg:'rgba(165,110,210,0.90)', bd:'#a56ed2' },  // パープル
+  { bg:'rgba( 65,185,185,0.90)', bd:'#41b9b9' },  // ティール
+  { bg:'rgba(220,170, 85,0.90)', bd:'#dcaa55' },  // アンバー
+  { bg:'rgba(130,190, 70,0.90)', bd:'#82be46' },  // ライム
+  { bg:'rgba(210, 85,160,0.90)', bd:'#d255a0' },  // ピンク
+  { bg:'rgba( 95,150,210,0.90)', bd:'#5f96d2' },  // インディゴ
+  { bg:'rgba(185,185, 70,0.90)', bd:'#b9b946' },  // イエロー
+];
+
+function getColorMap()   { return JSON.parse(localStorage.getItem(COLORS_KEY) || '{}'); }
+function saveColorMap(m) { localStorage.setItem(COLORS_KEY, JSON.stringify(m)); }
+
+function getOrAssignColor(songName) {
+  const map  = getColorMap();
+  if (map[songName] !== undefined) return map[songName];
+  const used = new Set(Object.values(map));
+  let idx = 0;
+  while (used.has(idx)) idx++;
+  map[songName] = idx;
+  saveColorMap(map);
+  return idx;
+}
+
+function songColor(songName) {
+  return PALETTE[getOrAssignColor(songName) % PALETTE.length];
+}
+
+/* =====================================================
+   CHART INSTANCES（song名 / archive id をキーに管理）
+===================================================== */
+const activeSongCharts  = {};  // songName → Chart
+const archiveSongCharts = {};  // archiveId (number) → Chart
+
+function destroyActiveSongCharts() {
+  Object.values(activeSongCharts).forEach(c => { try { c.destroy(); } catch(_){} });
+  for (const k in activeSongCharts) delete activeSongCharts[k];
+}
+function destroyArchiveSongCharts() {
+  Object.values(archiveSongCharts).forEach(c => { try { c.destroy(); } catch(_){} });
+  for (const k in archiveSongCharts) delete archiveSongCharts[k];
+}
+
+/* ─── Chart.js 設定を組み立てる共通関数 ─── */
+function buildChartConfig(songName, days) {
+  const sessions = db.getSessions();
+  const color    = songColor(songName);
+  const data     = days.map(d =>
+    sessions.filter(s => s.songName === songName && s.date === d)
+            .reduce((sum, s) => sum + s.duration, 0)
+  );
+  const maxVal = Math.max(...data, 1);
+
+  return {
+    type: 'bar',
+    data: {
+      labels: days.map(dayLabel),
+      datasets: [{
+        data,
+        backgroundColor: color.bg,
+        borderColor:     color.bd,
+        borderWidth: 0,
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1a1a',
+          borderColor: color.bd, borderWidth: 1,
+          titleColor: '#f5f2e8',
+          bodyColor:  color.bd,
+          titleFont: { size: 13, weight: '700' },
+          bodyFont:  { size: 15, weight: '800' },
+          padding: 10,
+          callbacks: {
+            title: items => items[0].label,
+            label: item  => ` ${item.parsed.y}分`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid:   { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.08)' },
+          ticks:  {
+            color: '#a0a098',
+            font:  { size: 11, family: '-apple-system,sans-serif', weight: '700' },
+            maxRotation: 0,
+          }
+        },
+        y: {
+          beginAtZero: true,
+          suggestedMax: Math.ceil(maxVal * 1.25) || 10,
+          grid:   { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.08)' },
+          ticks:  {
+            color: '#a0a098',
+            font:  { size: 11, family: '-apple-system,sans-serif', weight: '700' },
+            stepSize: Math.max(5, Math.ceil(maxVal / 4 / 5) * 5),
+            callback: v => v === 0 ? '0' : v + '分',
+          }
+        }
+      }
+    }
+  };
+}
+
+/* ─── アクティブ曲のチャートを全再描画 ─── */
+function renderActiveSongCharts(songs) {
+  destroyActiveSongCharts();
+  const days = last7Days();   // 基準日 = 今日
+  songs.forEach((name, i) => {
+    const canvas = document.getElementById(`song-canvas-${i}`);
+    if (!canvas) return;
+    activeSongCharts[name] = new Chart(canvas.getContext('2d'), buildChartConfig(name, days));
+  });
+}
+
+/* ─── アーカイブ曲のチャートを全再描画 ─── */
+function renderArchiveSongCharts(archive) {
+  destroyArchiveSongCharts();
+  archive.forEach(item => {
+    const canvas = document.getElementById(`archive-canvas-${item.id}`);
+    if (!canvas) return;
+    // 基準日 = archivedDate（終了日前後7日間を表示）
+    const days = last7Days(item.archivedDate || todayStr());
+    archiveSongCharts[item.id] = new Chart(canvas.getContext('2d'), buildChartConfig(item.name, days));
+  });
 }
 
 /* =====================================================
@@ -707,28 +759,46 @@ let timerRunning  = false;
 let timerStartAt  = 0;
 let timerTick     = null;
 let currentTab    = 'today';
-let chartInstance = null;
-let pendingGradSong = null; // 練習終了待ちの曲名
+let pendingGradSong = null;
 
 /* =====================================================
-   SONG LIST
+   SONG LIST（1曲ごとのカード＋専用グラフ）
 ===================================================== */
 function renderSongs() {
   const songs = db.getSongs();
   const el    = document.getElementById('songList');
+
   if (songs.length === 0) {
     el.innerHTML = '<p class="empty-msg">曲を追加してください</p>';
+    destroyActiveSongCharts();
     return;
   }
-  el.innerHTML = songs.map((name, i) => `
-    <div class="song-item${selectedSong === name ? ' selected' : ''}"
-         data-idx="${i}" role="button" tabindex="0">
-      <div class="radio-dot"></div>
-      <span class="song-name">${esc(name)}</span>
-      <button class="btn-grad" data-grad="${i}" title="練習終了にする">🎓&nbsp;終了</button>
-      <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
-    </div>
-  `).join('');
+
+  el.innerHTML = songs.map((name, i) => {
+    const color = songColor(name);
+    return `
+      <div class="song-card${selectedSong === name ? ' selected' : ''}" data-card="${i}">
+        <!-- 曲名行（タップで選択） -->
+        <div class="song-row" data-idx="${i}" role="button" tabindex="0">
+          <div class="radio-dot"></div>
+          <span class="song-name">${esc(name)}</span>
+          <button class="btn-grad" data-grad="${i}" title="練習終了にする">🎓&nbsp;終了</button>
+          <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
+        </div>
+        <!-- 専用グラフ -->
+        <div class="song-chart-area">
+          <div class="song-chart-label" style="color:${color.bd}">
+            ▎ 直近7日間の練習推移
+          </div>
+          <div class="song-chart-wrap">
+            <canvas id="song-canvas-${i}"></canvas>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // DOMが確定してからチャートを描画
+  renderActiveSongCharts(songs);
 }
 
 function addSong() {
@@ -737,6 +807,8 @@ function addSong() {
   if (!name) { input.focus(); return; }
   const songs = db.getSongs();
   if (songs.includes(name)) { showToast('同じ曲名が既にあります'); return; }
+  // 色を先に割り当てておく
+  getOrAssignColor(name);
   songs.push(name);
   db.saveSongs(songs);
   input.value = '';
@@ -748,13 +820,12 @@ function deleteSong(idx) {
   const songs = db.getSongs();
   const name  = songs[idx];
   if (!name) return;
-  if (timerRunning && selectedSong === name) {
-    showToast('練習中の曲は削除できません'); return;
-  }
+  if (timerRunning && selectedSong === name) { showToast('練習中の曲は削除できません'); return; }
   if (selectedSong === name) { selectedSong = null; updateTimerControls(); }
   songs.splice(idx, 1);
   db.saveSongs(songs);
-  renderSongs(); renderStats();
+  renderSongs();
+  renderStats();
   showToast(`「${name}」を削除しました`);
 }
 
@@ -764,68 +835,29 @@ function selectSong(idx) {
   const name  = songs[idx];
   if (!name) return;
   selectedSong = (selectedSong === name) ? null : name;
-  renderSongs(); updateTimerControls();
-}
-
-// 練習終了ボタン → モーダルを開く
-function openGradModal(idx) {
-  const songs = db.getSongs();
-  const name  = songs[idx];
-  if (!name) return;
-  if (timerRunning && selectedSong === name) {
-    showToast('練習中の曲は終了できません'); return;
-  }
-  pendingGradSong = name;
-  document.getElementById('modalSongName').textContent = name;
-  document.getElementById('modalDate').value  = todayStr();
-  document.getElementById('modalMemo').value  = '';
-  document.getElementById('gradModal').classList.add('show');
-  setTimeout(() => document.getElementById('modalDate').focus(), 100);
-}
-
-function closeGradModal() {
-  document.getElementById('gradModal').classList.remove('show');
-  pendingGradSong = null;
-}
-
-function confirmGrad() {
-  if (!pendingGradSong) return;
-  const date = document.getElementById('modalDate').value || todayStr();
-  const memo = document.getElementById('modalMemo').value.trim();
-
-  // アーカイブに追加
-  const archive = db.getArchive();
-  archive.unshift({
-    id:           Date.now(),
-    name:         pendingGradSong,
-    archivedDate: date,
-    memo:         memo
+  // カードのselectedクラスだけ差し替える（チャートは維持）
+  document.querySelectorAll('.song-card').forEach((card, i) => {
+    card.classList.toggle('selected', songs[i] === selectedSong);
+    const row = card.querySelector('.song-row');
+    row && row.querySelector('.radio-dot') &&
+      (card.querySelector('.song-name').style.color = songs[i] === selectedSong ? 'var(--gold-lt)' : '');
   });
-  db.saveArchive(archive);
-
-  // アクティブ曲リストから削除
-  const songs = db.getSongs().filter(n => n !== pendingGradSong);
-  if (selectedSong === pendingGradSong) { selectedSong = null; updateTimerControls(); }
-  db.saveSongs(songs);
-
-  closeGradModal();
-  renderSongs(); renderStats(); renderArchive();
-  showToast(`「${pendingGradSong}」を練習終了しました 🎓`);
+  updateTimerControls();
 }
 
-// イベント委任
+// イベント委任（song-list内）
 document.getElementById('songList').addEventListener('click', e => {
   const gradBtn = e.target.closest('.btn-grad');
   const delBtn  = e.target.closest('.btn-del');
-  const item    = e.target.closest('.song-item');
+  const row     = e.target.closest('.song-row');
   if (gradBtn) {
     e.stopPropagation();
     openGradModal(parseInt(gradBtn.dataset.grad, 10));
   } else if (delBtn) {
     e.stopPropagation();
     deleteSong(parseInt(delBtn.dataset.del, 10));
-  } else if (item) {
-    selectSong(parseInt(item.dataset.idx, 10));
+  } else if (row) {
+    selectSong(parseInt(row.dataset.idx, 10));
   }
 });
 
@@ -833,6 +865,43 @@ document.getElementById('btnAdd').addEventListener('click', addSong);
 document.getElementById('songInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') addSong();
 });
+
+/* =====================================================
+   GRADUATION MODAL
+===================================================== */
+function openGradModal(idx) {
+  const songs = db.getSongs();
+  const name  = songs[idx];
+  if (!name) return;
+  if (timerRunning && selectedSong === name) { showToast('練習中の曲は終了できません'); return; }
+  pendingGradSong = name;
+  document.getElementById('modalSongName').textContent = name;
+  document.getElementById('modalDate').value  = todayStr();
+  document.getElementById('modalMemo').value  = '';
+  document.getElementById('gradModal').classList.add('show');
+  setTimeout(() => document.getElementById('modalDate').focus(), 100);
+}
+function closeGradModal() {
+  document.getElementById('gradModal').classList.remove('show');
+  pendingGradSong = null;
+}
+function confirmGrad() {
+  if (!pendingGradSong) return;
+  const date = document.getElementById('modalDate').value || todayStr();
+  const memo = document.getElementById('modalMemo').value.trim();
+  const archive = db.getArchive();
+  archive.unshift({ id: Date.now(), name: pendingGradSong, archivedDate: date, memo });
+  db.saveArchive(archive);
+  const songs = db.getSongs().filter(n => n !== pendingGradSong);
+  if (selectedSong === pendingGradSong) { selectedSong = null; updateTimerControls(); }
+  db.saveSongs(songs);
+  closeGradModal();
+  renderSongs();
+  renderStats();
+  renderArchive();
+  showToast(`「${pendingGradSong}」を練習終了しました 🎓`);
+}
+
 document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
 document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
 document.getElementById('gradModal').addEventListener('click', e => {
@@ -848,37 +917,29 @@ function updateTimerControls() {
   const ring    = document.getElementById('timerRing');
   const songLbl = document.getElementById('timerSongLabel');
   const display = document.getElementById('timerDisplay');
-
   btn.disabled = (!timerRunning && !selectedSong);
   if (timerRunning) {
-    btn.classList.add('running');
-    label.textContent  = '練習を終了する';
-    ring.style.display = 'inline-block';
-    display.classList.add('running');
+    btn.classList.add('running'); label.textContent = '練習を終了する';
+    ring.style.display = 'inline-block'; display.classList.add('running');
     songLbl.textContent = selectedSong || '';
   } else {
-    btn.classList.remove('running');
-    label.textContent  = '練習を開始する';
-    ring.style.display = 'none';
-    display.classList.remove('running');
+    btn.classList.remove('running'); label.textContent = '練習を開始する';
+    ring.style.display = 'none'; display.classList.remove('running');
     songLbl.textContent = selectedSong ? `— ${selectedSong} —` : '';
   }
 }
-
 function formatTime(sec) {
   return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
 }
-
 function startTimer() {
   if (!selectedSong) return;
   timerStartAt = Date.now(); timerRunning = true;
   timerTick = setInterval(() => {
-    const e = Math.floor((Date.now() - timerStartAt) / 1000);
-    document.getElementById('timerDisplay').textContent = formatTime(e);
+    document.getElementById('timerDisplay').textContent =
+      formatTime(Math.floor((Date.now() - timerStartAt) / 1000));
   }, 500);
   updateTimerControls(); requestWakeLock();
 }
-
 function stopTimer() {
   clearInterval(timerTick); timerRunning = false;
   const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
@@ -887,13 +948,14 @@ function stopTimer() {
   releaseWakeLock();
   if (mins) {
     showToast(`${mins}分を記録しました！`);
-    renderStats(); renderChart();
+    renderStats();
+    // 対象曲のグラフだけ更新（全再描画）
+    renderSongs();
   } else {
     showToast('30秒未満は記録されません');
   }
   updateTimerControls();
 }
-
 document.getElementById('btnStart').addEventListener('click', () => {
   if (timerRunning) stopTimer(); else startTimer();
 });
@@ -902,7 +964,7 @@ let wakeLock = null;
 async function requestWakeLock() {
   try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {}
 }
-function releaseWakeLock() { wakeLock?.release().catch(()=>{}); wakeLock = null; }
+function releaseWakeLock() { wakeLock?.release().catch(() => {}); wakeLock = null; }
 document.addEventListener('visibilitychange', async () => {
   if (timerRunning && document.visibilityState === 'visible') requestWakeLock();
 });
@@ -916,7 +978,6 @@ function getRange(tab) {
   if (tab === 'week')  return [getWeekStart(), today];
   if (tab === 'month') return [getMonthStart(), today];
 }
-
 function renderStats() {
   const [start, end] = getRange(currentTab);
   const sessions     = db.getSessions();
@@ -940,12 +1001,10 @@ function renderStats() {
     <div class="stat-row">
       <span class="stat-song">${esc(r.name)}</span>
       <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
-    </div>
-  `).join('');
-  totV.textContent = rows.reduce((s,r) => s + r.mins, 0);
+    </div>`).join('');
+  totV.textContent = rows.reduce((s, r) => s + r.mins, 0);
   totEl.style.display = 'flex';
 }
-
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     currentTab = btn.dataset.tab;
@@ -956,20 +1015,22 @@ document.querySelectorAll('.tab').forEach(btn => {
 });
 
 /* =====================================================
-   ARCHIVE
+   ARCHIVE（各曲に終了日前後7日間のグラフ付き）
 ===================================================== */
 function renderArchive() {
   const archive = db.getArchive();
   const card    = document.getElementById('archiveCard');
   const list    = document.getElementById('archiveList');
   const count   = document.getElementById('archiveCount');
-
-  if (archive.length === 0) { card.style.display = 'none'; return; }
+  if (archive.length === 0) {
+    card.style.display = 'none'; destroyArchiveSongCharts(); return;
+  }
   card.style.display = 'block';
   count.textContent  = archive.length;
 
   list.innerHTML = archive.map(item => {
     const total = totalMinsForSong(item.name);
+    const color = songColor(item.name);
     return `
     <div class="archive-card" data-aid="${item.id}">
       <div class="archive-card-header">
@@ -981,7 +1042,7 @@ function renderArchive() {
         <div class="archive-date-row">
           <span class="archive-date-label">終了日</span>
           <input type="date" class="archive-date-input"
-                 value="${esc(item.archivedDate)}"
+                 value="${esc(item.archivedDate || '')}"
                  data-aid="${item.id}" data-field="date">
         </div>
         <div class="archive-memo-label">感想・メモ</div>
@@ -992,206 +1053,65 @@ function renderArchive() {
           <button class="btn-memo-save" data-aid="${item.id}">保存する</button>
           <button class="btn-archive-del" data-adel="${item.id}">削除</button>
         </div>
+        <!-- 専用グラフ（終了日前後7日間） -->
+        <div class="archive-chart-section">
+          <div class="archive-chart-label" style="color:${color.bd}">
+            ▎ 終了日前後7日間の練習推移
+          </div>
+          <div class="archive-chart-wrap">
+            <canvas id="archive-canvas-${item.id}"></canvas>
+          </div>
+        </div>
       </div>
-    </div>
-  `}).join('');
+    </div>`;
+  }).join('');
+
+  renderArchiveSongCharts(archive);
 }
 
-// アーカイブの保存・削除イベント
+// アーカイブ保存・削除イベント
 document.getElementById('archiveList').addEventListener('click', e => {
   const saveBtn = e.target.closest('.btn-memo-save');
   const delBtn  = e.target.closest('.btn-archive-del');
   if (saveBtn) {
-    const id   = parseInt(saveBtn.dataset.aid, 10);
-    const card = saveBtn.closest('.archive-card');
-    const dateInput = card.querySelector('[data-field="date"]');
-    const memoInput = card.querySelector('[data-field="memo"]');
-    const archive   = db.getArchive();
-    const item      = archive.find(a => a.id === id);
+    const id      = parseInt(saveBtn.dataset.aid, 10);
+    const card    = saveBtn.closest('.archive-card');
+    const dateInp = card.querySelector('[data-field="date"]');
+    const memoInp = card.querySelector('[data-field="memo"]');
+    const archive = db.getArchive();
+    const item    = archive.find(a => a.id === id);
     if (item) {
-      item.archivedDate = dateInput.value;
-      item.memo         = memoInput.value.trim();
+      item.archivedDate = dateInp.value;
+      item.memo         = memoInp.value.trim();
       db.saveArchive(archive);
+      // 日付変更によりグラフの範囲が変わる可能性があるため再描画
+      renderArchive();
       showToast('メモを保存しました ✓');
     }
   } else if (delBtn) {
-    const id      = parseInt(delBtn.dataset.adel, 10);
-    const archive = db.getArchive().filter(a => a.id !== id);
-    db.saveArchive(archive);
+    const id = parseInt(delBtn.dataset.adel, 10);
+    db.saveArchive(db.getArchive().filter(a => a.id !== id));
     renderArchive();
     showToast('アーカイブから削除しました');
   }
 });
 
 /* =====================================================
-   CHART  ─  色永続化 + 積み上げ棒 + カスタム凡例
-===================================================== */
-
-// シックな12色パレット（背景色・枠色のペア）
-const PALETTE = [
-  { bg:'rgba(212,174, 82,0.88)', bd:'#d4ae52' },  // ゴールド
-  { bg:'rgba( 94,156,220,0.88)', bd:'#5e9cdc' },  // ブルー
-  { bg:'rgba(220, 94, 94,0.88)', bd:'#dc5e5e' },  // レッド
-  { bg:'rgba( 94,200,140,0.88)', bd:'#5ec88c' },  // グリーン
-  { bg:'rgba(210,130, 55,0.88)', bd:'#d28237' },  // オレンジ
-  { bg:'rgba(165,110,210,0.88)', bd:'#a56ed2' },  // パープル
-  { bg:'rgba( 70,190,190,0.88)', bd:'#46bebe' },  // ティール
-  { bg:'rgba(220,170, 90,0.88)', bd:'#dcaa5a' },  // アンバー
-  { bg:'rgba(130,190, 75,0.88)', bd:'#82be4b' },  // ライム
-  { bg:'rgba(210, 85,160,0.88)', bd:'#d255a0' },  // ピンク
-  { bg:'rgba(100,155,210,0.88)', bd:'#649bd2' },  // インディゴ
-  { bg:'rgba(185,185, 75,0.88)', bd:'#b9b94b' },  // イエロー
-];
-
-// 曲ごとの色インデックスをlocalStorageに永続保存
-const COLORS_KEY = 'piano_song_colors_v1';
-function getColorMap()    { return JSON.parse(localStorage.getItem(COLORS_KEY) || '{}'); }
-function saveColorMap(m)  { localStorage.setItem(COLORS_KEY, JSON.stringify(m)); }
-
-function getOrAssignColor(songName) {
-  const map  = getColorMap();
-  if (map[songName] !== undefined) return map[songName];
-  // 未使用インデックスを探す
-  const used = new Set(Object.values(map));
-  let idx = 0;
-  while (used.has(idx)) idx++;
-  map[songName] = idx;
-  saveColorMap(map);
-  return idx;
-}
-
-function last7Days() { return Array.from({length:7}, (_,i) => daysAgo(6-i)); }
-function dayLabel(d) {
-  const dt   = new Date(d + 'T12:00:00');
-  const days = ['日','月','火','水','木','金','土'];
-  return `${dt.getMonth()+1}/${dt.getDate()}(${days[dt.getDay()]})`;
-}
-
-function renderChart() {
-  const days    = last7Days();
-  const sessions = db.getSessions();
-  const active  = db.getSongs();
-  const archived = db.getArchive().map(a => a.name);
-
-  // 直近7日のセッション（練習終了済みを含む全曲）
-  const inRange = sessions.filter(s => days.includes(s.date));
-  const seenInRange = [...new Set(inRange.map(s => s.songName))];
-
-  // 表示順：アクティブ曲 → アーカイブ曲 → その他
-  const ordered = [
-    ...active.filter(n => seenInRange.includes(n)),
-    ...archived.filter(n => seenInRange.includes(n) && !active.includes(n)),
-    ...seenInRange.filter(n => !active.includes(n) && !archived.includes(n)),
-  ];
-
-  const canvas = document.getElementById('practiceChart');
-  const legend = document.getElementById('chartLegend');
-  const ctx    = canvas.getContext('2d');
-  if (chartInstance) chartInstance.destroy();
-
-  if (ordered.length === 0) {
-    canvas.style.display = 'none';
-    legend.innerHTML = '<p class="chart-no-data">まだ練習記録がありません</p>';
-    return;
-  }
-  canvas.style.display = '';
-
-  const labels   = days.map(dayLabel);
-  const datasets = ordered.map(song => {
-    const idx   = getOrAssignColor(song);
-    const color = PALETTE[idx % PALETTE.length];
-    return {
-      label: song,
-      data: days.map(d =>
-        inRange.filter(s => s.songName === song && s.date === d)
-               .reduce((sum, s) => sum + s.duration, 0)
-      ),
-      backgroundColor: color.bg,
-      borderColor:     color.bd,
-      borderWidth: 0,
-      borderRadius: 4,
-      borderSkipped: false,
-    };
-  });
-
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: { labels, datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },   // ← Chart.js標準凡例は非表示、自前で描画
-        tooltip: {
-          backgroundColor: '#1a1a1a',
-          borderColor: '#3a3a3a', borderWidth: 1,
-          titleColor: '#f5f2e8',  bodyColor: '#f0d080',
-          titleFont: { size:14, weight:'700' },
-          bodyFont:  { size:14, weight:'600' },
-          padding: 12,
-          callbacks: {
-            title: items => items[0].label,
-            label: item  => ` ${item.dataset.label}：${item.parsed.y}分`,
-          }
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          grid:   { color:'rgba(255,255,255,0.05)' },
-          border: { color:'rgba(255,255,255,0.1)'  },
-          ticks:  { color:'#c0bdb0', font:{size:12,family:'-apple-system,sans-serif',weight:'700'}, maxRotation:0 }
-        },
-        y: {
-          stacked: true, beginAtZero: true,
-          grid:   { color:'rgba(255,255,255,0.05)' },
-          border: { color:'rgba(255,255,255,0.1)'  },
-          ticks:  {
-            color:'#c0bdb0',
-            font: { size:12, family:'-apple-system,sans-serif', weight:'700' },
-            stepSize: 10,
-            callback: v => v + '分'
-          }
-        }
-      }
-    }
-  });
-
-  // ── カスタム凡例を描画 ──
-  const archivedSet = new Set(archived);
-  legend.innerHTML = ordered.map(song => {
-    const idx    = getOrAssignColor(song);
-    const color  = PALETTE[idx % PALETTE.length];
-    const total7 = inRange.filter(s => s.songName === song)
-                          .reduce((sum, s) => sum + s.duration, 0);
-    const isArc  = archivedSet.has(song);
-    return `
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:${color.bg};border:1.5px solid ${color.bd};"></div>
-        <div class="legend-label-wrap">
-          <span class="legend-name">${esc(song)}</span>
-          ${isArc ? '<span class="legend-archived">🎓</span>' : ''}
-          ${total7 > 0 ? `<span class="legend-mins">${total7}分</span>` : ''}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-/* =====================================================
    PWA
 ===================================================== */
 (function setupManifest() {
   const m = {
-    name:'ピアノ練習記録', short_name:'ピアノ練習',
-    start_url:'.', display:'standalone',
-    background_color:'#0a0a0a', theme_color:'#0a0a0a',
-    orientation:'portrait-primary',
-    icons:[{
-      src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
-      sizes:'512x512', type:'image/svg+xml', purpose:'any maskable'
+    name: 'ピアノ練習記録', short_name: 'ピアノ練習',
+    start_url: '.', display: 'standalone',
+    background_color: '#0a0a0a', theme_color: '#0a0a0a',
+    orientation: 'portrait-primary',
+    icons: [{
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
+      sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable'
     }]
   };
   try {
-    const blob = new Blob([JSON.stringify(m)],{type:'application/manifest+json'});
+    const blob = new Blob([JSON.stringify(m)], {type:'application/manifest+json'});
     const link = document.createElement('link');
     link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
     document.head.appendChild(link);
@@ -1199,7 +1119,7 @@ function renderChart() {
 })();
 
 if ('serviceWorker' in navigator) {
-  const sw = `const C='piano-sw-v1';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
+  const sw = `const C='piano-sw-v2';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
   try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{}); } catch(_) {}
 }
 
@@ -1208,7 +1128,6 @@ if ('serviceWorker' in navigator) {
 ===================================================== */
 renderSongs();
 renderStats();
-renderChart();
 renderArchive();
 updateTimerControls();
 </script>

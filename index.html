@@ -272,7 +272,38 @@
     .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
 
     /* ─── CHART ─── */
-    .chart-wrap { position: relative; height: 220px; }
+    .chart-wrap { position: relative; height: 240px; }
+
+    /* ─── カスタム凡例 ─── */
+    .chart-legend {
+      display: flex; flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
+    }
+    .legend-swatch {
+      width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0;
+    }
+    .legend-label-wrap {
+      display: flex; align-items: baseline; gap: 5px; min-width: 0;
+    }
+    .legend-name {
+      font-size: 15px; font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 130px;
+    }
+    .legend-mins {
+      font-size: 13px; font-weight: 700; color: var(--gold-lt);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .legend-archived { font-size: 12px; color: var(--grad-clr); flex-shrink: 0; }
+    .chart-no-data {
+      text-align: center; color: var(--text-dim);
+      font-size: 16px; font-weight: 600; padding: 40px 0;
+    }
 
     /* ─── ARCHIVE SECTION ─── */
     .archive-header {
@@ -557,6 +588,7 @@
     <div class="chart-wrap">
       <canvas id="practiceChart"></canvas>
     </div>
+    <div class="chart-legend" id="chartLegend"></div>
   </div>
 
   <!-- ⑤ 練習終了した曲（アーカイブ） -->
@@ -992,71 +1024,156 @@ document.getElementById('archiveList').addEventListener('click', e => {
 });
 
 /* =====================================================
-   CHART
+   CHART  ─  色永続化 + 積み上げ棒 + カスタム凡例
 ===================================================== */
+
+// シックな12色パレット（背景色・枠色のペア）
 const PALETTE = [
-  'rgba(212,174,82,0.85)',  'rgba(100,165,220,0.85)',
-  'rgba(170,100,100,0.85)', 'rgba(90,175,115,0.85)',
-  'rgba(200,125,65,0.85)',  'rgba(145,100,195,0.85)',
-  'rgba(75,180,175,0.85)',  'rgba(215,175,80,0.85)',
+  { bg:'rgba(212,174, 82,0.88)', bd:'#d4ae52' },  // ゴールド
+  { bg:'rgba( 94,156,220,0.88)', bd:'#5e9cdc' },  // ブルー
+  { bg:'rgba(220, 94, 94,0.88)', bd:'#dc5e5e' },  // レッド
+  { bg:'rgba( 94,200,140,0.88)', bd:'#5ec88c' },  // グリーン
+  { bg:'rgba(210,130, 55,0.88)', bd:'#d28237' },  // オレンジ
+  { bg:'rgba(165,110,210,0.88)', bd:'#a56ed2' },  // パープル
+  { bg:'rgba( 70,190,190,0.88)', bd:'#46bebe' },  // ティール
+  { bg:'rgba(220,170, 90,0.88)', bd:'#dcaa5a' },  // アンバー
+  { bg:'rgba(130,190, 75,0.88)', bd:'#82be4b' },  // ライム
+  { bg:'rgba(210, 85,160,0.88)', bd:'#d255a0' },  // ピンク
+  { bg:'rgba(100,155,210,0.88)', bd:'#649bd2' },  // インディゴ
+  { bg:'rgba(185,185, 75,0.88)', bd:'#b9b94b' },  // イエロー
 ];
+
+// 曲ごとの色インデックスをlocalStorageに永続保存
+const COLORS_KEY = 'piano_song_colors_v1';
+function getColorMap()    { return JSON.parse(localStorage.getItem(COLORS_KEY) || '{}'); }
+function saveColorMap(m)  { localStorage.setItem(COLORS_KEY, JSON.stringify(m)); }
+
+function getOrAssignColor(songName) {
+  const map  = getColorMap();
+  if (map[songName] !== undefined) return map[songName];
+  // 未使用インデックスを探す
+  const used = new Set(Object.values(map));
+  let idx = 0;
+  while (used.has(idx)) idx++;
+  map[songName] = idx;
+  saveColorMap(map);
+  return idx;
+}
+
 function last7Days() { return Array.from({length:7}, (_,i) => daysAgo(6-i)); }
 function dayLabel(d) {
-  const dt = new Date(d + 'T12:00:00');
+  const dt   = new Date(d + 'T12:00:00');
   const days = ['日','月','火','水','木','金','土'];
   return `${dt.getMonth()+1}/${dt.getDate()}(${days[dt.getDay()]})`;
 }
 
 function renderChart() {
-  const days     = last7Days();
+  const days    = last7Days();
   const sessions = db.getSessions();
-  const songs    = db.getSongs();
-  const inRange  = sessions.filter(s => days.includes(s.date));
-  const seen     = [...new Set(inRange.map(s => s.songName))];
-  const ordered  = [...songs.filter(n => seen.includes(n)), ...seen.filter(n => !songs.includes(n))];
-  const labels   = days.map(dayLabel);
-  const datasets = ordered.length
-    ? ordered.map((song, i) => ({
-        label: song,
-        data: days.map(d => inRange.filter(s => s.songName===song && s.date===d).reduce((sum,s)=>sum+s.duration,0)),
-        backgroundColor: PALETTE[i % PALETTE.length],
-        borderRadius: 3, borderSkipped: false,
-      }))
-    : [{ label:'データなし', data:Array(7).fill(0), backgroundColor:'rgba(60,60,60,0.5)', borderRadius:3 }];
+  const active  = db.getSongs();
+  const archived = db.getArchive().map(a => a.name);
 
-  const ctx = document.getElementById('practiceChart').getContext('2d');
+  // 直近7日のセッション（練習終了済みを含む全曲）
+  const inRange = sessions.filter(s => days.includes(s.date));
+  const seenInRange = [...new Set(inRange.map(s => s.songName))];
+
+  // 表示順：アクティブ曲 → アーカイブ曲 → その他
+  const ordered = [
+    ...active.filter(n => seenInRange.includes(n)),
+    ...archived.filter(n => seenInRange.includes(n) && !active.includes(n)),
+    ...seenInRange.filter(n => !active.includes(n) && !archived.includes(n)),
+  ];
+
+  const canvas = document.getElementById('practiceChart');
+  const legend = document.getElementById('chartLegend');
+  const ctx    = canvas.getContext('2d');
   if (chartInstance) chartInstance.destroy();
+
+  if (ordered.length === 0) {
+    canvas.style.display = 'none';
+    legend.innerHTML = '<p class="chart-no-data">まだ練習記録がありません</p>';
+    return;
+  }
+  canvas.style.display = '';
+
+  const labels   = days.map(dayLabel);
+  const datasets = ordered.map(song => {
+    const idx   = getOrAssignColor(song);
+    const color = PALETTE[idx % PALETTE.length];
+    return {
+      label: song,
+      data: days.map(d =>
+        inRange.filter(s => s.songName === song && s.date === d)
+               .reduce((sum, s) => sum + s.duration, 0)
+      ),
+      backgroundColor: color.bg,
+      borderColor:     color.bd,
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: false,
+    };
+  });
+
   chartInstance = new Chart(ctx, {
     type: 'bar',
     data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'top',
-          labels: { color:'#c8c5b8', font:{size:14,family:'-apple-system,sans-serif',weight:'700'}, boxWidth:12, boxHeight:12, padding:10 }
-        },
+        legend: { display: false },   // ← Chart.js標準凡例は非表示、自前で描画
         tooltip: {
-          backgroundColor:'#1e1e1e', borderColor:'#3a3a3a', borderWidth:1,
-          titleColor:'#f5f2e8', bodyColor:'#f0d080',
-          titleFont:{size:14,weight:'700'}, bodyFont:{size:14,weight:'600'}, padding:10,
-          callbacks: { label: ctx => ` ${ctx.dataset.label}：${ctx.parsed.y}分` }
+          backgroundColor: '#1a1a1a',
+          borderColor: '#3a3a3a', borderWidth: 1,
+          titleColor: '#f5f2e8',  bodyColor: '#f0d080',
+          titleFont: { size:14, weight:'700' },
+          bodyFont:  { size:14, weight:'600' },
+          padding: 12,
+          callbacks: {
+            title: items => items[0].label,
+            label: item  => ` ${item.dataset.label}：${item.parsed.y}分`,
+          }
         }
       },
       scales: {
         x: {
           stacked: true,
-          grid:{color:'rgba(255,255,255,0.05)'}, border:{color:'rgba(255,255,255,0.1)'},
-          ticks:{color:'#c0bdb0', font:{size:13,family:'-apple-system,sans-serif',weight:'600'}, maxRotation:0}
+          grid:   { color:'rgba(255,255,255,0.05)' },
+          border: { color:'rgba(255,255,255,0.1)'  },
+          ticks:  { color:'#c0bdb0', font:{size:12,family:'-apple-system,sans-serif',weight:'700'}, maxRotation:0 }
         },
         y: {
           stacked: true, beginAtZero: true,
-          grid:{color:'rgba(255,255,255,0.05)'}, border:{color:'rgba(255,255,255,0.1)'},
-          ticks:{color:'#c0bdb0', font:{size:13,family:'-apple-system,sans-serif',weight:'600'}, stepSize:10, callback:v=>v+'分'}
+          grid:   { color:'rgba(255,255,255,0.05)' },
+          border: { color:'rgba(255,255,255,0.1)'  },
+          ticks:  {
+            color:'#c0bdb0',
+            font: { size:12, family:'-apple-system,sans-serif', weight:'700' },
+            stepSize: 10,
+            callback: v => v + '分'
+          }
         }
       }
     }
   });
+
+  // ── カスタム凡例を描画 ──
+  const archivedSet = new Set(archived);
+  legend.innerHTML = ordered.map(song => {
+    const idx    = getOrAssignColor(song);
+    const color  = PALETTE[idx % PALETTE.length];
+    const total7 = inRange.filter(s => s.songName === song)
+                          .reduce((sum, s) => sum + s.duration, 0);
+    const isArc  = archivedSet.has(song);
+    return `
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:${color.bg};border:1.5px solid ${color.bd};"></div>
+        <div class="legend-label-wrap">
+          <span class="legend-name">${esc(song)}</span>
+          ${isArc ? '<span class="legend-archived">🎓</span>' : ''}
+          ${total7 > 0 ? `<span class="legend-mins">${total7}分</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
 }
 
 /* =====================================================

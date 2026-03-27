@@ -20,23 +20,21 @@
       --gold-lt:   #f0d080;
       --gold-dim:  rgba(212,174,82,0.18);
       --ivory:     #ffffff;
-      --ivory-dim: #c8c5b8;
       --text:      #f5f2e8;
       --text-dim:  #8a877c;
       --border:    #2a2a2a;
       --border-lt: #3a3a3a;
       --danger:    #c03535;
-      --running:   #a82828;
+      --grad-clr:  #5ec080;
+      --grad-dim:  rgba(94,192,128,0.15);
+      --grad-bdr:  rgba(94,192,128,0.45);
     }
 
     *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
+      box-sizing: border-box; margin: 0; padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -44,7 +42,7 @@
       font-weight: 500;
       min-height: 100vh;
       overflow-x: hidden;
-      padding-bottom: env(safe-area-inset-bottom, 16px);
+      padding-bottom: env(safe-area-inset-bottom, 20px);
       -webkit-font-smoothing: antialiased;
     }
 
@@ -54,405 +52,395 @@
       border-bottom: 1px solid #2a2a20;
       padding: 20px 16px 0;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       box-shadow: 0 4px 24px rgba(0,0,0,0.8);
     }
-
     .header h1 {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: 6px;
-      color: var(--gold-lt);
-      text-transform: uppercase;
+      font-size: 32px; font-weight: 800; letter-spacing: 6px;
+      color: var(--gold-lt); text-transform: uppercase;
       font-family: 'Georgia', serif;
     }
-
     .header p {
-      font-size: 16px;
-      color: var(--text-dim);
-      letter-spacing: 3px;
-      margin: 6px 0 0;
-      font-weight: 600;
-      text-transform: uppercase;
+      font-size: 16px; color: var(--text-dim);
+      letter-spacing: 3px; margin: 6px 0 0;
+      font-weight: 600; text-transform: uppercase;
     }
-
-    /* SVG piano strip */
     .piano-svg {
-      display: block;
-      width: 100%;
-      max-width: 420px;
+      display: block; width: 100%; max-width: 420px;
       margin: 12px auto 0;
     }
 
     /* ─── LAYOUT ─── */
     .container {
-      max-width: 580px;
-      margin: 0 auto;
+      max-width: 580px; margin: 0 auto;
       padding: 16px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      display: flex; flex-direction: column; gap: 14px;
     }
 
     /* ─── CARD ─── */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-lt);
-      border-radius: 16px;
-      padding: 20px 18px;
+      border-radius: 16px; padding: 20px 18px;
     }
-
     .card-title {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--gold-lt);
-      text-transform: uppercase;
+      font-size: 16px; font-weight: 700; letter-spacing: 3px;
+      color: var(--gold-lt); text-transform: uppercase;
       margin-bottom: 18px;
     }
 
     /* ─── SONG SECTION ─── */
-    .add-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
+    .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
     .song-input {
-      flex: 1;
-      background: var(--bg-input);
-      border: 1px solid var(--border-lt);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 22px;
-      font-weight: 600;
-      padding: 16px 16px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-      min-width: 0;
+      flex: 1; background: var(--bg-input);
+      border: 1px solid var(--border-lt); border-radius: 10px;
+      color: #fff; font-size: 22px; font-weight: 600;
+      padding: 16px; font-family: inherit;
+      outline: none; transition: border-color 0.2s; min-width: 0;
     }
     .song-input::placeholder { color: var(--text-dim); font-weight: 400; }
     .song-input:focus { border-color: var(--gold); }
 
     .btn-add {
-      background: var(--gold);
-      border: none;
-      border-radius: 10px;
-      color: #000;
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 800;
-      width: 62px;
-      flex-shrink: 0;
-      cursor: pointer;
-      transition: background 0.15s;
+      background: var(--gold); border: none; border-radius: 10px;
+      color: #000; font-size: 34px; line-height: 1;
+      font-weight: 800; width: 62px; flex-shrink: 0;
+      cursor: pointer; transition: background 0.15s;
     }
     .btn-add:active { background: var(--gold-lt); }
 
-    .song-list {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
+    .song-list { display: flex; flex-direction: column; gap: 7px; }
 
     .song-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-      min-height: 68px;
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 12px;
+      cursor: pointer; transition: all 0.2s;
+      user-select: none; min-height: 68px;
     }
     .song-item.selected {
-      border-color: var(--gold);
-      background: var(--gold-dim);
+      border-color: var(--gold); background: var(--gold-dim);
     }
 
     .radio-dot {
       width: 22px; height: 22px;
-      border: 2px solid var(--border-lt);
-      border-radius: 50%;
-      flex-shrink: 0;
-      transition: all 0.2s;
+      border: 2px solid var(--border-lt); border-radius: 50%;
+      flex-shrink: 0; transition: all 0.2s;
       display: flex; align-items: center; justify-content: center;
     }
     .song-item.selected .radio-dot {
-      border-color: var(--gold);
-      background: var(--gold);
+      border-color: var(--gold); background: var(--gold);
     }
     .radio-dot::after {
-      content: '';
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #000;
-      opacity: 0;
-      transition: opacity 0.2s;
+      content: ''; width: 8px; height: 8px;
+      border-radius: 50%; background: #000;
+      opacity: 0; transition: opacity 0.2s;
     }
     .song-item.selected .radio-dot::after { opacity: 1; }
 
     .song-name {
-      flex: 1;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      flex: 1; font-size: 22px; font-weight: 700;
+      color: var(--text); overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
     }
     .song-item.selected .song-name { color: var(--gold-lt); }
 
+    /* 練習終了ボタン */
+    .btn-grad {
+      background: var(--grad-dim);
+      border: 1px solid var(--grad-bdr);
+      border-radius: 8px; color: var(--grad-clr);
+      font-size: 14px; font-weight: 800;
+      padding: 8px 10px; cursor: pointer; flex-shrink: 0;
+      white-space: nowrap; transition: all 0.2s;
+      line-height: 1.2;
+    }
+    .btn-grad:active {
+      background: rgba(94,192,128,0.3); border-color: var(--grad-clr);
+    }
+
+    /* 削除ボタン */
     .btn-del {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-size: 24px;
-      padding: 6px 10px;
-      cursor: pointer;
-      flex-shrink: 0;
-      border-radius: 8px;
-      transition: all 0.15s;
-      line-height: 1;
+      background: none; border: none;
+      color: var(--text-dim); font-size: 22px;
+      padding: 6px 8px; cursor: pointer; flex-shrink: 0;
+      border-radius: 8px; transition: all 0.15s; line-height: 1;
     }
     .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
     .empty-msg {
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 18px;
-      font-weight: 500;
-      padding: 16px 0 4px;
+      text-align: center; color: var(--text-dim);
+      font-size: 18px; font-weight: 500; padding: 16px 0 4px;
     }
 
-    /* ─── TIMER SECTION ─── */
-    .timer-display {
-      text-align: center;
-      padding: 12px 0 24px;
-    }
-
+    /* ─── TIMER ─── */
+    .timer-display { text-align: center; padding: 12px 0 24px; }
     .timer-time {
-      font-size: 72px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 2px;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-      transition: color 0.3s, text-shadow 0.3s;
-      /* System font for crisp number rendering on iPhone */
+      font-size: 72px; font-weight: 800; color: #ffffff;
+      letter-spacing: 2px; font-variant-numeric: tabular-nums;
+      line-height: 1; transition: color 0.3s, text-shadow 0.3s;
       font-family: -apple-system, 'SF Mono', 'Helvetica Neue', Arial, sans-serif;
     }
     .timer-time.running {
       color: var(--gold-lt);
       text-shadow: 0 0 60px rgba(212,174,82,0.55), 0 0 20px rgba(212,174,82,0.3);
     }
-
     .timer-song-label {
-      margin-top: 14px;
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 1px;
-      min-height: 36px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding: 0 12px;
-    }
-    /* When not running, dim the song label slightly */
-    .timer-song-label:not(:empty) {
-      color: var(--gold-lt);
+      margin-top: 14px; font-size: 26px; font-weight: 700;
+      color: var(--gold-lt); letter-spacing: 1px;
+      min-height: 34px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap; padding: 0 12px;
     }
 
     .btn-start {
       width: 100%;
       background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
-      border: none;
-      border-radius: 14px;
-      color: #000000;
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      padding: 0 20px;
-      height: 82px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
+      border: none; border-radius: 14px;
+      color: #000000; font-size: 24px; font-weight: 800;
+      letter-spacing: 3px; padding: 0 20px; height: 82px;
+      cursor: pointer; text-transform: uppercase;
+      transition: all 0.2s; position: relative; overflow: hidden;
       box-shadow: 0 4px 20px rgba(212,174,82,0.25);
     }
     .btn-start::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: rgba(255,255,255,0.1);
-      opacity: 0;
-      transition: opacity 0.15s;
+      opacity: 0; transition: opacity 0.15s;
     }
     .btn-start:active::before { opacity: 1; }
     .btn-start:active { transform: scale(0.97); }
-
     .btn-start.running {
       background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%);
-      color: #ffffff;
-      box-shadow: 0 4px 20px rgba(192,53,53,0.35);
+      color: #fff; box-shadow: 0 4px 20px rgba(192,53,53,0.35);
     }
     .btn-start:disabled {
-      background: var(--bg-card2);
-      color: var(--text-dim);
-      cursor: not-allowed;
-      border: 1px solid var(--border-lt);
-      box-shadow: none;
-      font-size: 22px;
+      background: var(--bg-card2); color: var(--text-dim);
+      cursor: not-allowed; border: 1px solid var(--border-lt);
+      box-shadow: none; font-size: 22px;
     }
-
-    /* pulse ring when running */
     .timer-ring {
-      display: none;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--gold);
-      display: inline-block;
-      margin-right: 10px;
+      display: none; width: 14px; height: 14px;
+      border-radius: 50%; background: var(--gold);
+      display: inline-block; margin-right: 10px;
       vertical-align: middle;
       animation: pulse 1.2s ease-in-out infinite;
     }
     .btn-start:not(.running) .timer-ring { display: none; }
-    .btn-start.running .timer-ring {
-      display: inline-block;
-      background: #ff8080;
-    }
-
+    .btn-start.running .timer-ring { display: inline-block; background: #ff8080; }
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.65); }
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.4; transform:scale(0.65); }
     }
 
     /* ─── STATS ─── */
     .tabs {
-      display: flex;
-      background: var(--bg-input);
-      border-radius: 12px;
-      padding: 5px;
-      gap: 5px;
-      margin-bottom: 16px;
+      display: flex; background: var(--bg-input);
+      border-radius: 12px; padding: 5px; gap: 5px; margin-bottom: 16px;
     }
     .tab {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-size: 20px;
-      font-weight: 700;
-      padding: 14px 6px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 1px;
+      flex: 1; background: none; border: none;
+      color: var(--text-dim); font-size: 20px; font-weight: 700;
+      padding: 14px 6px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
     }
     .tab.active {
-      background: var(--bg-card2);
-      color: var(--gold-lt);
+      background: var(--bg-card2); color: var(--gold-lt);
       border: 1px solid var(--border-lt);
     }
-
-    .stats-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .stats-list { display: flex; flex-direction: column; gap: 8px; }
     .stat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 16px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      min-height: 72px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 16px; background: var(--bg-card2);
+      border: 1px solid var(--border); border-radius: 12px; min-height: 72px;
     }
     .stat-song {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-      padding-right: 12px;
+      font-size: 22px; font-weight: 700; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      flex: 1; padding-right: 12px;
     }
     .stat-mins {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--gold-lt);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      letter-spacing: 1px;
-      flex-shrink: 0;
+      font-size: 36px; font-weight: 700; color: var(--gold-lt);
+      font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0;
     }
-    .stat-unit {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text-dim);
-      margin-left: 4px;
-    }
-
+    .stat-unit { font-size: 18px; font-weight: 600; color: var(--text-dim); margin-left: 4px; }
     .stats-total {
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-      gap: 6px;
-      padding: 14px 4px 0;
-      border-top: 1px solid var(--border);
-      margin-top: 12px;
+      display: flex; justify-content: flex-end; align-items: baseline;
+      gap: 6px; padding: 14px 4px 0;
+      border-top: 1px solid var(--border); margin-top: 12px;
     }
-    .stats-total-label {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text-dim);
-      letter-spacing: 1px;
-    }
-    .stats-total-val {
-      font-size: 30px;
-      font-weight: 800;
-      color: var(--gold-lt);
-      font-variant-numeric: tabular-nums;
-    }
+    .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); letter-spacing: 1px; }
+    .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
 
     /* ─── CHART ─── */
-    .chart-wrap {
-      position: relative;
-      height: 220px;
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* ─── ARCHIVE SECTION ─── */
+    .archive-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
     }
+    .archive-header .card-title { margin-bottom: 0; flex: 1; }
+    .archive-count {
+      background: var(--grad-dim); border: 1px solid var(--grad-bdr);
+      color: var(--grad-clr); font-size: 15px; font-weight: 800;
+      padding: 4px 12px; border-radius: 20px;
+    }
+
+    .archive-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .archive-card {
+      background: var(--bg-card2);
+      border: 1px solid rgba(94,192,128,0.25);
+      border-radius: 12px; overflow: hidden;
+    }
+    .archive-card-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 16px 0;
+    }
+    .archive-icon {
+      font-size: 24px; flex-shrink: 0;
+    }
+    .archive-name {
+      flex: 1; font-size: 22px; font-weight: 700; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .archive-stats-badge {
+      background: rgba(212,174,82,0.12);
+      border: 1px solid rgba(212,174,82,0.3);
+      border-radius: 8px; padding: 4px 10px;
+      font-size: 14px; font-weight: 700; color: var(--gold-lt);
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    .archive-body { padding: 14px 16px 16px; }
+
+    .archive-date-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    }
+    .archive-date-label {
+      font-size: 16px; font-weight: 700; color: var(--text-dim);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .archive-date-input {
+      flex: 1; background: var(--bg-input);
+      border: 1px solid var(--border-lt); border-radius: 8px;
+      color: var(--gold-lt); font-size: 17px; font-weight: 700;
+      padding: 10px 12px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .archive-date-input:focus { border-color: var(--gold); }
+
+    .archive-memo-label {
+      font-size: 16px; font-weight: 700; color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .archive-memo {
+      width: 100%; background: var(--bg-input);
+      border: 1px solid var(--border-lt); border-radius: 10px;
+      color: var(--text); font-size: 18px; font-weight: 600;
+      padding: 14px; font-family: inherit;
+      outline: none; resize: vertical; min-height: 90px;
+      transition: border-color 0.2s; line-height: 1.5;
+    }
+    .archive-memo::placeholder { color: var(--text-dim); font-weight: 400; }
+    .archive-memo:focus { border-color: var(--grad-clr); }
+
+    .archive-actions {
+      display: flex; gap: 10px; margin-top: 12px; align-items: center;
+    }
+    .btn-memo-save {
+      flex: 1; background: var(--grad-dim);
+      border: 1px solid var(--grad-bdr); border-radius: 10px;
+      color: var(--grad-clr); font-size: 18px; font-weight: 800;
+      padding: 14px; cursor: pointer; transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+    .btn-memo-save:active {
+      background: rgba(94,192,128,0.3); border-color: var(--grad-clr);
+    }
+    .btn-archive-del {
+      background: none; border: 1px solid var(--border-lt);
+      border-radius: 10px; color: var(--text-dim);
+      font-size: 18px; font-weight: 700; padding: 14px 18px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-archive-del:active { color: var(--danger); border-color: var(--danger); background: rgba(192,53,53,0.1); }
 
     /* ─── TOAST ─── */
     .toast {
       position: fixed;
-      bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-      left: 50%;
+      bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--gold);
-      color: #000000;
-      padding: 14px 28px;
-      border-radius: 28px;
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: 1px;
+      background: var(--gold); color: #000000;
+      padding: 14px 28px; border-radius: 28px;
+      font-size: 19px; font-weight: 800; letter-spacing: 1px;
       z-index: 999;
       transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
-      white-space: nowrap;
-      pointer-events: none;
+      white-space: nowrap; pointer-events: none;
       box-shadow: 0 8px 32px rgba(0,0,0,0.7);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── GRADUATION MODAL ─── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85); z-index: 500;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--bg-card); border: 1px solid var(--grad-bdr);
+      border-radius: 20px; padding: 28px 24px; width: 100%;
+      max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .modal-title {
+      font-size: 26px; font-weight: 800; color: var(--grad-clr);
+      text-align: center; margin-bottom: 8px;
+    }
+    .modal-song {
+      font-size: 22px; font-weight: 700; color: var(--gold-lt);
+      text-align: center; margin-bottom: 24px;
+      padding: 10px 16px; background: var(--gold-dim);
+      border-radius: 10px; word-break: break-all;
+    }
+    .modal-label {
+      font-size: 17px; font-weight: 700; color: var(--text-dim);
+      margin-bottom: 8px; margin-top: 16px;
+    }
+    .modal-input {
+      width: 100%; background: var(--bg-input);
+      border: 1px solid var(--border-lt); border-radius: 10px;
+      color: var(--gold-lt); font-size: 19px; font-weight: 700;
+      padding: 14px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .modal-input:focus { border-color: var(--grad-clr); }
+    .modal-textarea {
+      width: 100%; background: var(--bg-input);
+      border: 1px solid var(--border-lt); border-radius: 10px;
+      color: var(--text); font-size: 19px; font-weight: 600;
+      padding: 14px; font-family: inherit;
+      outline: none; resize: vertical; min-height: 100px;
+      transition: border-color 0.2s; line-height: 1.5;
+    }
+    .modal-textarea::placeholder { color: var(--text-dim); font-weight: 400; }
+    .modal-textarea:focus { border-color: var(--grad-clr); }
+    .modal-btns { display: flex; gap: 10px; margin-top: 24px; }
+    .btn-modal-ok {
+      flex: 2;
+      background: linear-gradient(135deg, #3a9055 0%, #5ec080 50%, #3a9055 100%);
+      border: none; border-radius: 12px;
+      color: #000; font-size: 20px; font-weight: 800;
+      padding: 18px; cursor: pointer; transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+    .btn-modal-ok:active { transform: scale(0.97); }
+    .btn-modal-cancel {
+      flex: 1; background: none;
+      border: 1px solid var(--border-lt); border-radius: 12px;
+      color: var(--text-dim); font-size: 20px; font-weight: 700;
+      padding: 18px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-modal-cancel:active { background: var(--bg-card2); }
 
     /* ─── SCROLLBAR ─── */
     ::-webkit-scrollbar { width: 3px; }
@@ -461,18 +449,18 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 390px) {
-      .timer-time        { font-size: 60px; }
-      .btn-start         { height: 76px; font-size: 21px; }
-      .timer-song-label  { font-size: 23px; }
-      .song-name         { font-size: 21px; }
-      .stat-song         { font-size: 19px; }
-      .stat-mins         { font-size: 32px; }
+      .timer-time       { font-size: 60px; }
+      .btn-start        { height: 76px; font-size: 21px; }
+      .timer-song-label { font-size: 21px; }
+      .song-name        { font-size: 19px; }
+      .stat-song        { font-size: 19px; }
+      .stat-mins        { font-size: 30px; }
+      .btn-grad         { font-size: 12px; padding: 7px 8px; }
     }
     @media (max-width: 340px) {
-      .timer-time        { font-size: 52px; }
-      .btn-start         { height: 70px; font-size: 19px; }
-      .timer-song-label  { font-size: 20px; }
-      .song-name         { font-size: 19px; }
+      .timer-time       { font-size: 52px; }
+      .btn-start        { height: 70px; font-size: 19px; }
+      .song-name        { font-size: 17px; }
     }
   </style>
 </head>
@@ -482,9 +470,7 @@
 <header class="header">
   <h1>Piano Practice</h1>
   <p>ピアノ練習記録</p>
-  <!-- Decorative piano keyboard strip (2 octaves) -->
   <svg class="piano-svg" viewBox="0 0 416 38" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <!-- White keys octave 1 -->
     <rect x="0"   y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="29"  y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="58"  y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
@@ -492,7 +478,6 @@
     <rect x="116" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="145" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="174" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
-    <!-- White keys octave 2 -->
     <rect x="204" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="233" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="262" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
@@ -500,19 +485,16 @@
     <rect x="320" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="349" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
     <rect x="378" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
-    <!-- Black keys oct 1: C# D# F# G# A# -->
     <rect x="19"  y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="48"  y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="106" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="135" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="164" y="0" width="17" height="24" rx="2" fill="#181818"/>
-    <!-- Black keys oct 2 -->
     <rect x="223" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="252" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="310" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="339" y="0" width="17" height="24" rx="2" fill="#181818"/>
     <rect x="368" y="0" width="17" height="24" rx="2" fill="#181818"/>
-    <!-- Gold shimmer overlay -->
     <rect x="0" y="0" width="416" height="38" fill="url(#shimmer)" opacity="0.18"/>
     <defs>
       <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="0">
@@ -577,6 +559,32 @@
     </div>
   </div>
 
+  <!-- ⑤ 練習終了した曲（アーカイブ） -->
+  <div class="card" id="archiveCard" style="display:none">
+    <div class="archive-header">
+      <div class="card-title">🎓 練習終了した曲</div>
+      <span class="archive-count" id="archiveCount">0</span>
+    </div>
+    <div class="archive-list" id="archiveList"></div>
+  </div>
+
+</div>
+
+<!-- 練習終了モーダル -->
+<div class="modal-overlay" id="gradModal">
+  <div class="modal">
+    <div class="modal-title">🎓 練習終了</div>
+    <div class="modal-song" id="modalSongName"></div>
+    <div class="modal-label">📅 終了日</div>
+    <input type="date" class="modal-input" id="modalDate">
+    <div class="modal-label">✏️ 感想・メモ（任意）</div>
+    <textarea class="modal-textarea" id="modalMemo"
+              placeholder="この曲の感想や思い出を残しておきましょう…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" id="btnModalCancel">キャンセル</button>
+      <button class="btn-modal-ok"     id="btnModalOk">終了を記録する</button>
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -584,16 +592,19 @@
 
 <script>
 /* =====================================================
-   DATA LAYER  (localStorage)
+   DATA LAYER
 ===================================================== */
 const SONGS_KEY    = 'piano_songs_v1';
 const SESSIONS_KEY = 'piano_sessions_v1';
+const ARCHIVE_KEY  = 'piano_archive_v1';
 
 const db = {
   getSongs:    () => JSON.parse(localStorage.getItem(SONGS_KEY)    || '[]'),
   getSessions: () => JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]'),
+  getArchive:  () => JSON.parse(localStorage.getItem(ARCHIVE_KEY)  || '[]'),
   saveSongs(s)    { localStorage.setItem(SONGS_KEY,    JSON.stringify(s)); },
   saveSessions(s) { localStorage.setItem(SESSIONS_KEY, JSON.stringify(s)); },
+  saveArchive(a)  { localStorage.setItem(ARCHIVE_KEY,  JSON.stringify(a)); },
   addSession(songName, totalSeconds) {
     const mins = Math.ceil(totalSeconds / 60);
     if (mins < 1) return false;
@@ -618,25 +629,30 @@ function daysAgo(n) {
   d.setDate(d.getDate() - n);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-
 function getWeekStart() {
   const d = new Date();
-  const day = d.getDay(); // 0=Sun
-  const diff = (day === 0) ? 6 : day - 1; // Monday start
+  const diff = (d.getDay() === 0) ? 6 : d.getDay() - 1;
   d.setDate(d.getDate() - diff);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-
 function getMonthStart() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`;
 }
-
+function formatDateJP(str) {
+  if (!str) return '';
+  const [y, m, d] = str.split('-');
+  return `${y}年${parseInt(m)}月${parseInt(d)}日`;
+}
+function totalMinsForSong(songName) {
+  return db.getSessions()
+    .filter(s => s.songName === songName)
+    .reduce((sum, s) => sum + s.duration, 0);
+}
 function esc(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 /* =====================================================
@@ -656,13 +672,14 @@ function showToast(msg) {
 ===================================================== */
 let selectedSong  = null;
 let timerRunning  = false;
-let timerStartAt  = 0;   // Date.now() snapshot
+let timerStartAt  = 0;
 let timerTick     = null;
 let currentTab    = 'today';
 let chartInstance = null;
+let pendingGradSong = null; // 練習終了待ちの曲名
 
 /* =====================================================
-   SONG MANAGEMENT
+   SONG LIST
 ===================================================== */
 function renderSongs() {
   const songs = db.getSongs();
@@ -673,11 +690,11 @@ function renderSongs() {
   }
   el.innerHTML = songs.map((name, i) => `
     <div class="song-item${selectedSong === name ? ' selected' : ''}"
-         data-idx="${i}" role="button" tabindex="0"
-         aria-label="${esc(name)}${selectedSong === name ? '（選択中）' : ''}">
+         data-idx="${i}" role="button" tabindex="0">
       <div class="radio-dot"></div>
       <span class="song-name">${esc(name)}</span>
-      <button class="btn-del" data-del="${i}" aria-label="削除">✕</button>
+      <button class="btn-grad" data-grad="${i}" title="練習終了にする">🎓&nbsp;終了</button>
+      <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
     </div>
   `).join('');
 }
@@ -700,17 +717,12 @@ function deleteSong(idx) {
   const name  = songs[idx];
   if (!name) return;
   if (timerRunning && selectedSong === name) {
-    showToast('練習中の曲は削除できません');
-    return;
+    showToast('練習中の曲は削除できません'); return;
   }
-  if (selectedSong === name) {
-    selectedSong = null;
-    updateTimerControls();
-  }
+  if (selectedSong === name) { selectedSong = null; updateTimerControls(); }
   songs.splice(idx, 1);
   db.saveSongs(songs);
-  renderSongs();
-  renderStats();
+  renderSongs(); renderStats();
   showToast(`「${name}」を削除しました`);
 }
 
@@ -720,15 +732,64 @@ function selectSong(idx) {
   const name  = songs[idx];
   if (!name) return;
   selectedSong = (selectedSong === name) ? null : name;
-  renderSongs();
-  updateTimerControls();
+  renderSongs(); updateTimerControls();
 }
 
-// Event delegation for song list
+// 練習終了ボタン → モーダルを開く
+function openGradModal(idx) {
+  const songs = db.getSongs();
+  const name  = songs[idx];
+  if (!name) return;
+  if (timerRunning && selectedSong === name) {
+    showToast('練習中の曲は終了できません'); return;
+  }
+  pendingGradSong = name;
+  document.getElementById('modalSongName').textContent = name;
+  document.getElementById('modalDate').value  = todayStr();
+  document.getElementById('modalMemo').value  = '';
+  document.getElementById('gradModal').classList.add('show');
+  setTimeout(() => document.getElementById('modalDate').focus(), 100);
+}
+
+function closeGradModal() {
+  document.getElementById('gradModal').classList.remove('show');
+  pendingGradSong = null;
+}
+
+function confirmGrad() {
+  if (!pendingGradSong) return;
+  const date = document.getElementById('modalDate').value || todayStr();
+  const memo = document.getElementById('modalMemo').value.trim();
+
+  // アーカイブに追加
+  const archive = db.getArchive();
+  archive.unshift({
+    id:           Date.now(),
+    name:         pendingGradSong,
+    archivedDate: date,
+    memo:         memo
+  });
+  db.saveArchive(archive);
+
+  // アクティブ曲リストから削除
+  const songs = db.getSongs().filter(n => n !== pendingGradSong);
+  if (selectedSong === pendingGradSong) { selectedSong = null; updateTimerControls(); }
+  db.saveSongs(songs);
+
+  closeGradModal();
+  renderSongs(); renderStats(); renderArchive();
+  showToast(`「${pendingGradSong}」を練習終了しました 🎓`);
+}
+
+// イベント委任
 document.getElementById('songList').addEventListener('click', e => {
-  const delBtn = e.target.closest('.btn-del');
-  const item   = e.target.closest('.song-item');
-  if (delBtn) {
+  const gradBtn = e.target.closest('.btn-grad');
+  const delBtn  = e.target.closest('.btn-del');
+  const item    = e.target.closest('.song-item');
+  if (gradBtn) {
+    e.stopPropagation();
+    openGradModal(parseInt(gradBtn.dataset.grad, 10));
+  } else if (delBtn) {
     e.stopPropagation();
     deleteSong(parseInt(delBtn.dataset.del, 10));
   } else if (item) {
@@ -740,67 +801,61 @@ document.getElementById('btnAdd').addEventListener('click', addSong);
 document.getElementById('songInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') addSong();
 });
+document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
+document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
+document.getElementById('gradModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeGradModal();
+});
 
 /* =====================================================
    TIMER
 ===================================================== */
 function updateTimerControls() {
-  const btn      = document.getElementById('btnStart');
-  const label    = document.getElementById('btnLabel');
-  const ring     = document.getElementById('timerRing');
-  const songLbl  = document.getElementById('timerSongLabel');
-  const display  = document.getElementById('timerDisplay');
+  const btn     = document.getElementById('btnStart');
+  const label   = document.getElementById('btnLabel');
+  const ring    = document.getElementById('timerRing');
+  const songLbl = document.getElementById('timerSongLabel');
+  const display = document.getElementById('timerDisplay');
 
   btn.disabled = (!timerRunning && !selectedSong);
-
   if (timerRunning) {
     btn.classList.add('running');
-    label.textContent   = '練習を終了する';
-    ring.style.display  = 'inline-block';
+    label.textContent  = '練習を終了する';
+    ring.style.display = 'inline-block';
     display.classList.add('running');
     songLbl.textContent = selectedSong || '';
   } else {
     btn.classList.remove('running');
-    label.textContent   = '練習を開始する';
-    ring.style.display  = 'none';
+    label.textContent  = '練習を開始する';
+    ring.style.display = 'none';
     display.classList.remove('running');
     songLbl.textContent = selectedSong ? `— ${selectedSong} —` : '';
   }
 }
 
 function formatTime(sec) {
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
-  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
 }
 
 function startTimer() {
   if (!selectedSong) return;
-  timerStartAt  = Date.now();
-  timerRunning  = true;
+  timerStartAt = Date.now(); timerRunning = true;
   timerTick = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
-    document.getElementById('timerDisplay').textContent = formatTime(elapsed);
+    const e = Math.floor((Date.now() - timerStartAt) / 1000);
+    document.getElementById('timerDisplay').textContent = formatTime(e);
   }, 500);
-  updateTimerControls();
-  requestWakeLock();
+  updateTimerControls(); requestWakeLock();
 }
 
 function stopTimer() {
-  clearInterval(timerTick);
-  timerRunning = false;
-
+  clearInterval(timerTick); timerRunning = false;
   const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
   const mins    = db.addSession(selectedSong, elapsed);
-
   document.getElementById('timerDisplay').textContent = '00:00:00';
   releaseWakeLock();
-
   if (mins) {
     showToast(`${mins}分を記録しました！`);
-    renderStats();
-    renderChart();
+    renderStats(); renderChart();
   } else {
     showToast('30秒未満は記録されません');
   }
@@ -811,19 +866,11 @@ document.getElementById('btnStart').addEventListener('click', () => {
   if (timerRunning) stopTimer(); else startTimer();
 });
 
-/* Wake Lock (keeps screen on while practicing) */
 let wakeLock = null;
 async function requestWakeLock() {
-  try {
-    if ('wakeLock' in navigator)
-      wakeLock = await navigator.wakeLock.request('screen');
-  } catch(_) {}
+  try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {}
 }
-function releaseWakeLock() {
-  wakeLock?.release().catch(() => {});
-  wakeLock = null;
-}
-// Re-acquire on visibility change
+function releaseWakeLock() { wakeLock?.release().catch(()=>{}); wakeLock = null; }
 document.addEventListener('visibilitychange', async () => {
   if (timerRunning && document.visibilityState === 'visible') requestWakeLock();
 });
@@ -842,45 +889,31 @@ function renderStats() {
   const [start, end] = getRange(currentTab);
   const sessions     = db.getSessions();
   const songs        = db.getSongs();
-
   const totals = {};
   sessions.forEach(s => {
     if (s.date >= start && s.date <= end)
       totals[s.songName] = (totals[s.songName] || 0) + s.duration;
   });
-
-  // Registered songs + any deleted songs that still have data in range
-  const extra   = Object.keys(totals).filter(n => !songs.includes(n));
-  const all     = [...songs, ...extra];
-  const active  = all.filter(n => totals[n]);
-
-  const list    = document.getElementById('statsList');
-  const totalEl = document.getElementById('statsTotal');
-  const totalV  = document.getElementById('statsTotalVal');
-
+  const extra  = Object.keys(totals).filter(n => !songs.includes(n));
+  const active = [...songs, ...extra].filter(n => totals[n]);
+  const list   = document.getElementById('statsList');
+  const totEl  = document.getElementById('statsTotal');
+  const totV   = document.getElementById('statsTotalVal');
   if (active.length === 0) {
     list.innerHTML = '<p class="empty-msg">この期間の練習記録はありません</p>';
-    totalEl.style.display = 'none';
-    return;
+    totEl.style.display = 'none'; return;
   }
-
-  // Sort by duration desc
-  const rows = active.map(n => ({ name: n, mins: totals[n] }))
-                     .sort((a,b) => b.mins - a.mins);
-
+  const rows = active.map(n => ({name:n, mins:totals[n]})).sort((a,b) => b.mins - a.mins);
   list.innerHTML = rows.map(r => `
     <div class="stat-row">
       <span class="stat-song">${esc(r.name)}</span>
       <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
     </div>
   `).join('');
-
-  const total = rows.reduce((s,r) => s + r.mins, 0);
-  totalV.textContent     = total;
-  totalEl.style.display  = 'flex';
+  totV.textContent = rows.reduce((s,r) => s + r.mins, 0);
+  totEl.style.display = 'flex';
 }
 
-// Tab switching
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     currentTab = btn.dataset.tab;
@@ -891,26 +924,85 @@ document.querySelectorAll('.tab').forEach(btn => {
 });
 
 /* =====================================================
-   CHART  (last 7 days, stacked by song)
+   ARCHIVE
 ===================================================== */
-const PALETTE = [
-  'rgba(201,168,76,0.85)',
-  'rgba(100,165,220,0.85)',
-  'rgba(170,100,100,0.85)',
-  'rgba(90,175,115,0.85)',
-  'rgba(200,125,65,0.85)',
-  'rgba(145,100,195,0.85)',
-  'rgba(75,180,175,0.85)',
-  'rgba(215,175,80,0.85)',
-];
+function renderArchive() {
+  const archive = db.getArchive();
+  const card    = document.getElementById('archiveCard');
+  const list    = document.getElementById('archiveList');
+  const count   = document.getElementById('archiveCount');
 
-function last7Days() {
-  return Array.from({length:7}, (_,i) => daysAgo(6-i));
+  if (archive.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  count.textContent  = archive.length;
+
+  list.innerHTML = archive.map(item => {
+    const total = totalMinsForSong(item.name);
+    return `
+    <div class="archive-card" data-aid="${item.id}">
+      <div class="archive-card-header">
+        <span class="archive-icon">🎓</span>
+        <span class="archive-name">${esc(item.name)}</span>
+        ${total > 0 ? `<span class="archive-stats-badge">累計 ${total}分</span>` : ''}
+      </div>
+      <div class="archive-body">
+        <div class="archive-date-row">
+          <span class="archive-date-label">終了日</span>
+          <input type="date" class="archive-date-input"
+                 value="${esc(item.archivedDate)}"
+                 data-aid="${item.id}" data-field="date">
+        </div>
+        <div class="archive-memo-label">感想・メモ</div>
+        <textarea class="archive-memo" rows="3"
+                  placeholder="感想や思い出を入力…"
+                  data-aid="${item.id}" data-field="memo">${esc(item.memo || '')}</textarea>
+        <div class="archive-actions">
+          <button class="btn-memo-save" data-aid="${item.id}">保存する</button>
+          <button class="btn-archive-del" data-adel="${item.id}">削除</button>
+        </div>
+      </div>
+    </div>
+  `}).join('');
 }
 
+// アーカイブの保存・削除イベント
+document.getElementById('archiveList').addEventListener('click', e => {
+  const saveBtn = e.target.closest('.btn-memo-save');
+  const delBtn  = e.target.closest('.btn-archive-del');
+  if (saveBtn) {
+    const id   = parseInt(saveBtn.dataset.aid, 10);
+    const card = saveBtn.closest('.archive-card');
+    const dateInput = card.querySelector('[data-field="date"]');
+    const memoInput = card.querySelector('[data-field="memo"]');
+    const archive   = db.getArchive();
+    const item      = archive.find(a => a.id === id);
+    if (item) {
+      item.archivedDate = dateInput.value;
+      item.memo         = memoInput.value.trim();
+      db.saveArchive(archive);
+      showToast('メモを保存しました ✓');
+    }
+  } else if (delBtn) {
+    const id      = parseInt(delBtn.dataset.adel, 10);
+    const archive = db.getArchive().filter(a => a.id !== id);
+    db.saveArchive(archive);
+    renderArchive();
+    showToast('アーカイブから削除しました');
+  }
+});
+
+/* =====================================================
+   CHART
+===================================================== */
+const PALETTE = [
+  'rgba(212,174,82,0.85)',  'rgba(100,165,220,0.85)',
+  'rgba(170,100,100,0.85)', 'rgba(90,175,115,0.85)',
+  'rgba(200,125,65,0.85)',  'rgba(145,100,195,0.85)',
+  'rgba(75,180,175,0.85)',  'rgba(215,175,80,0.85)',
+];
+function last7Days() { return Array.from({length:7}, (_,i) => daysAgo(6-i)); }
 function dayLabel(d) {
-  // d = 'YYYY-MM-DD'
-  const dt   = new Date(d + 'T12:00:00');
+  const dt = new Date(d + 'T12:00:00');
   const days = ['日','月','火','水','木','金','土'];
   return `${dt.getMonth()+1}/${dt.getDate()}(${days[dt.getDay()]})`;
 }
@@ -919,85 +1011,48 @@ function renderChart() {
   const days     = last7Days();
   const sessions = db.getSessions();
   const songs    = db.getSongs();
-
-  // Gather songs active in last 7 days
-  const inRange   = sessions.filter(s => days.includes(s.date));
-  const seenSongs = [...new Set(inRange.map(s => s.songName))];
-  const ordered   = [
-    ...songs.filter(n => seenSongs.includes(n)),
-    ...seenSongs.filter(n => !songs.includes(n))
-  ];
-
+  const inRange  = sessions.filter(s => days.includes(s.date));
+  const seen     = [...new Set(inRange.map(s => s.songName))];
+  const ordered  = [...songs.filter(n => seen.includes(n)), ...seen.filter(n => !songs.includes(n))];
   const labels   = days.map(dayLabel);
   const datasets = ordered.length
     ? ordered.map((song, i) => ({
         label: song,
-        data: days.map(d =>
-          inRange.filter(s => s.songName === song && s.date === d)
-                 .reduce((sum,s) => sum + s.duration, 0)
-        ),
+        data: days.map(d => inRange.filter(s => s.songName===song && s.date===d).reduce((sum,s)=>sum+s.duration,0)),
         backgroundColor: PALETTE[i % PALETTE.length],
-        borderRadius: 3,
-        borderSkipped: false,
+        borderRadius: 3, borderSkipped: false,
       }))
-    : [{
-        label: 'データなし',
-        data: Array(7).fill(0),
-        backgroundColor: 'rgba(60,60,60,0.5)',
-        borderRadius: 3,
-      }];
+    : [{ label:'データなし', data:Array(7).fill(0), backgroundColor:'rgba(60,60,60,0.5)', borderRadius:3 }];
 
   const ctx = document.getElementById('practiceChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
-
   chartInstance = new Chart(ctx, {
     type: 'bar',
     data: { labels, datasets },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
-          labels: {
-            color: '#c8c5b8',
-            font: { size: 15, family: '-apple-system, sans-serif', weight: '700' },
-            boxWidth: 12, boxHeight: 12,
-            padding: 12,
-          }
+          labels: { color:'#c8c5b8', font:{size:14,family:'-apple-system,sans-serif',weight:'700'}, boxWidth:12, boxHeight:12, padding:10 }
         },
         tooltip: {
-          backgroundColor: '#1e1e1e',
-          borderColor: '#3a3a3a',
-          borderWidth: 1,
-          titleColor: '#f5f2e8',
-          bodyColor: '#f0d080',
-          titleFont: { size: 14, weight: '700' },
-          bodyFont:  { size: 14, weight: '600' },
-          padding: 10,
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}：${ctx.parsed.y}分`
-          }
+          backgroundColor:'#1e1e1e', borderColor:'#3a3a3a', borderWidth:1,
+          titleColor:'#f5f2e8', bodyColor:'#f0d080',
+          titleFont:{size:14,weight:'700'}, bodyFont:{size:14,weight:'600'}, padding:10,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}：${ctx.parsed.y}分` }
         }
       },
       scales: {
         x: {
           stacked: true,
-          grid:   { color: 'rgba(255,255,255,0.05)' },
-          border: { color: 'rgba(255,255,255,0.1)' },
-          ticks:  { color: '#c0bdb0', font: { size: 14, family: '-apple-system, sans-serif', weight: '600' }, maxRotation: 0 }
+          grid:{color:'rgba(255,255,255,0.05)'}, border:{color:'rgba(255,255,255,0.1)'},
+          ticks:{color:'#c0bdb0', font:{size:13,family:'-apple-system,sans-serif',weight:'600'}, maxRotation:0}
         },
         y: {
-          stacked: true,
-          beginAtZero: true,
-          grid:   { color: 'rgba(255,255,255,0.05)' },
-          border: { color: 'rgba(255,255,255,0.1)' },
-          ticks:  {
-            color: '#c0bdb0',
-            font: { size: 14, family: '-apple-system, sans-serif', weight: '600' },
-            stepSize: 10,
-            callback: v => v + '分'
-          }
+          stacked: true, beginAtZero: true,
+          grid:{color:'rgba(255,255,255,0.05)'}, border:{color:'rgba(255,255,255,0.1)'},
+          ticks:{color:'#c0bdb0', font:{size:13,family:'-apple-system,sans-serif',weight:'600'}, stepSize:10, callback:v=>v+'分'}
         }
       }
     }
@@ -1005,55 +1060,30 @@ function renderChart() {
 }
 
 /* =====================================================
-   PWA SETUP
+   PWA
 ===================================================== */
-// Inline manifest via blob
 (function setupManifest() {
   const m = {
-    name: 'ピアノ練習記録',
-    short_name: 'ピアノ練習',
-    description: 'ピアノ練習時間を曲ごとに記録するアプリ',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#0a0a0a',
-    theme_color: '#0a0a0a',
-    orientation: 'portrait-primary',
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
-      sizes: '512x512',
-      type: 'image/svg+xml',
-      purpose: 'any maskable'
+    name:'ピアノ練習記録', short_name:'ピアノ練習',
+    start_url:'.', display:'standalone',
+    background_color:'#0a0a0a', theme_color:'#0a0a0a',
+    orientation:'portrait-primary',
+    icons:[{
+      src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
+      sizes:'512x512', type:'image/svg+xml', purpose:'any maskable'
     }]
   };
   try {
-    const blob = new Blob([JSON.stringify(m)], {type:'application/manifest+json'});
-    const url  = URL.createObjectURL(blob);
+    const blob = new Blob([JSON.stringify(m)],{type:'application/manifest+json'});
     const link = document.createElement('link');
-    link.rel   = 'manifest';
-    link.href  = url;
+    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
     document.head.appendChild(link);
   } catch(_) {}
 })();
 
-// Service Worker via blob (works when served over HTTP/HTTPS)
 if ('serviceWorker' in navigator) {
-  const sw = `
-const CACHE='piano-sw-v1';
-self.addEventListener('install',e=>{ self.skipWaiting(); });
-self.addEventListener('activate',e=>{ e.waitUntil(clients.claim()); });
-self.addEventListener('fetch',e=>{
-  e.respondWith(
-    caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-      const c=res.clone();
-      caches.open(CACHE).then(ca=>ca.put(e.request,c));
-      return res;
-    }).catch(()=>caches.match(e.request)))
-  );
-});`;
-  try {
-    const blob = new Blob([sw], {type:'application/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(blob), {scope:'./'}).catch(()=>{});
-  } catch(_) {}
+  const sw = `const C='piano-sw-v1';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
+  try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{}); } catch(_) {}
 }
 
 /* =====================================================
@@ -1062,6 +1092,7 @@ self.addEventListener('fetch',e=>{
 renderSongs();
 renderStats();
 renderChart();
+renderArchive();
 updateTimerControls();
 </script>
 </body>

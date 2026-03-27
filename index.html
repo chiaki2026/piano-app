@@ -174,10 +174,12 @@
     .tab { flex: 1; background: none; border: none; color: var(--text-dim); font-size: 20px; font-weight: 700; padding: 14px 6px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
     .tab.active { background: var(--bg-card2); color: var(--gold-lt); border: 1px solid var(--bdr-lt); }
     .stats-list { display: flex; flex-direction: column; gap: 8px; }
-    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 16px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 12px; min-height: 72px; }
-    .stat-song { font-size: 22px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; padding-right: 12px; }
+    .stat-row { display: flex; align-items: center; gap: 10px; padding: 14px 14px 14px 16px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 12px; min-height: 72px; }
+    .stat-song { font-size: 22px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
     .stat-mins { font-size: 36px; font-weight: 700; color: var(--gold-lt); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
     .stat-unit { font-size: 18px; font-weight: 600; color: var(--text-dim); margin-left: 4px; }
+    .btn-stat-del { background: none; border: none; color: var(--text-dim); font-size: 22px; padding: 6px 4px 6px 10px; cursor: pointer; flex-shrink: 0; border-radius: 8px; transition: all 0.15s; }
+    .btn-stat-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
     .stats-total { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; padding: 14px 4px 0; border-top: 1px solid var(--border); margin-top: 12px; }
     .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); }
     .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
@@ -268,7 +270,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="today">今日</button>
       <button class="tab"        data-tab="week" >今週</button>
-      <button class="tab"        data-tab="month">今月</button>
+      <button class="tab"        data-tab="total">総合計</button>
     </div>
     <div class="stats-list" id="statsList"></div>
     <div class="stats-total" id="statsTotal" style="display:none">
@@ -370,8 +372,7 @@ function buildBadges(name) {
   const lbl   = lastPracticeLabel(name);
   let html = '';
   if (total > 0) html += `<span class="song-meta-badge badge-total">累計 ${total}分</span>`;
-  if (lbl === 'today') html += `<span class="song-meta-badge badge-new">✓ 今日練習済み</span>`;
-  else if (lbl)        html += `<span class="song-meta-badge badge-last">最終: ${lbl}</span>`;
+  if (lbl && lbl !== 'today') html += `<span class="song-meta-badge badge-last">最終: ${lbl}</span>`;
   return html;
 }
 
@@ -525,23 +526,37 @@ document.addEventListener('visibilitychange', async () => {
    STATISTICS
 ===================================================== */
 let currentTab = 'today';
-function getRange(tab) {
-  const t = todayStr();
-  if (tab==='today') return [t, t];
-  if (tab==='week')  return [getWeekStart(), t];
-  if (tab==='month') return [getMonthStart(), t];
-}
 function renderStats() {
-  const [start,end] = getRange(currentTab);
-  const sessions = db.getSessions(), songs = db.getSongs(), totals = {};
-  sessions.forEach(s => { if(s.date>=start&&s.date<=end) totals[s.songName]=(totals[s.songName]||0)+s.duration; });
-  const active = songs.filter(n=>totals[n]);
-  const list   = document.getElementById('statsList');
-  const totEl  = document.getElementById('statsTotal');
-  const totV   = document.getElementById('statsTotalVal');
-  if (!active.length) { list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display='none'; return; }
-  const rows = active.map(n=>({name:n,mins:totals[n]})).sort((a,b)=>b.mins-a.mins);
-  list.innerHTML = rows.map(r=>`<div class="stat-row"><span class="stat-song">${esc(r.name)}</span><span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span></div>`).join('');
+  const sessions = db.getSessions();
+  const totals   = {};
+
+  if (currentTab === 'total') {
+    // 総合計：全セッションを集計
+    sessions.forEach(s => { totals[s.songName] = (totals[s.songName]||0) + s.duration; });
+  } else {
+    // 今日 / 今週
+    const t = todayStr();
+    const start = currentTab === 'today' ? t : getWeekStart();
+    sessions.forEach(s => { if(s.date>=start&&s.date<=t) totals[s.songName]=(totals[s.songName]||0)+s.duration; });
+  }
+
+  // セッションがある曲をすべて表示（練習曲リストから削除された曲も含む）
+  const rows = Object.entries(totals)
+    .filter(([,m]) => m > 0)
+    .map(([name,mins]) => ({name,mins}))
+    .sort((a,b) => b.mins - a.mins);
+
+  const list  = document.getElementById('statsList');
+  const totEl = document.getElementById('statsTotal');
+  const totV  = document.getElementById('statsTotalVal');
+  if (!rows.length) { list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display='none'; return; }
+
+  list.innerHTML = rows.map(r=>`
+    <div class="stat-row">
+      <span class="stat-song">${esc(r.name)}</span>
+      <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
+      <button class="btn-stat-del" data-name="${esc(r.name)}" aria-label="記録を削除">✕</button>
+    </div>`).join('');
   totV.textContent = rows.reduce((t,r)=>t+r.mins,0);
   totEl.style.display = 'flex';
 }
@@ -551,6 +566,15 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     btn.classList.add('active'); renderStats();
   });
+});
+document.getElementById('statsList').addEventListener('click', e => {
+  const del = e.target.closest('.btn-stat-del');
+  if (!del) return;
+  const name = del.dataset.name;
+  db.saveSessions(db.getSessions().filter(s => s.songName !== name));
+  renderStats();
+  renderSongs(); // バッジ（累計）を更新
+  showToast(`「${name}」の記録を削除しました`);
 });
 
 /* =====================================================

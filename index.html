@@ -53,7 +53,7 @@
     /* ── LAYOUT ── */
     .container { max-width: 580px; margin: 0 auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* ── OUTER CARD ── */
+    /* ── CARD ── */
     .card { background: var(--bg-card); border: 1px solid var(--bdr-lt); border-radius: 16px; padding: 20px 18px; }
     .card-title { font-size: 16px; font-weight: 700; letter-spacing: 3px; color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px; }
 
@@ -66,61 +66,29 @@
     }
     .song-input::placeholder { color: var(--text-dim); font-weight: 400; }
     .song-input:focus { border-color: var(--gold); }
-    .btn-add {
-      background: var(--gold); border: none; border-radius: 10px;
-      color: #000; font-size: 34px; font-weight: 800; width: 62px;
-      flex-shrink: 0; cursor: pointer; transition: background 0.15s;
-    }
+    .btn-add { background: var(--gold); border: none; border-radius: 10px; color: #000; font-size: 34px; font-weight: 800; width: 62px; flex-shrink: 0; cursor: pointer; transition: background 0.15s; }
     .btn-add:active { background: var(--gold-lt); }
 
     /* ── 曲リスト ── */
     .song-list { display: flex; flex-direction: column; gap: 12px; }
 
-    /* ═══════════════════════════════════
-       曲カード  ── 1曲ごとの自己完結ユニット
-       ① 曲名行
-       ② タイマー＋開始ボタン
-       ③ 7日間グラフ
-    ═══════════════════════════════════ */
-    .song-card {
-      background: var(--bg-card2); border: 2px solid var(--border);
-      border-radius: 14px; overflow: hidden; transition: border-color 0.25s;
-    }
+    /* ── 曲カード（タイマー内蔵・グラフなし） ── */
+    .song-card { background: var(--bg-card2); border: 2px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; }
     .song-card.running { border-color: var(--danger); }
 
-    /* ① 曲名行 */
-    .song-name-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 14px 12px; background: rgba(0,0,0,0.25);
-      border-bottom: 1px solid var(--border);
-    }
-    .song-name {
-      flex: 1; font-size: 22px; font-weight: 800; color: var(--text);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+    /* 曲名行 */
+    .song-name-row { display: flex; align-items: center; gap: 10px; padding: 14px 14px 12px; background: rgba(0,0,0,0.25); border-bottom: 1px solid var(--border); }
+    .song-name { flex: 1; font-size: 22px; font-weight: 800; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .song-card.running .song-name { color: var(--gold-lt); }
 
-    .btn-grad {
-      background: var(--grn-dim); border: 1px solid var(--grn-bdr);
-      border-radius: 8px; color: var(--grn); font-size: 13px; font-weight: 800;
-      padding: 8px 10px; cursor: pointer; flex-shrink: 0;
-      white-space: nowrap; transition: all 0.2s; line-height: 1.2;
-    }
+    .btn-grad { background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 8px; color: var(--grn); font-size: 13px; font-weight: 800; padding: 8px 10px; cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: all 0.2s; line-height: 1.2; }
     .btn-grad:active { background: rgba(94,192,128,0.3); }
-    .btn-del {
-      background: none; border: none; color: var(--text-dim);
-      font-size: 22px; padding: 6px 8px; cursor: pointer;
-      flex-shrink: 0; border-radius: 8px; transition: all 0.15s;
-    }
+    .btn-del { background: none; border: none; color: var(--text-dim); font-size: 22px; padding: 6px 8px; cursor: pointer; flex-shrink: 0; border-radius: 8px; transition: all 0.15s; }
     .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
-    /* ② タイマーエリア */
-    .song-timer-area {
-      padding: 18px 16px 16px; text-align: center;
-      border-bottom: 1px solid var(--border);
-    }
+    /* タイマーエリア */
+    .song-timer-area { padding: 18px 16px 16px; text-align: center; }
 
-    /* HH:MM:SS 大型表示 */
     .song-timer-display {
       font-size: 58px; font-weight: 800; color: #444;
       font-variant-numeric: tabular-nums; letter-spacing: 3px;
@@ -133,7 +101,6 @@
       text-shadow: 0 0 40px rgba(212,174,82,0.45), 0 0 14px rgba(212,174,82,0.25);
     }
 
-    /* 開始/終了ボタン */
     .btn-song-start {
       width: 100%; height: 76px;
       background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
@@ -143,40 +110,32 @@
       transition: all 0.2s; box-shadow: 0 4px 18px rgba(212,174,82,0.22);
       display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .btn-song-start::before {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.15s;
-    }
+    .btn-song-start::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.15s; }
     .btn-song-start:active::before { opacity: 1; }
     .btn-song-start:active { transform: scale(0.97); }
-    .btn-song-start.running {
-      background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%);
-      color: #fff; box-shadow: 0 4px 18px rgba(192,53,53,0.3);
-    }
-    .btn-song-start:disabled {
-      background: var(--bg-input); color: var(--text-dim);
-      box-shadow: none; cursor: not-allowed; border: 1px solid var(--border);
-    }
+    .btn-song-start.running { background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%); color: #fff; box-shadow: 0 4px 18px rgba(192,53,53,0.3); }
+    .btn-song-start:disabled { background: var(--bg-input); color: var(--text-dim); box-shadow: none; cursor: not-allowed; border: 1px solid var(--border); }
 
-    /* パルスリング */
-    .pulse-dot {
-      width: 12px; height: 12px; border-radius: 50%; background: #ff8080;
-      animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0;
-    }
-    @keyframes pulse {
-      0%,100% { opacity:1; transform:scale(1); }
-      50%      { opacity:0.4; transform:scale(0.6); }
-    }
-
-    /* ③ グラフエリア */
-    .song-chart-area { padding: 12px 12px 14px; background: rgba(0,0,0,0.15); }
-    .song-chart-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; margin-bottom: 8px; color: var(--text-dim);
-    }
-    .song-chart-wrap { position: relative; height: 165px; }
+    .pulse-dot { width: 12px; height: 12px; border-radius: 50%; background: #ff8080; animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.6);} }
 
     .empty-msg { text-align: center; color: var(--text-dim); font-size: 18px; font-weight: 500; padding: 20px 0 8px; }
+
+    /* ── 積み上げグラフカード ── */
+    .chart-wrap { position: relative; height: 250px; }
+
+    .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 10px 18px;
+      margin-top: 18px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+    .legend-text { display: flex; align-items: baseline; gap: 6px; }
+    .legend-name { font-size: 16px; font-weight: 700; color: var(--text); white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+    .legend-mins { font-size: 14px; font-weight: 700; color: var(--gold-lt); white-space: nowrap; }
+    .legend-arc  { font-size: 13px; color: var(--grn); flex-shrink: 0; }
+    .chart-empty { text-align: center; color: var(--text-dim); font-size: 16px; font-weight: 600; padding: 50px 0; }
 
     /* ── STATS ── */
     .tabs { display: flex; background: var(--bg-input); border-radius: 12px; padding: 5px; gap: 5px; margin-bottom: 16px; }
@@ -211,13 +170,10 @@
     .archive-memo::placeholder { color: var(--text-dim); font-weight: 400; }
     .archive-memo:focus { border-color: var(--grn); }
     .archive-actions { display: flex; gap: 10px; margin-top: 12px; }
-    .btn-memo-save { flex: 1; background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 10px; color: var(--grn); font-size: 18px; font-weight: 800; padding: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-memo-save    { flex: 1; background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 10px; color: var(--grn); font-size: 18px; font-weight: 800; padding: 14px; cursor: pointer; transition: all 0.2s; }
     .btn-memo-save:active { background: rgba(94,192,128,0.3); }
-    .btn-archive-del { background: none; border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text-dim); font-size: 18px; font-weight: 700; padding: 14px 18px; cursor: pointer; transition: all 0.2s; }
+    .btn-archive-del  { background: none; border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text-dim); font-size: 18px; font-weight: 700; padding: 14px 18px; cursor: pointer; transition: all 0.2s; }
     .btn-archive-del:active { color: var(--danger); border-color: var(--danger); background: rgba(192,53,53,0.1); }
-    .archive-chart-section { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
-    .archive-chart-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
-    .archive-chart-wrap { position: relative; height: 165px; }
 
     /* ── MODAL ── */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
@@ -238,30 +194,21 @@
     .btn-modal-cancel:active { background: var(--bg-card2); }
 
     /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: calc(28px + env(safe-area-inset-bottom,0px)); left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--gold); color: #000; padding: 14px 28px; border-radius: 28px;
-      font-size: 19px; font-weight: 800; letter-spacing: 1px; z-index: 999;
-      transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
-      white-space: nowrap; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
-    }
+    .toast { position: fixed; bottom: calc(28px + env(safe-area-inset-bottom,0px)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: #000; padding: 14px 28px; border-radius: 28px; font-size: 19px; font-weight: 800; letter-spacing: 1px; z-index: 999; transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275); white-space: nowrap; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7); }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--bdr-lt); border-radius: 2px; }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 390px) {
       .song-timer-display { font-size: 48px; }
       .btn-song-start     { height: 68px; font-size: 19px; }
       .song-name          { font-size: 19px; }
       .stat-song          { font-size: 19px; }
       .stat-mins          { font-size: 30px; }
-      .song-chart-wrap    { height: 145px; }
-      .archive-chart-wrap { height: 145px; }
+      .chart-wrap         { height: 210px; }
+      .legend-name        { font-size: 14px; }
     }
     @media (max-width: 340px) {
       .song-timer-display { font-size: 40px; }
@@ -312,7 +259,7 @@
 
 <div class="container">
 
-  <!-- ① 曲の選択（各曲カード＝曲名＋タイマー＋グラフ） -->
+  <!-- ① 曲の選択 -->
   <div class="card">
     <div class="card-title">♩ 曲の選択</div>
     <div class="add-row">
@@ -326,7 +273,16 @@
     </div>
   </div>
 
-  <!-- ② 練習時間の集計 -->
+  <!-- ② 直近7日間 積み上げグラフ（全曲まとめて） -->
+  <div class="card">
+    <div class="card-title">♩ 直近7日間の練習推移</div>
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+    <div class="chart-legend" id="chartLegend"></div>
+  </div>
+
+  <!-- ③ 練習時間の集計 -->
   <div class="card">
     <div class="card-title">♩ 練習時間</div>
     <div class="tabs">
@@ -342,7 +298,7 @@
     </div>
   </div>
 
-  <!-- ③ 練習終了した曲（アーカイブ） -->
+  <!-- ④ 練習終了した曲（アーカイブ） -->
   <div class="card" id="archiveCard" style="display:none">
     <div class="archive-header">
       <div class="card-title">🎓 練習終了した曲</div>
@@ -393,8 +349,7 @@ const db = {
     if (mins < 1) return false;
     const s = this.getSessions();
     s.push({ id: Date.now(), songName, date: todayStr(), duration: mins });
-    this.saveSessions(s);
-    return mins;
+    this.saveSessions(s); return mins;
   }
 };
 
@@ -407,44 +362,26 @@ function todayStr() {
 }
 function pad(n) { return String(n).padStart(2,'0'); }
 function daysAgo(n) {
-  const d = new Date(); d.setDate(d.getDate() - n);
+  const d = new Date(); d.setDate(d.getDate()-n);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 function getWeekStart() {
-  const d = new Date();
-  const diff = d.getDay() === 0 ? 6 : d.getDay() - 1;
-  d.setDate(d.getDate() - diff);
+  const d=new Date(), diff=d.getDay()===0?6:d.getDay()-1;
+  d.setDate(d.getDate()-diff);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-function getMonthStart() {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`;
-}
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function totalMinsForSong(n) {
-  return db.getSessions().filter(s => s.songName === n).reduce((t,s) => t + s.duration, 0);
-}
-function last7Days(base) {
-  const b = base ? new Date(base + 'T12:00:00') : new Date();
-  return Array.from({length:7}, (_,i) => {
-    const d = new Date(b); d.setDate(d.getDate() - (6 - i));
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  });
-}
+function getMonthStart() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`; }
+function last7Days()     { return Array.from({length:7},(_,i)=>daysAgo(6-i)); }
 function dayLabel(s) {
-  const d = new Date(s + 'T12:00:00');
+  const d=new Date(s+'T12:00:00');
   return `${d.getMonth()+1}/${d.getDate()}(${'日月火水木金土'[d.getDay()]})`;
 }
-function formatTime(sec) {
-  return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
-}
+function formatTime(sec) { return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`; }
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function totalMinsForSong(n) { return db.getSessions().filter(s=>s.songName===n).reduce((t,s)=>t+s.duration,0); }
 
 /* =====================================================
-   COLOR SYSTEM
+   COLOR SYSTEM（曲ごとに永続割り当て）
 ===================================================== */
 const PALETTE = [
   {bg:'rgba(212,174, 82,0.90)',bd:'#d4ae52'},
@@ -460,351 +397,273 @@ const PALETTE = [
   {bg:'rgba( 95,150,210,0.90)',bd:'#5f96d2'},
   {bg:'rgba(185,185, 70,0.90)',bd:'#b9b946'},
 ];
-function getColorMap()   { return JSON.parse(localStorage.getItem(COLORS_KEY) || '{}'); }
-function saveColorMap(m) { localStorage.setItem(COLORS_KEY, JSON.stringify(m)); }
+function getColorMap()   { return JSON.parse(localStorage.getItem(COLORS_KEY)||'{}'); }
+function saveColorMap(m) { localStorage.setItem(COLORS_KEY,JSON.stringify(m)); }
 function getOrAssignColor(name) {
-  const map = getColorMap();
-  if (map[name] !== undefined) return map[name];
-  const used = new Set(Object.values(map));
-  let idx = 0; while (used.has(idx)) idx++;
-  map[name] = idx; saveColorMap(map); return idx;
+  const map=getColorMap();
+  if(map[name]!==undefined) return map[name];
+  const used=new Set(Object.values(map)); let idx=0; while(used.has(idx)) idx++;
+  map[name]=idx; saveColorMap(map); return idx;
 }
-function songColor(name) { return PALETTE[getOrAssignColor(name) % PALETTE.length]; }
-
-/* =====================================================
-   CHART INSTANCES
-===================================================== */
-const activeSongCharts  = {};
-const archiveSongCharts = {};
-
-function destroyActiveSongCharts() {
-  Object.values(activeSongCharts).forEach(c => { try{c.destroy();}catch(_){} });
-  for (const k in activeSongCharts) delete activeSongCharts[k];
-}
-function destroyArchiveSongCharts() {
-  Object.values(archiveSongCharts).forEach(c => { try{c.destroy();}catch(_){} });
-  for (const k in archiveSongCharts) delete archiveSongCharts[k];
-}
-
-function buildChartConfig(songName, days) {
-  const sessions = db.getSessions();
-  const color = songColor(songName);
-  const data  = days.map(d =>
-    sessions.filter(s => s.songName === songName && s.date === d)
-            .reduce((t,s) => t + s.duration, 0)
-  );
-  const maxVal = Math.max(...data, 1);
-  return {
-    type: 'bar',
-    data: {
-      labels: days.map(dayLabel),
-      datasets: [{
-        data,
-        backgroundColor: color.bg,
-        borderColor:     color.bd,
-        borderWidth: 0, borderRadius: 5, borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: {duration:400},
-      plugins: {
-        legend: {display: false},
-        tooltip: {
-          backgroundColor:'#1a1a1a', borderColor: color.bd, borderWidth:1,
-          titleColor:'#f5f2e8', bodyColor: color.bd,
-          titleFont:{size:13,weight:'700'}, bodyFont:{size:15,weight:'800'}, padding:10,
-          callbacks: { title: i=>i[0].label, label: i=>` ${i.parsed.y}分` }
-        }
-      },
-      scales: {
-        x: {
-          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
-          ticks:{color:'#a0a098', font:{size:11,family:'-apple-system,sans-serif',weight:'700'}, maxRotation:0}
-        },
-        y: {
-          beginAtZero:true, suggestedMax: Math.ceil(maxVal*1.3)||10,
-          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
-          ticks:{
-            color:'#a0a098', font:{size:11,family:'-apple-system,sans-serif',weight:'700'},
-            stepSize: Math.max(5, Math.ceil(maxVal/4/5)*5),
-            callback: v => v===0 ? '0' : v+'分'
-          }
-        }
-      }
-    }
-  };
-}
-
-function renderActiveSongCharts(songs) {
-  destroyActiveSongCharts();
-  const days = last7Days();
-  songs.forEach((name, i) => {
-    const canvas = document.getElementById(`song-canvas-${i}`);
-    if (canvas) activeSongCharts[name] = new Chart(canvas.getContext('2d'), buildChartConfig(name, days));
-  });
-}
-
-function renderArchiveSongCharts(archive) {
-  destroyArchiveSongCharts();
-  archive.forEach(item => {
-    const canvas = document.getElementById(`archive-canvas-${item.id}`);
-    if (canvas) {
-      const days = last7Days(item.archivedDate || todayStr());
-      archiveSongCharts[item.id] = new Chart(canvas.getContext('2d'), buildChartConfig(item.name, days));
-    }
-  });
-}
+function songColor(name) { return PALETTE[getOrAssignColor(name)%PALETTE.length]; }
 
 /* =====================================================
    TOAST
 ===================================================== */
 let toastTid;
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTid);
-  toastTid = setTimeout(() => t.classList.remove('show'), 2800);
+  toastTid=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
 /* =====================================================
    STATE
 ===================================================== */
-let runningSong  = null;   // 現在タイマー計測中の曲名
+let runningSong  = null;
 let timerRunning = false;
 let timerStartAt = 0;
 let timerTick    = null;
 let currentTab   = 'today';
 let pendingGrad  = null;
+let chartInstance= null;
 
 /* =====================================================
-   SONG LIST  ── renderSongs は曲リスト変化時のみ呼ぶ
+   SONG LIST（グラフなし・タイマー内蔵）
 ===================================================== */
 function renderSongs() {
   const songs = db.getSongs();
   const el    = document.getElementById('songList');
+  if (!songs.length) { el.innerHTML='<p class="empty-msg">曲を追加してください</p>'; return; }
 
-  if (songs.length === 0) {
-    el.innerHTML = '<p class="empty-msg">曲を追加してください</p>';
-    destroyActiveSongCharts(); return;
-  }
-
-  el.innerHTML = songs.map((name, i) => {
-    const color   = songColor(name);
-    const isRun   = timerRunning && runningSong === name;
-    const otherRun = timerRunning && runningSong !== name;
-    const elapsed = isRun ? Math.floor((Date.now() - timerStartAt) / 1000) : 0;
-
+  el.innerHTML = songs.map((name,i) => {
+    const isRun    = timerRunning && runningSong===name;
+    const otherRun = timerRunning && runningSong!==name;
     return `
-    <div class="song-card${isRun ? ' running' : ''}" id="song-card-${i}">
-
-      <!-- ① 曲名 + 操作ボタン -->
+    <div class="song-card${isRun?' running':''}" id="song-card-${i}">
       <div class="song-name-row">
         <span class="song-name">${esc(name)}</span>
-        <button class="btn-grad" data-grad="${i}" title="練習終了">🎓&nbsp;終了</button>
-        <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
+        <button class="btn-grad" data-grad="${i}">🎓&nbsp;終了</button>
+        <button class="btn-del"  data-del="${i}" aria-label="削除">✕</button>
       </div>
-
-      <!-- ② タイマー表示 + 開始/終了ボタン -->
       <div class="song-timer-area">
         <div class="song-timer-display" id="timer-display-${i}">
-          ${isRun ? formatTime(elapsed) : '00:00:00'}
+          ${isRun ? formatTime(Math.floor((Date.now()-timerStartAt)/1000)) : '00:00:00'}
         </div>
-        <button class="btn-song-start${isRun ? ' running' : ''}"
-                id="btn-song-${i}"
-                data-song-idx="${i}"
-                ${otherRun ? 'disabled' : ''}>
-          ${isRun ? '<span class="pulse-dot"></span> 練習を終了する' : '練習を開始する'}
+        <button class="btn-song-start${isRun?' running':''}"
+                id="btn-song-${i}" data-song-idx="${i}"
+                ${otherRun?'disabled':''}>
+          ${isRun?'<span class="pulse-dot"></span> 練習を終了する':'練習を開始する'}
         </button>
-      </div>
-
-      <!-- ③ 専用グラフ（直近7日間） -->
-      <div class="song-chart-area">
-        <div class="song-chart-label" style="color:${color.bd}">
-          ▎ 直近7日間の練習推移
-        </div>
-        <div class="song-chart-wrap">
-          <canvas id="song-canvas-${i}"></canvas>
-        </div>
       </div>
     </div>`;
   }).join('');
-
-  renderActiveSongCharts(songs);
 }
 
-/* ─ 曲追加 ─ */
 function addSong() {
-  const input = document.getElementById('songInput');
-  const name  = input.value.trim();
-  if (!name) { input.focus(); return; }
-  const songs = db.getSongs();
-  if (songs.includes(name)) { showToast('同じ曲名が既にあります'); return; }
-  getOrAssignColor(name);    // 先に色を確定
-  songs.push(name);
-  db.saveSongs(songs);
-  input.value = '';
-  renderSongs();
+  const input=document.getElementById('songInput');
+  const name=input.value.trim();
+  if(!name){input.focus();return;}
+  const songs=db.getSongs();
+  if(songs.includes(name)){showToast('同じ曲名が既にあります');return;}
+  getOrAssignColor(name);
+  songs.push(name); db.saveSongs(songs);
+  input.value=''; renderSongs(); renderChart();
   showToast(`「${name}」を追加しました`);
 }
 
-/* ─ 曲削除 ─ */
 function deleteSong(idx) {
-  const songs = db.getSongs();
-  const name  = songs[idx];
-  if (!name) return;
-  if (timerRunning && runningSong === name) { showToast('練習中の曲は削除できません'); return; }
-  songs.splice(idx, 1);
-  db.saveSongs(songs);
-  renderSongs(); renderStats();
+  const songs=db.getSongs(); const name=songs[idx]; if(!name) return;
+  if(timerRunning&&runningSong===name){showToast('練習中の曲は削除できません');return;}
+  songs.splice(idx,1); db.saveSongs(songs);
+  renderSongs(); renderStats(); renderChart();
   showToast(`「${name}」を削除しました`);
 }
 
-/* ─ イベント委任 ─ */
 document.getElementById('songList').addEventListener('click', e => {
-  const startBtn = e.target.closest('.btn-song-start');
-  const gradBtn  = e.target.closest('.btn-grad');
-  const delBtn   = e.target.closest('.btn-del');
-
-  if (startBtn && !startBtn.disabled) {
-    const idx  = parseInt(startBtn.dataset.songIdx, 10);
-    const name = db.getSongs()[idx];
-    if (timerRunning && runningSong === name) {
-      stopTimer();
-    } else if (!timerRunning) {
-      startTimer(name, idx);
-    }
-  } else if (gradBtn) {
+  const startBtn=e.target.closest('.btn-song-start');
+  const gradBtn =e.target.closest('.btn-grad');
+  const delBtn  =e.target.closest('.btn-del');
+  if(startBtn&&!startBtn.disabled) {
+    const idx=parseInt(startBtn.dataset.songIdx,10);
+    const name=db.getSongs()[idx];
+    if(timerRunning&&runningSong===name) stopTimer();
+    else if(!timerRunning) startTimer(name,idx);
+  } else if(gradBtn) {
     e.stopPropagation();
-    if (timerRunning) { showToast('練習中は終了できません'); return; }
-    openGradModal(parseInt(gradBtn.dataset.grad, 10));
-  } else if (delBtn) {
-    e.stopPropagation();
-    deleteSong(parseInt(delBtn.dataset.del, 10));
+    if(timerRunning){showToast('練習中は終了できません');return;}
+    openGradModal(parseInt(gradBtn.dataset.grad,10));
+  } else if(delBtn) {
+    e.stopPropagation(); deleteSong(parseInt(delBtn.dataset.del,10));
   }
 });
-
 document.getElementById('btnAdd').addEventListener('click', addSong);
-document.getElementById('songInput').addEventListener('keydown', e => { if (e.key === 'Enter') addSong(); });
+document.getElementById('songInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addSong(); });
 
 /* =====================================================
-   TIMER  ── DOM直接操作でチャートを破壊しない
+   TIMER
 ===================================================== */
 function startTimer(songName, idx) {
-  runningSong  = songName;
-  timerStartAt = Date.now();
-  timerRunning = true;
-
-  // カードを running 状態に
-  const card = document.getElementById(`song-card-${idx}`);
-  const btn  = document.getElementById(`btn-song-${idx}`);
-  const disp = document.getElementById(`timer-display-${idx}`);
-  if (card) card.classList.add('running');
-  if (btn)  { btn.innerHTML = '<span class="pulse-dot"></span> 練習を終了する'; btn.classList.add('running'); }
-
-  // 他の曲ボタンを無効化
-  document.querySelectorAll('.btn-song-start').forEach((b, i) => {
-    if (i !== idx) b.disabled = true;
-  });
-
-  // タイマー tick
-  timerTick = setInterval(() => {
-    const el = document.getElementById(`timer-display-${idx}`);
-    if (el) el.textContent = formatTime(Math.floor((Date.now() - timerStartAt) / 1000));
-  }, 500);
-
+  runningSong=songName; timerStartAt=Date.now(); timerRunning=true;
+  const card=document.getElementById(`song-card-${idx}`);
+  const btn =document.getElementById(`btn-song-${idx}`);
+  const disp=document.getElementById(`timer-display-${idx}`);
+  if(card) card.classList.add('running');
+  if(btn)  { btn.innerHTML='<span class="pulse-dot"></span> 練習を終了する'; btn.classList.add('running'); }
+  document.querySelectorAll('.btn-song-start').forEach((b,i)=>{ if(i!==idx) b.disabled=true; });
+  timerTick=setInterval(()=>{
+    const el=document.getElementById(`timer-display-${idx}`);
+    if(el) el.textContent=formatTime(Math.floor((Date.now()-timerStartAt)/1000));
+  },500);
   requestWakeLock();
 }
 
 function stopTimer() {
-  clearInterval(timerTick);
-  timerRunning = false;
-
-  const elapsed  = Math.floor((Date.now() - timerStartAt) / 1000);
-  const songName = runningSong;
-  const songs    = db.getSongs();
-  const idx      = songs.indexOf(songName);
-
-  // カードをリセット
-  const card = document.getElementById(`song-card-${idx}`);
-  const btn  = document.getElementById(`btn-song-${idx}`);
-  const disp = document.getElementById(`timer-display-${idx}`);
-  if (card) card.classList.remove('running');
-  if (btn)  { btn.innerHTML = '練習を開始する'; btn.classList.remove('running'); btn.disabled = false; }
-  if (disp) disp.textContent = '00:00:00';
-
-  // 全ボタンを再有効化
-  document.querySelectorAll('.btn-song-start').forEach(b => b.disabled = false);
-
+  clearInterval(timerTick); timerRunning=false;
+  const elapsed=Math.floor((Date.now()-timerStartAt)/1000);
+  const songName=runningSong;
+  const idx=db.getSongs().indexOf(songName);
+  const card=document.getElementById(`song-card-${idx}`);
+  const btn =document.getElementById(`btn-song-${idx}`);
+  const disp=document.getElementById(`timer-display-${idx}`);
+  if(card) card.classList.remove('running');
+  if(btn)  { btn.innerHTML='練習を開始する'; btn.classList.remove('running'); btn.disabled=false; }
+  if(disp) disp.textContent='00:00:00';
+  document.querySelectorAll('.btn-song-start').forEach(b=>b.disabled=false);
   releaseWakeLock();
+  const mins=db.addSession(songName,elapsed);
+  if(mins){ showToast(`${mins}分を記録しました！`); renderStats(); renderChart(); }
+  else     showToast('30秒未満は記録されません');
+}
 
-  const mins = db.addSession(songName, elapsed);
-  if (mins) {
-    showToast(`${mins}分を記録しました！`);
-    renderStats();
-    // その曲のグラフだけ更新（他は触らない）
-    if (idx >= 0) {
-      const canvas = document.getElementById(`song-canvas-${idx}`);
-      if (canvas) {
-        if (activeSongCharts[songName]) { activeSongCharts[songName].destroy(); delete activeSongCharts[songName]; }
-        activeSongCharts[songName] = new Chart(canvas.getContext('2d'), buildChartConfig(songName, last7Days()));
+let wakeLock=null;
+async function requestWakeLock(){ try{ if('wakeLock'in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch(_){} }
+function releaseWakeLock(){ wakeLock?.release().catch(()=>{}); wakeLock=null; }
+document.addEventListener('visibilitychange',async()=>{ if(timerRunning&&document.visibilityState==='visible') requestWakeLock(); });
+
+/* =====================================================
+   STACKED BAR CHART（全曲まとめて・凡例付き）
+===================================================== */
+function renderChart() {
+  const days     = last7Days();
+  const sessions = db.getSessions();
+  const songs    = db.getSongs();
+  const archived = db.getArchive().map(a=>a.name);
+  const archivedSet = new Set(archived);
+
+  // 直近7日に練習記録のある全曲（アクティブ + アーカイブ）
+  const inRange   = sessions.filter(s=>days.includes(s.date));
+  const seenNames = [...new Set(inRange.map(s=>s.songName))];
+  // 表示順：登録曲→アーカイブ曲→その他
+  const ordered = [
+    ...songs.filter(n=>seenNames.includes(n)),
+    ...archived.filter(n=>seenNames.includes(n)&&!songs.includes(n)),
+    ...seenNames.filter(n=>!songs.includes(n)&&!archivedSet.has(n)),
+  ];
+
+  const canvas = document.getElementById('mainChart');
+  const legend = document.getElementById('chartLegend');
+  const ctx    = canvas.getContext('2d');
+  if(chartInstance){ chartInstance.destroy(); chartInstance=null; }
+
+  if(!ordered.length) {
+    canvas.style.display='none';
+    legend.innerHTML='<p class="chart-empty">まだ練習記録がありません</p>';
+    return;
+  }
+  canvas.style.display='';
+
+  const labels   = days.map(dayLabel);
+  const datasets = ordered.map(name=>{
+    const c=songColor(name);
+    return {
+      label: name,
+      data: days.map(d=>inRange.filter(s=>s.songName===name&&s.date===d).reduce((t,s)=>t+s.duration,0)),
+      backgroundColor: c.bg, borderColor: c.bd,
+      borderWidth:0, borderRadius:4, borderSkipped:false,
+    };
+  });
+
+  chartInstance = new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:{duration:400},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1a1a1a', borderColor:'#3a3a3a', borderWidth:1,
+          titleColor:'#f5f2e8', bodyColor:'#f0d080',
+          titleFont:{size:14,weight:'700'}, bodyFont:{size:14,weight:'700'}, padding:12,
+          callbacks:{
+            title: items=>items[0].label,
+            label: item=>` ${item.dataset.label}：${item.parsed.y}分`,
+          }
+        }
+      },
+      scales:{
+        x:{
+          stacked:true,
+          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
+          ticks:{color:'#b0ada0',font:{size:12,family:'-apple-system,sans-serif',weight:'700'},maxRotation:0}
+        },
+        y:{
+          stacked:true, beginAtZero:true,
+          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
+          ticks:{color:'#b0ada0',font:{size:12,family:'-apple-system,sans-serif',weight:'700'},
+                 stepSize:10, callback:v=>v+'分'}
+        }
       }
     }
-  } else {
-    showToast('30秒未満は記録されません');
-  }
-}
+  });
 
-let wakeLock = null;
-async function requestWakeLock() {
-  try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {}
+  // カスタム凡例（ハッキリ大きく）
+  legend.innerHTML = ordered.map(name=>{
+    const c      = songColor(name);
+    const total7 = inRange.filter(s=>s.songName===name).reduce((t,s)=>t+s.duration,0);
+    const isArc  = archivedSet.has(name);
+    return `
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:${c.bg};border:1.5px solid ${c.bd};"></div>
+        <div class="legend-text">
+          <span class="legend-name">${esc(name)}</span>
+          ${isArc?'<span class="legend-arc">🎓</span>':''}
+          ${total7>0?`<span class="legend-mins">${total7}分</span>`:''}
+        </div>
+      </div>`;
+  }).join('');
 }
-function releaseWakeLock() { wakeLock?.release().catch(()=>{}); wakeLock = null; }
-document.addEventListener('visibilitychange', async () => {
-  if (timerRunning && document.visibilityState === 'visible') requestWakeLock();
-});
 
 /* =====================================================
    STATISTICS
 ===================================================== */
 function getRange(tab) {
-  const t = todayStr();
-  if (tab === 'today') return [t, t];
-  if (tab === 'week')  return [getWeekStart(), t];
-  if (tab === 'month') return [getMonthStart(), t];
+  const t=todayStr();
+  if(tab==='today') return [t,t];
+  if(tab==='week')  return [getWeekStart(),t];
+  if(tab==='month') return [getMonthStart(),t];
 }
 function renderStats() {
-  const [start, end] = getRange(currentTab);
-  const sessions = db.getSessions();
-  const songs    = db.getSongs();
-  const totals   = {};
-  sessions.forEach(s => {
-    if (s.date >= start && s.date <= end)
-      totals[s.songName] = (totals[s.songName] || 0) + s.duration;
-  });
-  const extra  = Object.keys(totals).filter(n => !songs.includes(n));
-  const active = [...songs, ...extra].filter(n => totals[n]);
-  const list   = document.getElementById('statsList');
-  const totEl  = document.getElementById('statsTotal');
-  const totV   = document.getElementById('statsTotalVal');
-  if (!active.length) {
-    list.innerHTML = '<p class="empty-msg">この期間の練習記録はありません</p>';
-    totEl.style.display = 'none'; return;
-  }
-  const rows = active.map(n => ({name:n, mins:totals[n]})).sort((a,b) => b.mins - a.mins);
-  list.innerHTML = rows.map(r => `
-    <div class="stat-row">
-      <span class="stat-song">${esc(r.name)}</span>
-      <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
-    </div>`).join('');
-  totV.textContent = rows.reduce((t,r) => t + r.mins, 0);
-  totEl.style.display = 'flex';
+  const [start,end]=getRange(currentTab);
+  const sessions=db.getSessions(), songs=db.getSongs(), totals={};
+  sessions.forEach(s=>{ if(s.date>=start&&s.date<=end) totals[s.songName]=(totals[s.songName]||0)+s.duration; });
+  const extra=Object.keys(totals).filter(n=>!songs.includes(n));
+  const active=[...songs,...extra].filter(n=>totals[n]);
+  const list=document.getElementById('statsList');
+  const totEl=document.getElementById('statsTotal');
+  const totV=document.getElementById('statsTotalVal');
+  if(!active.length){ list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display='none'; return; }
+  const rows=active.map(n=>({name:n,mins:totals[n]})).sort((a,b)=>b.mins-a.mins);
+  list.innerHTML=rows.map(r=>`<div class="stat-row"><span class="stat-song">${esc(r.name)}</span><span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span></div>`).join('');
+  totV.textContent=rows.reduce((t,r)=>t+r.mins,0);
+  totEl.style.display='flex';
 }
-document.querySelectorAll('.tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentTab = btn.dataset.tab;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    renderStats();
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    currentTab=btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active'); renderStats();
   });
 });
 
@@ -812,55 +671,50 @@ document.querySelectorAll('.tab').forEach(btn => {
    GRADUATION MODAL
 ===================================================== */
 function openGradModal(idx) {
-  const name = db.getSongs()[idx];
-  if (!name) return;
-  pendingGrad = name;
-  document.getElementById('modalSongName').textContent = name;
-  document.getElementById('modalDate').value = todayStr();
-  document.getElementById('modalMemo').value = '';
+  const name=db.getSongs()[idx]; if(!name) return;
+  pendingGrad=name;
+  document.getElementById('modalSongName').textContent=name;
+  document.getElementById('modalDate').value=todayStr();
+  document.getElementById('modalMemo').value='';
   document.getElementById('gradModal').classList.add('show');
-  setTimeout(() => document.getElementById('modalDate').focus(), 100);
+  setTimeout(()=>document.getElementById('modalDate').focus(),100);
 }
-function closeGradModal() {
-  document.getElementById('gradModal').classList.remove('show');
-  pendingGrad = null;
-}
+function closeGradModal(){ document.getElementById('gradModal').classList.remove('show'); pendingGrad=null; }
 function confirmGrad() {
-  if (!pendingGrad) return;
-  const date = document.getElementById('modalDate').value || todayStr();
-  const memo = document.getElementById('modalMemo').value.trim();
-  const archive = db.getArchive();
-  archive.unshift({ id: Date.now(), name: pendingGrad, archivedDate: date, memo });
+  if(!pendingGrad) return;
+  const date=document.getElementById('modalDate').value||todayStr();
+  const memo=document.getElementById('modalMemo').value.trim();
+  const archive=db.getArchive();
+  archive.unshift({id:Date.now(),name:pendingGrad,archivedDate:date,memo});
   db.saveArchive(archive);
-  db.saveSongs(db.getSongs().filter(n => n !== pendingGrad));
+  db.saveSongs(db.getSongs().filter(n=>n!==pendingGrad));
   closeGradModal();
-  renderSongs(); renderStats(); renderArchive();
+  renderSongs(); renderStats(); renderArchive(); renderChart();
   showToast(`「${pendingGrad}」を練習終了しました 🎓`);
 }
-document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
-document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
-document.getElementById('gradModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGradModal(); });
+document.getElementById('btnModalOk').addEventListener('click',confirmGrad);
+document.getElementById('btnModalCancel').addEventListener('click',closeGradModal);
+document.getElementById('gradModal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeGradModal(); });
 
 /* =====================================================
    ARCHIVE
 ===================================================== */
 function renderArchive() {
-  const archive = db.getArchive();
-  const card    = document.getElementById('archiveCard');
-  const list    = document.getElementById('archiveList');
-  if (!archive.length) { card.style.display = 'none'; destroyArchiveSongCharts(); return; }
-  card.style.display = 'block';
-  document.getElementById('archiveCount').textContent = archive.length;
+  const archive=db.getArchive();
+  const card=document.getElementById('archiveCard');
+  const list=document.getElementById('archiveList');
+  if(!archive.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  document.getElementById('archiveCount').textContent=archive.length;
 
-  list.innerHTML = archive.map(item => {
-    const total = totalMinsForSong(item.name);
-    const color = songColor(item.name);
+  list.innerHTML=archive.map(item=>{
+    const total=totalMinsForSong(item.name);
     return `
     <div class="archive-card">
       <div class="archive-card-header">
         <span class="archive-icon">🎓</span>
         <span class="archive-name">${esc(item.name)}</span>
-        ${total > 0 ? `<span class="archive-stats-badge">累計 ${total}分</span>` : ''}
+        ${total>0?`<span class="archive-stats-badge">累計 ${total}分</span>`:''}
       </div>
       <div class="archive-body">
         <div class="archive-date-row">
@@ -870,37 +724,28 @@ function renderArchive() {
         <div class="archive-memo-label">感想・メモ</div>
         <textarea class="archive-memo" rows="3" placeholder="感想や思い出を入力…" data-aid="${item.id}" data-field="memo">${esc(item.memo||'')}</textarea>
         <div class="archive-actions">
-          <button class="btn-memo-save"    data-aid="${item.id}">保存する</button>
-          <button class="btn-archive-del"  data-adel="${item.id}">削除</button>
-        </div>
-        <div class="archive-chart-section">
-          <div class="archive-chart-label" style="color:${color.bd}">▎ 終了日前後7日間の練習推移</div>
-          <div class="archive-chart-wrap">
-            <canvas id="archive-canvas-${item.id}"></canvas>
-          </div>
+          <button class="btn-memo-save"   data-aid="${item.id}">保存する</button>
+          <button class="btn-archive-del" data-adel="${item.id}">削除</button>
         </div>
       </div>
     </div>`;
   }).join('');
-
-  renderArchiveSongCharts(archive);
 }
 
-document.getElementById('archiveList').addEventListener('click', e => {
-  const saveBtn = e.target.closest('.btn-memo-save');
-  const delBtn  = e.target.closest('.btn-archive-del');
-  if (saveBtn) {
-    const id   = parseInt(saveBtn.dataset.aid, 10);
-    const arc  = saveBtn.closest('.archive-card');
-    const date = arc.querySelector('[data-field="date"]').value;
-    const memo = arc.querySelector('[data-field="memo"]').value.trim();
-    const archive = db.getArchive();
-    const item = archive.find(a => a.id === id);
-    if (item) { item.archivedDate = date; item.memo = memo; db.saveArchive(archive); renderArchive(); showToast('メモを保存しました ✓'); }
-  } else if (delBtn) {
-    const id = parseInt(delBtn.dataset.adel, 10);
-    db.saveArchive(db.getArchive().filter(a => a.id !== id));
-    renderArchive(); showToast('アーカイブから削除しました');
+document.getElementById('archiveList').addEventListener('click',e=>{
+  const saveBtn=e.target.closest('.btn-memo-save');
+  const delBtn =e.target.closest('.btn-archive-del');
+  if(saveBtn){
+    const id=parseInt(saveBtn.dataset.aid,10);
+    const arc=saveBtn.closest('.archive-card');
+    const date=arc.querySelector('[data-field="date"]').value;
+    const memo=arc.querySelector('[data-field="memo"]').value.trim();
+    const archive=db.getArchive(); const item=archive.find(a=>a.id===id);
+    if(item){ item.archivedDate=date; item.memo=memo; db.saveArchive(archive); renderArchive(); showToast('メモを保存しました ✓'); }
+  } else if(delBtn){
+    const id=parseInt(delBtn.dataset.adel,10);
+    db.saveArchive(db.getArchive().filter(a=>a.id!==id));
+    renderArchive(); renderChart(); showToast('アーカイブから削除しました');
   }
 });
 
@@ -908,12 +753,12 @@ document.getElementById('archiveList').addEventListener('click', e => {
    PWA
 ===================================================== */
 (function(){
-  const m = { name:'ピアノ練習記録', short_name:'ピアノ練習', start_url:'.', display:'standalone', background_color:'#0a0a0a', theme_color:'#0a0a0a', orientation:'portrait-primary',
+  const m={name:'ピアノ練習記録',short_name:'ピアノ練習',start_url:'.',display:'standalone',background_color:'#0a0a0a',theme_color:'#0a0a0a',orientation:'portrait-primary',
     icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
-  try { const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'}); const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(b); document.head.appendChild(l); } catch(_){}
+  try{const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'});const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);document.head.appendChild(l);}catch(_){}
 })();
 if('serviceWorker'in navigator){
-  const sw=`const C='piano-sw-v3';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
+  const sw=`const C='piano-sw-v4';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
   try{navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{});}catch(_){}
 }
 
@@ -921,6 +766,7 @@ if('serviceWorker'in navigator){
    INIT
 ===================================================== */
 renderSongs();
+renderChart();
 renderStats();
 renderArchive();
 </script>

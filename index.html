@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ピアノ練習">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>ピアノ練習記録</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:        #0a0a0a;
+      --bg-card:   #141414;
+      --bg-card2:  #1c1c1c;
+      --bg-input:  #111111;
+      --gold:      #c9a84c;
+      --gold-lt:   #e4c97e;
+      --gold-dim:  rgba(201,168,76,0.15);
+      --ivory:     #f0ede0;
+      --ivory-dim: #a8a59a;
+      --text:      #e0ddd0;
+      --text-dim:  #666660;
+      --border:    #252525;
+      --border-lt: #333;
+      --danger:    #b03030;
+      --running:   #a02828;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: linear-gradient(180deg, #1a1a18 0%, #0a0a0a 100%);
+      border-bottom: 1px solid #2a2a20;
+      padding: 20px 16px 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.8);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: normal;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .header p {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 3px;
+      margin: 4px 0 0;
+      font-family: sans-serif;
+      text-transform: uppercase;
+    }
+
+    /* SVG piano strip */
+    .piano-svg {
+      display: block;
+      width: 100%;
+      max-width: 420px;
+      margin: 12px auto 0;
+    }
+
+    /* ─── LAYOUT ─── */
+    .container {
+      max-width: 580px;
+      margin: 0 auto;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+    }
+
+    .card-title {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-family: sans-serif;
+      margin-bottom: 14px;
+    }
+
+    /* ─── SONG SECTION ─── */
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .song-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-lt);
+      border-radius: 10px;
+      color: var(--ivory);
+      font-size: 16px;
+      padding: 13px 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      min-width: 0;
+    }
+    .song-input::placeholder { color: var(--text-dim); }
+    .song-input:focus { border-color: var(--gold); }
+
+    .btn-add {
+      background: var(--gold);
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+      width: 50px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-add:active { background: var(--gold-lt); }
+
+    .song-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .song-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .song-item.selected {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+    }
+
+    .radio-dot {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border-lt);
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .song-item.selected .radio-dot {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+    .radio-dot::after {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #000;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .song-item.selected .radio-dot::after { opacity: 1; }
+
+    .song-name {
+      flex: 1;
+      font-size: 16px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .song-item.selected .song-name { color: var(--gold-lt); }
+
+    .btn-del {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 16px;
+      padding: 4px 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      border-radius: 6px;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .btn-del:active { color: var(--danger); background: rgba(176,48,48,0.1); }
+
+    .empty-msg {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-family: sans-serif;
+      padding: 16px 0 4px;
+    }
+
+    /* ─── TIMER SECTION ─── */
+    .timer-display {
+      text-align: center;
+      padding: 8px 0 20px;
+    }
+
+    .timer-time {
+      font-size: 68px;
+      font-weight: normal;
+      color: var(--ivory);
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    .timer-time.running {
+      color: var(--gold-lt);
+      text-shadow: 0 0 40px rgba(201,168,76,0.4);
+    }
+
+    .timer-song-label {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-family: sans-serif;
+      min-height: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+
+    .btn-start {
+      width: 100%;
+      background: linear-gradient(135deg, #b89038 0%, #c9a84c 50%, #b89038 100%);
+      border: none;
+      border-radius: 12px;
+      color: #0a0a0a;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 0 20px;
+      height: 62px;
+      cursor: pointer;
+      font-family: sans-serif;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-start::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .btn-start:active::before { opacity: 1; }
+    .btn-start:active { transform: scale(0.98); }
+
+    .btn-start.running {
+      background: linear-gradient(135deg, #8a2020 0%, #c03030 50%, #8a2020 100%);
+      color: #fff;
+    }
+    .btn-start:disabled {
+      background: var(--bg-card2);
+      color: var(--text-dim);
+      cursor: not-allowed;
+      border: 1px solid var(--border);
+    }
+
+    /* pulse ring when running */
+    .timer-ring {
+      display: none;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+      margin-right: 8px;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .btn-start:not(.running) .timer-ring { display: none; }
+    .btn-start.running .timer-ring {
+      display: inline-block;
+      background: #ff6666;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    /* ─── STATS ─── */
+    .tabs {
+      display: flex;
+      background: var(--bg-input);
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 14px;
+      padding: 10px 6px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: sans-serif;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+    .tab.active {
+      background: var(--bg-card2);
+      color: var(--gold);
+      border: 1px solid var(--border-lt);
+    }
+
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 14px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .stat-song {
+      font-size: 15px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      padding-right: 12px;
+    }
+    .stat-mins {
+      font-size: 22px;
+      color: var(--gold-lt);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+    .stat-unit {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: sans-serif;
+      margin-left: 3px;
+    }
+
+    .stats-total {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      gap: 4px;
+      padding: 10px 4px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 10px;
+    }
+    .stats-total-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: sans-serif;
+      letter-spacing: 1px;
+    }
+    .stats-total-val {
+      font-size: 18px;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── CHART ─── */
+    .chart-wrap {
+      position: relative;
+      height: 210px;
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--gold);
+      color: #0a0a0a;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      z-index: 999;
+      transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-lt); border-radius: 2px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 380px) {
+      .timer-time { font-size: 56px; }
+      .btn-start  { height: 58px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <h1>Piano Practice</h1>
+  <p>ピアノ練習記録</p>
+  <!-- Decorative piano keyboard strip (2 octaves) -->
+  <svg class="piano-svg" viewBox="0 0 416 38" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- White keys octave 1 -->
+    <rect x="0"   y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="29"  y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="58"  y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="87"  y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="116" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="145" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="174" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <!-- White keys octave 2 -->
+    <rect x="204" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="233" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="262" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="291" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="320" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="349" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <rect x="378" y="0" width="27" height="38" rx="2" fill="#ede9d8" stroke="#555" stroke-width="0.5"/>
+    <!-- Black keys oct 1: C# D# F# G# A# -->
+    <rect x="19"  y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="48"  y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="106" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="135" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="164" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <!-- Black keys oct 2 -->
+    <rect x="223" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="252" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="310" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="339" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <rect x="368" y="0" width="17" height="24" rx="2" fill="#181818"/>
+    <!-- Gold shimmer overlay -->
+    <rect x="0" y="0" width="416" height="38" fill="url(#shimmer)" opacity="0.18"/>
+    <defs>
+      <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#c9a84c" stop-opacity="0"/>
+        <stop offset="50%"  stop-color="#c9a84c" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</header>
+
+<div class="container">
+
+  <!-- ① 曲の選択 -->
+  <div class="card">
+    <div class="card-title">♩ 曲の選択</div>
+    <div class="add-row">
+      <input type="text" id="songInput" class="song-input"
+             placeholder="曲名を入力..." maxlength="60"
+             autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="btn-add" id="btnAdd" aria-label="曲を追加">＋</button>
+    </div>
+    <div class="song-list" id="songList">
+      <p class="empty-msg">曲を追加してください</p>
+    </div>
+  </div>
+
+  <!-- ② タイマー -->
+  <div class="card">
+    <div class="card-title">♩ タイマー</div>
+    <div class="timer-display">
+      <div class="timer-time" id="timerDisplay">00:00:00</div>
+      <div class="timer-song-label" id="timerSongLabel"></div>
+    </div>
+    <button class="btn-start" id="btnStart" disabled>
+      <span class="timer-ring" id="timerRing"></span>
+      <span id="btnLabel">練習を開始する</span>
+    </button>
+  </div>
+
+  <!-- ③ 練習時間の集計 -->
+  <div class="card">
+    <div class="card-title">♩ 練習時間</div>
+    <div class="tabs">
+      <button class="tab active" data-tab="today">今日</button>
+      <button class="tab"        data-tab="week" >今週</button>
+      <button class="tab"        data-tab="month">今月</button>
+    </div>
+    <div class="stats-list" id="statsList"></div>
+    <div class="stats-total" id="statsTotal" style="display:none">
+      <span class="stats-total-label">合計</span>
+      <span class="stats-total-val" id="statsTotalVal">0</span>
+      <span class="stats-total-label">分</span>
+    </div>
+  </div>
+
+  <!-- ④ 直近7日グラフ -->
+  <div class="card">
+    <div class="card-title">♩ 直近7日間の練習推移</div>
+    <div class="chart-wrap">
+      <canvas id="practiceChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   DATA LAYER  (localStorage)
+===================================================== */
+const SONGS_KEY    = 'piano_songs_v1';
+const SESSIONS_KEY = 'piano_sessions_v1';
+
+const db = {
+  getSongs:    () => JSON.parse(localStorage.getItem(SONGS_KEY)    || '[]'),
+  getSessions: () => JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]'),
+  saveSongs(s)    { localStorage.setItem(SONGS_KEY,    JSON.stringify(s)); },
+  saveSessions(s) { localStorage.setItem(SESSIONS_KEY, JSON.stringify(s)); },
+  addSession(songName, totalSeconds) {
+    const mins = Math.ceil(totalSeconds / 60);
+    if (mins < 1) return false;
+    const sessions = this.getSessions();
+    sessions.push({ id: Date.now(), songName, date: todayStr(), duration: mins });
+    this.saveSessions(sessions);
+    return mins;
+  }
+};
+
+/* =====================================================
+   HELPERS
+===================================================== */
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function daysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function getWeekStart() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun
+  const diff = (day === 0) ? 6 : day - 1; // Monday start
+  d.setDate(d.getDate() - diff);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function getMonthStart() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`;
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+let toastTid;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTid);
+  toastTid = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* =====================================================
+   STATE
+===================================================== */
+let selectedSong  = null;
+let timerRunning  = false;
+let timerStartAt  = 0;   // Date.now() snapshot
+let timerTick     = null;
+let currentTab    = 'today';
+let chartInstance = null;
+
+/* =====================================================
+   SONG MANAGEMENT
+===================================================== */
+function renderSongs() {
+  const songs = db.getSongs();
+  const el    = document.getElementById('songList');
+  if (songs.length === 0) {
+    el.innerHTML = '<p class="empty-msg">曲を追加してください</p>';
+    return;
+  }
+  el.innerHTML = songs.map((name, i) => `
+    <div class="song-item${selectedSong === name ? ' selected' : ''}"
+         data-idx="${i}" role="button" tabindex="0"
+         aria-label="${esc(name)}${selectedSong === name ? '（選択中）' : ''}">
+      <div class="radio-dot"></div>
+      <span class="song-name">${esc(name)}</span>
+      <button class="btn-del" data-del="${i}" aria-label="削除">✕</button>
+    </div>
+  `).join('');
+}
+
+function addSong() {
+  const input = document.getElementById('songInput');
+  const name  = input.value.trim();
+  if (!name) { input.focus(); return; }
+  const songs = db.getSongs();
+  if (songs.includes(name)) { showToast('同じ曲名が既にあります'); return; }
+  songs.push(name);
+  db.saveSongs(songs);
+  input.value = '';
+  renderSongs();
+  showToast(`「${name}」を追加しました`);
+}
+
+function deleteSong(idx) {
+  const songs = db.getSongs();
+  const name  = songs[idx];
+  if (!name) return;
+  if (timerRunning && selectedSong === name) {
+    showToast('練習中の曲は削除できません');
+    return;
+  }
+  if (selectedSong === name) {
+    selectedSong = null;
+    updateTimerControls();
+  }
+  songs.splice(idx, 1);
+  db.saveSongs(songs);
+  renderSongs();
+  renderStats();
+  showToast(`「${name}」を削除しました`);
+}
+
+function selectSong(idx) {
+  if (timerRunning) return;
+  const songs = db.getSongs();
+  const name  = songs[idx];
+  if (!name) return;
+  selectedSong = (selectedSong === name) ? null : name;
+  renderSongs();
+  updateTimerControls();
+}
+
+// Event delegation for song list
+document.getElementById('songList').addEventListener('click', e => {
+  const delBtn = e.target.closest('.btn-del');
+  const item   = e.target.closest('.song-item');
+  if (delBtn) {
+    e.stopPropagation();
+    deleteSong(parseInt(delBtn.dataset.del, 10));
+  } else if (item) {
+    selectSong(parseInt(item.dataset.idx, 10));
+  }
+});
+
+document.getElementById('btnAdd').addEventListener('click', addSong);
+document.getElementById('songInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addSong();
+});
+
+/* =====================================================
+   TIMER
+===================================================== */
+function updateTimerControls() {
+  const btn      = document.getElementById('btnStart');
+  const label    = document.getElementById('btnLabel');
+  const ring     = document.getElementById('timerRing');
+  const songLbl  = document.getElementById('timerSongLabel');
+  const display  = document.getElementById('timerDisplay');
+
+  btn.disabled = (!timerRunning && !selectedSong);
+
+  if (timerRunning) {
+    btn.classList.add('running');
+    label.textContent   = '練習を終了する';
+    ring.style.display  = 'inline-block';
+    display.classList.add('running');
+    songLbl.textContent = selectedSong || '';
+  } else {
+    btn.classList.remove('running');
+    label.textContent   = '練習を開始する';
+    ring.style.display  = 'none';
+    display.classList.remove('running');
+    songLbl.textContent = selectedSong ? `— ${selectedSong} —` : '';
+  }
+}
+
+function formatTime(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function startTimer() {
+  if (!selectedSong) return;
+  timerStartAt  = Date.now();
+  timerRunning  = true;
+  timerTick = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
+    document.getElementById('timerDisplay').textContent = formatTime(elapsed);
+  }, 500);
+  updateTimerControls();
+  requestWakeLock();
+}
+
+function stopTimer() {
+  clearInterval(timerTick);
+  timerRunning = false;
+
+  const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
+  const mins    = db.addSession(selectedSong, elapsed);
+
+  document.getElementById('timerDisplay').textContent = '00:00:00';
+  releaseWakeLock();
+
+  if (mins) {
+    showToast(`${mins}分を記録しました！`);
+    renderStats();
+    renderChart();
+  } else {
+    showToast('30秒未満は記録されません');
+  }
+  updateTimerControls();
+}
+
+document.getElementById('btnStart').addEventListener('click', () => {
+  if (timerRunning) stopTimer(); else startTimer();
+});
+
+/* Wake Lock (keeps screen on while practicing) */
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator)
+      wakeLock = await navigator.wakeLock.request('screen');
+  } catch(_) {}
+}
+function releaseWakeLock() {
+  wakeLock?.release().catch(() => {});
+  wakeLock = null;
+}
+// Re-acquire on visibility change
+document.addEventListener('visibilitychange', async () => {
+  if (timerRunning && document.visibilityState === 'visible') requestWakeLock();
+});
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+function getRange(tab) {
+  const today = todayStr();
+  if (tab === 'today') return [today, today];
+  if (tab === 'week')  return [getWeekStart(), today];
+  if (tab === 'month') return [getMonthStart(), today];
+}
+
+function renderStats() {
+  const [start, end] = getRange(currentTab);
+  const sessions     = db.getSessions();
+  const songs        = db.getSongs();
+
+  const totals = {};
+  sessions.forEach(s => {
+    if (s.date >= start && s.date <= end)
+      totals[s.songName] = (totals[s.songName] || 0) + s.duration;
+  });
+
+  // Registered songs + any deleted songs that still have data in range
+  const extra   = Object.keys(totals).filter(n => !songs.includes(n));
+  const all     = [...songs, ...extra];
+  const active  = all.filter(n => totals[n]);
+
+  const list    = document.getElementById('statsList');
+  const totalEl = document.getElementById('statsTotal');
+  const totalV  = document.getElementById('statsTotalVal');
+
+  if (active.length === 0) {
+    list.innerHTML = '<p class="empty-msg">この期間の練習記録はありません</p>';
+    totalEl.style.display = 'none';
+    return;
+  }
+
+  // Sort by duration desc
+  const rows = active.map(n => ({ name: n, mins: totals[n] }))
+                     .sort((a,b) => b.mins - a.mins);
+
+  list.innerHTML = rows.map(r => `
+    <div class="stat-row">
+      <span class="stat-song">${esc(r.name)}</span>
+      <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
+    </div>
+  `).join('');
+
+  const total = rows.reduce((s,r) => s + r.mins, 0);
+  totalV.textContent     = total;
+  totalEl.style.display  = 'flex';
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentTab = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderStats();
+  });
+});
+
+/* =====================================================
+   CHART  (last 7 days, stacked by song)
+===================================================== */
+const PALETTE = [
+  'rgba(201,168,76,0.85)',
+  'rgba(100,165,220,0.85)',
+  'rgba(170,100,100,0.85)',
+  'rgba(90,175,115,0.85)',
+  'rgba(200,125,65,0.85)',
+  'rgba(145,100,195,0.85)',
+  'rgba(75,180,175,0.85)',
+  'rgba(215,175,80,0.85)',
+];
+
+function last7Days() {
+  return Array.from({length:7}, (_,i) => daysAgo(6-i));
+}
+
+function dayLabel(d) {
+  // d = 'YYYY-MM-DD'
+  const dt   = new Date(d + 'T12:00:00');
+  const days = ['日','月','火','水','木','金','土'];
+  return `${dt.getMonth()+1}/${dt.getDate()}(${days[dt.getDay()]})`;
+}
+
+function renderChart() {
+  const days     = last7Days();
+  const sessions = db.getSessions();
+  const songs    = db.getSongs();
+
+  // Gather songs active in last 7 days
+  const inRange   = sessions.filter(s => days.includes(s.date));
+  const seenSongs = [...new Set(inRange.map(s => s.songName))];
+  const ordered   = [
+    ...songs.filter(n => seenSongs.includes(n)),
+    ...seenSongs.filter(n => !songs.includes(n))
+  ];
+
+  const labels   = days.map(dayLabel);
+  const datasets = ordered.length
+    ? ordered.map((song, i) => ({
+        label: song,
+        data: days.map(d =>
+          inRange.filter(s => s.songName === song && s.date === d)
+                 .reduce((sum,s) => sum + s.duration, 0)
+        ),
+        backgroundColor: PALETTE[i % PALETTE.length],
+        borderRadius: 3,
+        borderSkipped: false,
+      }))
+    : [{
+        label: 'データなし',
+        data: Array(7).fill(0),
+        backgroundColor: 'rgba(60,60,60,0.5)',
+        borderRadius: 3,
+      }];
+
+  const ctx = document.getElementById('practiceChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#a0a098',
+            font: { size: 11, family: 'sans-serif' },
+            boxWidth: 10, boxHeight: 10,
+            padding: 10,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1c1c1c',
+          borderColor: '#333',
+          borderWidth: 1,
+          titleColor: '#e0ddd0',
+          bodyColor: '#c9a84c',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}：${ctx.parsed.y}分`
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid:   { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.08)' },
+          ticks:  { color: '#706d62', font: { size: 10, family: 'sans-serif' }, maxRotation: 0 }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          grid:   { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.08)' },
+          ticks:  {
+            color: '#706d62',
+            font: { size: 10, family: 'sans-serif' },
+            stepSize: 10,
+            callback: v => v + '分'
+          }
+        }
+      }
+    }
+  });
+}
+
+/* =====================================================
+   PWA SETUP
+===================================================== */
+// Inline manifest via blob
+(function setupManifest() {
+  const m = {
+    name: 'ピアノ練習記録',
+    short_name: 'ピアノ練習',
+    description: 'ピアノ練習時間を曲ごとに記録するアプリ',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#0a0a0a',
+    theme_color: '#0a0a0a',
+    orientation: 'portrait-primary',
+    icons: [{
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
+      sizes: '512x512',
+      type: 'image/svg+xml',
+      purpose: 'any maskable'
+    }]
+  };
+  try {
+    const blob = new Blob([JSON.stringify(m)], {type:'application/manifest+json'});
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel   = 'manifest';
+    link.href  = url;
+    document.head.appendChild(link);
+  } catch(_) {}
+})();
+
+// Service Worker via blob (works when served over HTTP/HTTPS)
+if ('serviceWorker' in navigator) {
+  const sw = `
+const CACHE='piano-sw-v1';
+self.addEventListener('install',e=>{ self.skipWaiting(); });
+self.addEventListener('activate',e=>{ e.waitUntil(clients.claim()); });
+self.addEventListener('fetch',e=>{
+  e.respondWith(
+    caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
+      const c=res.clone();
+      caches.open(CACHE).then(ca=>ca.put(e.request,c));
+      return res;
+    }).catch(()=>caches.match(e.request)))
+  );
+});`;
+  try {
+    const blob = new Blob([sw], {type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob), {scope:'./'}).catch(()=>{});
+  } catch(_) {}
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+renderSongs();
+renderStats();
+renderChart();
+updateTimerControls();
+</script>
+</body>
+</html>

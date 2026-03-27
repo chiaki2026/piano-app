@@ -54,7 +54,7 @@
 
     /* ── CARD ── */
     .card { background: var(--bg-card); border: 1px solid var(--bdr-lt); border-radius: 16px; padding: 20px 18px; }
-    .card-title { font-size: 16px; font-weight: 700; letter-spacing: 3px; color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px; }
+    .card-title { font-size: 22px; font-weight: 700; letter-spacing: 3px; color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px; }
 
     /* ── 曲追加行 ── */
     .add-row { display: flex; gap: 8px; margin-bottom: 14px; }
@@ -180,9 +180,6 @@
     .stat-unit { font-size: 18px; font-weight: 600; color: var(--text-dim); margin-left: 4px; }
     .btn-stat-del { background: none; border: none; color: var(--text-dim); font-size: 22px; padding: 6px 4px 6px 10px; cursor: pointer; flex-shrink: 0; border-radius: 8px; transition: all 0.15s; }
     .btn-stat-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
-    .stats-total { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; padding: 14px 4px 0; border-top: 1px solid var(--border); margin-top: 12px; }
-    .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); }
-    .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
 
     /* ── TOAST ── */
     .toast { position: fixed; bottom: calc(28px + env(safe-area-inset-bottom,0px)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: #000; padding: 14px 28px; border-radius: 28px; font-size: 19px; font-weight: 800; letter-spacing: 1px; z-index: 999; transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275); white-space: nowrap; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7); }
@@ -273,11 +270,6 @@
       <button class="tab"        data-tab="total">総合計</button>
     </div>
     <div class="stats-list" id="statsList"></div>
-    <div class="stats-total" id="statsTotal" style="display:none">
-      <span class="stats-total-label">合計</span>
-      <span class="stats-total-val" id="statsTotalVal">0</span>
-      <span class="stats-total-label">分</span>
-    </div>
   </div>
 
 </div>
@@ -546,10 +538,8 @@ function renderStats() {
     .map(([name,mins]) => ({name,mins}))
     .sort((a,b) => b.mins - a.mins);
 
-  const list  = document.getElementById('statsList');
-  const totEl = document.getElementById('statsTotal');
-  const totV  = document.getElementById('statsTotalVal');
-  if (!rows.length) { list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display='none'; return; }
+  const list = document.getElementById('statsList');
+  if (!rows.length) { list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; return; }
 
   list.innerHTML = rows.map(r=>`
     <div class="stat-row">
@@ -557,8 +547,6 @@ function renderStats() {
       <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
       <button class="btn-stat-del" data-name="${esc(r.name)}" aria-label="記録を削除">✕</button>
     </div>`).join('');
-  totV.textContent = rows.reduce((t,r)=>t+r.mins,0);
-  totEl.style.display = 'flex';
 }
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {

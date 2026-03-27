@@ -27,6 +27,7 @@
       --grn:      #5ec080;
       --grn-dim:  rgba(94,192,128,0.15);
       --grn-bdr:  rgba(94,192,128,0.45);
+      --amber:    #e09030;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
@@ -72,31 +73,38 @@
     /* ── 曲リスト ── */
     .song-list { display: flex; flex-direction: column; gap: 12px; }
 
-    /* ── 曲カード（タイマー内蔵・グラフなし） ── */
-    .song-card { background: var(--bg-card2); border: 2px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; }
+    /* ── 曲カード ── */
+    .song-card {
+      background: var(--bg-card2); border: 2px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: border-color 0.25s;
+    }
     .song-card.running { border-color: var(--danger); }
+    .song-card.paused  { border-color: var(--gold); }
 
     /* 曲名行 */
-    .song-name-row { display: flex; align-items: center; gap: 10px; padding: 14px 14px 12px; background: rgba(0,0,0,0.25); border-bottom: 1px solid var(--border); }
+    .song-name-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 14px 12px; background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid var(--border);
+    }
     .song-name { flex: 1; font-size: 22px; font-weight: 800; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .song-card.running .song-name { color: var(--gold-lt); }
+    .song-card.paused  .song-name { color: var(--gold); }
 
-    /* 練習ステータスバッジ */
-    .song-meta { display: flex; gap: 8px; align-items: center; padding: 8px 14px 0; flex-wrap: wrap; }
-    .song-meta-badge {
-      font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-      white-space: nowrap;
-    }
+    /* バッジ */
+    .song-meta { display: flex; gap: 8px; align-items: center; padding: 8px 14px 0; flex-wrap: wrap; min-height: 36px; }
+    .song-meta-badge { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
     .badge-total { background: var(--gold-dim); border: 1px solid rgba(212,174,82,0.3); color: var(--gold-lt); }
     .badge-last  { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-dim); }
     .badge-new   { background: var(--grn-dim); border: 1px solid var(--grn-bdr); color: var(--grn); }
 
+    /* 卒業・削除ボタン */
     .btn-grad { background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 8px; color: var(--grn); font-size: 13px; font-weight: 800; padding: 8px 10px; cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: all 0.2s; line-height: 1.2; }
     .btn-grad:active { background: rgba(94,192,128,0.3); }
     .btn-del { background: none; border: none; color: var(--text-dim); font-size: 22px; padding: 6px 8px; cursor: pointer; flex-shrink: 0; border-radius: 8px; transition: all 0.15s; }
     .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
-    /* タイマーエリア */
+    /* ── タイマーエリア ── */
     .song-timer-area { padding: 14px 16px 16px; text-align: center; }
 
     .song-timer-display {
@@ -110,30 +118,74 @@
       color: var(--gold-lt);
       text-shadow: 0 0 40px rgba(212,174,82,0.45), 0 0 14px rgba(212,174,82,0.25);
     }
+    .song-card.paused .song-timer-display {
+      color: var(--gold);
+    }
 
-    .btn-song-start {
-      width: 100%; height: 76px;
+    /* ── タイマーボタン群 ── */
+    .timer-btns { display: flex; gap: 10px; }
+
+    /* 開始ボタン（1本・全幅） */
+    .btn-start {
+      flex: 1; height: 76px;
       background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
       border: none; border-radius: 12px; color: #000;
-      font-size: 22px; font-weight: 800; letter-spacing: 2px;
-      cursor: pointer; text-transform: uppercase; position: relative; overflow: hidden;
-      transition: all 0.2s; box-shadow: 0 4px 18px rgba(212,174,82,0.22);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      font-size: 22px; font-weight: 800; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 18px rgba(212,174,82,0.22);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-song-start::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.15s; }
-    .btn-song-start:active::before { opacity: 1; }
-    .btn-song-start:active { transform: scale(0.97); }
-    .btn-song-start.running { background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%); color: #fff; box-shadow: 0 4px 18px rgba(192,53,53,0.3); }
-    .btn-song-start:disabled { background: var(--bg-input); color: var(--text-dim); box-shadow: none; cursor: not-allowed; border: 1px solid var(--border); }
+    .btn-start:active { transform: scale(0.97); }
+    .btn-start:disabled {
+      background: var(--bg-input); color: var(--text-dim);
+      box-shadow: none; cursor: not-allowed; border: 1px solid var(--border);
+    }
 
-    .pulse-dot { width: 12px; height: 12px; border-radius: 50%; background: #ff8080; animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
+    /* 一時停止ボタン */
+    .btn-pause {
+      flex: 1; height: 76px;
+      background: linear-gradient(135deg, #7a5500 0%, #c08020 40%, #d4943a 60%, #7a5500 100%);
+      border: none; border-radius: 12px; color: #000;
+      font-size: 20px; font-weight: 800; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 18px rgba(192,128,32,0.25);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-pause:active { transform: scale(0.97); }
+
+    /* 再開ボタン */
+    .btn-resume {
+      flex: 1; height: 76px;
+      background: linear-gradient(135deg, #1a6030 0%, #3a9055 40%, #4aaa65 60%, #1a6030 100%);
+      border: none; border-radius: 12px; color: #fff;
+      font-size: 20px; font-weight: 800; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 18px rgba(60,144,80,0.28);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-resume:active { transform: scale(0.97); }
+
+    /* 終了して記録ボタン */
+    .btn-end {
+      flex: 1; height: 76px;
+      background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%);
+      border: none; border-radius: 12px; color: #fff;
+      font-size: 18px; font-weight: 800; letter-spacing: 0px;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 18px rgba(192,53,53,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.3;
+      text-align: center;
+    }
+    .btn-end:active { transform: scale(0.97); }
+
+    /* 点滅ドット */
+    .pulse-dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.6);} }
 
     .empty-msg { text-align: center; color: var(--text-dim); font-size: 18px; font-weight: 500; padding: 20px 0 8px; }
 
     /* ── 積み上げグラフカード ── */
     .chart-wrap { position: relative; height: 250px; }
-
     .chart-legend {
       display: flex; flex-wrap: wrap; gap: 10px 18px;
       margin-top: 18px; padding-top: 16px;
@@ -180,9 +232,9 @@
     .archive-memo::placeholder { color: var(--text-dim); font-weight: 400; }
     .archive-memo:focus { border-color: var(--grn); }
     .archive-actions { display: flex; gap: 10px; margin-top: 12px; }
-    .btn-memo-save    { flex: 1; background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 10px; color: var(--grn); font-size: 18px; font-weight: 800; padding: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-memo-save   { flex: 1; background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 10px; color: var(--grn); font-size: 18px; font-weight: 800; padding: 14px; cursor: pointer; transition: all 0.2s; }
     .btn-memo-save:active { background: rgba(94,192,128,0.3); }
-    .btn-archive-del  { background: none; border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text-dim); font-size: 18px; font-weight: 700; padding: 14px 18px; cursor: pointer; transition: all 0.2s; }
+    .btn-archive-del { background: none; border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text-dim); font-size: 18px; font-weight: 700; padding: 14px 18px; cursor: pointer; transition: all 0.2s; }
     .btn-archive-del:active { color: var(--danger); border-color: var(--danger); background: rgba(192,53,53,0.1); }
 
     /* ── MODAL ── */
@@ -213,16 +265,17 @@
 
     @media (max-width: 390px) {
       .song-timer-display { font-size: 48px; }
-      .btn-song-start     { height: 68px; font-size: 19px; }
-      .song-name          { font-size: 19px; }
-      .stat-song          { font-size: 19px; }
-      .stat-mins          { font-size: 30px; }
-      .chart-wrap         { height: 210px; }
-      .legend-name        { font-size: 14px; }
+      .btn-start, .btn-pause, .btn-resume { font-size: 18px; }
+      .btn-end    { font-size: 15px; }
+      .song-name  { font-size: 19px; }
+      .stat-song  { font-size: 19px; }
+      .stat-mins  { font-size: 30px; }
+      .chart-wrap { height: 210px; }
     }
     @media (max-width: 340px) {
       .song-timer-display { font-size: 40px; }
-      .song-name          { font-size: 17px; }
+      .song-name { font-size: 17px; }
+      .btn-start, .btn-pause, .btn-resume, .btn-end { font-size: 14px; height: 62px; }
     }
   </style>
 </head>
@@ -269,7 +322,7 @@
 
 <div class="container">
 
-  <!-- ① 練習曲リスト（永続） -->
+  <!-- ① 練習曲リスト（入力 + 永続カード） -->
   <div class="card">
     <div class="card-title">♩ 練習曲リスト</div>
     <div class="add-row">
@@ -283,7 +336,7 @@
     </div>
   </div>
 
-  <!-- ② 直近7日間 積み上げグラフ（全曲まとめて） -->
+  <!-- ② 直近7日間 積み上げグラフ -->
   <div class="card">
     <div class="card-title">♩ 直近7日間の練習推移</div>
     <div class="chart-wrap">
@@ -386,26 +439,25 @@ function dayLabel(s) {
   const d=new Date(s+'T12:00:00');
   return `${d.getMonth()+1}/${d.getDate()}(${'日月火水木金土'[d.getDay()]})`;
 }
-function formatTime(sec) { return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`; }
+function formatTime(sec) {
+  sec = Math.max(0, Math.floor(sec));
+  return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
+}
 function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function totalMinsForSong(n) { return db.getSessions().filter(s=>s.songName===n).reduce((t,s)=>t+s.duration,0); }
 
-/* 最終練習日の表示テキスト */
 function lastPracticeLabel(name) {
   const sessions = db.getSessions().filter(s => s.songName === name);
   if (!sessions.length) return null;
-  const dates = sessions.map(s => s.date).sort();
-  const last  = dates[dates.length - 1];
+  const last  = sessions.map(s=>s.date).sort().pop();
   const today = todayStr();
-  if (last === today) return '今日練習済み';
-  const diffMs = new Date(today+'T12:00:00') - new Date(last+'T12:00:00');
-  const diffD  = Math.round(diffMs / 86400000);
-  if (diffD === 1) return '昨日';
-  return `${diffD}日前`;
+  if (last === today) return 'today';
+  const diffD = Math.round((new Date(today+'T12:00:00') - new Date(last+'T12:00:00')) / 86400000);
+  return diffD === 1 ? '昨日' : `${diffD}日前`;
 }
 
 /* =====================================================
-   COLOR SYSTEM（曲ごとに永続割り当て）
+   COLOR SYSTEM
 ===================================================== */
 const PALETTE = [
   {bg:'rgba(212,174, 82,0.90)',bd:'#d4ae52'},
@@ -443,66 +495,175 @@ function showToast(msg) {
 }
 
 /* =====================================================
-   STATE
+   STOPWATCH STATE
+   state: 'idle' | 'running' | 'paused'
 ===================================================== */
-let runningSong  = null;
-let timerRunning = false;
-let timerStartAt = 0;
-let timerTick    = null;
-let currentTab   = 'today';
-let pendingGrad  = null;
-let chartInstance= null;
+let swState   = 'idle';   // ストップウォッチの状態
+let swSong    = null;     // 計測中の曲名
+let swIdx     = -1;       // 計測中の曲のインデックス
+let swAccum   = 0;        // 一時停止までの累計秒数
+let swStartAt = 0;        // 現在の計測開始時刻（Date.now()）
+let swTick    = null;     // setInterval ID
+
+/* 現在の経過秒数を返す */
+function getElapsed() {
+  if (swState === 'idle')   return 0;
+  if (swState === 'paused') return swAccum;
+  return swAccum + Math.floor((Date.now() - swStartAt) / 1000);
+}
 
 /* =====================================================
-   SONG LIST（永続カード・タイマー内蔵・グラフなし）
+   SONG CARD RENDER
 ===================================================== */
+function buildBadges(name) {
+  const total  = totalMinsForSong(name);
+  const lbl    = lastPracticeLabel(name);
+  let html = '';
+  if (total > 0) html += `<span class="song-meta-badge badge-total">累計 ${total}分</span>`;
+  if (lbl === 'today') html += `<span class="song-meta-badge badge-new">✓ 今日練習済み</span>`;
+  else if (lbl)        html += `<span class="song-meta-badge badge-last">最終: ${lbl}</span>`;
+  return html;
+}
+
+function buildTimerBtns(name, i) {
+  const isMine    = name === swSong;
+  const isRunning = isMine && swState === 'running';
+  const isPaused  = isMine && swState === 'paused';
+  const otherBusy = !isMine && swState !== 'idle';
+
+  if (isRunning) {
+    return `
+      <button class="btn-pause" data-idx="${i}">⏸ 一時停止</button>
+      <button class="btn-end"   data-idx="${i}">⏹ 終了して記録</button>`;
+  }
+  if (isPaused) {
+    return `
+      <button class="btn-resume" data-idx="${i}">▶ 再開する</button>
+      <button class="btn-end"    data-idx="${i}">⏹ 終了して記録</button>`;
+  }
+  return `<button class="btn-start" data-idx="${i}" ${otherBusy?'disabled':''}
+    style="${otherBusy?'':''}">▶ 練習を開始する</button>`;
+}
+
 function renderSongs() {
-  const songs   = db.getSongs();
-  const el      = document.getElementById('songList');
+  const songs = db.getSongs();
+  const el    = document.getElementById('songList');
   if (!songs.length) { el.innerHTML='<p class="empty-msg">曲を追加してください</p>'; return; }
 
   el.innerHTML = songs.map((name, i) => {
-    const isRun    = timerRunning && runningSong === name;
-    const otherRun = timerRunning && runningSong !== name;
-    const total    = totalMinsForSong(name);
-    const lastLbl  = lastPracticeLabel(name);
-    const isToday  = lastLbl === '今日練習済み';
-
-    // バッジHTML
-    let badges = '';
-    if (total > 0) {
-      badges += `<span class="song-meta-badge badge-total">累計 ${total}分</span>`;
-    }
-    if (lastLbl) {
-      if (isToday) {
-        badges += `<span class="song-meta-badge badge-new">✓ ${lastLbl}</span>`;
-      } else {
-        badges += `<span class="song-meta-badge badge-last">最終: ${lastLbl}</span>`;
-      }
-    }
+    const isMine    = name === swSong;
+    const isRunning = isMine && swState === 'running';
+    const isPaused  = isMine && swState === 'paused';
+    const dispTime  = isMine ? formatTime(getElapsed()) : '00:00:00';
+    const cardCls   = isRunning ? 'running' : isPaused ? 'paused' : '';
 
     return `
-    <div class="song-card${isRun?' running':''}" id="song-card-${i}">
+    <div class="song-card ${cardCls}" id="song-card-${i}">
       <div class="song-name-row">
         <span class="song-name">${esc(name)}</span>
-        <button class="btn-grad" data-grad="${i}" title="練習を完全にマスターしたらアーカイブ">🎓&nbsp;終了</button>
+        <button class="btn-grad" data-grad="${i}" title="マスターしたらアーカイブへ">🎓&nbsp;終了</button>
         <button class="btn-del"  data-del="${i}" aria-label="削除">✕</button>
       </div>
-      ${badges ? `<div class="song-meta" id="song-meta-${i}">${badges}</div>` : `<div class="song-meta" id="song-meta-${i}"></div>`}
+      <div class="song-meta" id="song-meta-${i}">${buildBadges(name)}</div>
       <div class="song-timer-area">
-        <div class="song-timer-display" id="timer-display-${i}">
-          ${isRun ? formatTime(Math.floor((Date.now()-timerStartAt)/1000)) : '00:00:00'}
-        </div>
-        <button class="btn-song-start${isRun?' running':''}"
-                id="btn-song-${i}" data-song-idx="${i}"
-                ${otherRun?'disabled':''}>
-          ${isRun?'<span class="pulse-dot"></span> 練習を終了する':'練習を開始する'}
-        </button>
+        <div class="song-timer-display" id="timer-disp-${i}">${dispTime}</div>
+        <div class="timer-btns" id="timer-btns-${i}">${buildTimerBtns(name, i)}</div>
       </div>
     </div>`;
   }).join('');
 }
 
+/* =====================================================
+   STOPWATCH CONTROLS
+===================================================== */
+function swStart(name, idx) {
+  if (swState !== 'idle') {
+    showToast(`先に「${swSong}」を終了してください`);
+    return;
+  }
+  swSong    = name;
+  swIdx     = idx;
+  swAccum   = 0;
+  swStartAt = Date.now();
+  swState   = 'running';
+  renderSongs();
+  swTick = setInterval(() => {
+    const el = document.getElementById(`timer-disp-${swIdx}`);
+    if (el) el.textContent = formatTime(getElapsed());
+  }, 500);
+  requestWakeLock();
+}
+
+function swPause() {
+  if (swState !== 'running') return;
+  swAccum = getElapsed();
+  swState = 'paused';
+  clearInterval(swTick); swTick = null;
+  renderSongs();
+  releaseWakeLock();
+}
+
+function swResume() {
+  if (swState !== 'paused') return;
+  swStartAt = Date.now();
+  swState   = 'running';
+  renderSongs();
+  swTick = setInterval(() => {
+    const el = document.getElementById(`timer-disp-${swIdx}`);
+    if (el) el.textContent = formatTime(getElapsed());
+  }, 500);
+  requestWakeLock();
+}
+
+function swEnd() {
+  if (swState === 'idle') return;
+  clearInterval(swTick); swTick = null;
+  const elapsed  = getElapsed();
+  const songName = swSong;
+  swState = 'idle'; swSong = null; swIdx = -1; swAccum = 0; swStartAt = 0;
+  releaseWakeLock();
+  const mins = db.addSession(songName, elapsed);
+  renderSongs();   // カード再描画（バッジ更新含む）
+  renderStats();
+  renderChart();
+  if (mins) showToast(`${mins}分を記録しました！`);
+  else      showToast('1分未満は記録されません');
+}
+
+/* =====================================================
+   EVENT DELEGATION
+===================================================== */
+document.getElementById('songList').addEventListener('click', e => {
+  const startBtn  = e.target.closest('.btn-start');
+  const pauseBtn  = e.target.closest('.btn-pause');
+  const resumeBtn = e.target.closest('.btn-resume');
+  const endBtn    = e.target.closest('.btn-end');
+  const gradBtn   = e.target.closest('.btn-grad');
+  const delBtn    = e.target.closest('.btn-del');
+
+  if (startBtn && !startBtn.disabled) {
+    const i    = parseInt(startBtn.dataset.idx, 10);
+    const name = db.getSongs()[i];
+    swStart(name, i);
+  } else if (pauseBtn) {
+    swPause();
+  } else if (resumeBtn) {
+    swResume();
+  } else if (endBtn) {
+    swEnd();
+  } else if (gradBtn) {
+    e.stopPropagation();
+    if (swState !== 'idle') { showToast('練習中は終了できません'); return; }
+    openGradModal(parseInt(gradBtn.dataset.grad, 10));
+  } else if (delBtn) {
+    e.stopPropagation();
+    deleteSong(parseInt(delBtn.dataset.del, 10));
+  }
+});
+
+/* =====================================================
+   SONG ADD / DELETE
+===================================================== */
 function addSong() {
   const input = document.getElementById('songInput');
   const name  = input.value.trim();
@@ -517,91 +678,32 @@ function addSong() {
 
 function deleteSong(idx) {
   const songs = db.getSongs(); const name = songs[idx]; if (!name) return;
-  if (timerRunning && runningSong === name) { showToast('練習中の曲は削除できません'); return; }
+  if (swState !== 'idle' && swSong === name) { showToast('練習中の曲は削除できません'); return; }
   songs.splice(idx, 1); db.saveSongs(songs);
   renderSongs(); renderStats(); renderChart();
   showToast(`「${name}」を削除しました`);
 }
 
-document.getElementById('songList').addEventListener('click', e => {
-  const startBtn = e.target.closest('.btn-song-start');
-  const gradBtn  = e.target.closest('.btn-grad');
-  const delBtn   = e.target.closest('.btn-del');
-  if (startBtn && !startBtn.disabled) {
-    const idx  = parseInt(startBtn.dataset.songIdx, 10);
-    const name = db.getSongs()[idx];
-    if (timerRunning && runningSong === name) stopTimer();
-    else if (!timerRunning) startTimer(name, idx);
-  } else if (gradBtn) {
-    e.stopPropagation();
-    if (timerRunning) { showToast('練習中は終了できません'); return; }
-    openGradModal(parseInt(gradBtn.dataset.grad, 10));
-  } else if (delBtn) {
-    e.stopPropagation(); deleteSong(parseInt(delBtn.dataset.del, 10));
-  }
-});
 document.getElementById('btnAdd').addEventListener('click', addSong);
-document.getElementById('songInput').addEventListener('keydown', e => { if (e.key === 'Enter') addSong(); });
+document.getElementById('songInput').addEventListener('keydown', e => { if (e.key==='Enter') addSong(); });
 
 /* =====================================================
-   TIMER
+   WAKE LOCK
 ===================================================== */
-function startTimer(songName, idx) {
-  runningSong = songName; timerStartAt = Date.now(); timerRunning = true;
-  const card = document.getElementById(`song-card-${idx}`);
-  const btn  = document.getElementById(`btn-song-${idx}`);
-  const disp = document.getElementById(`timer-display-${idx}`);
-  if (card) card.classList.add('running');
-  if (btn)  { btn.innerHTML = '<span class="pulse-dot"></span> 練習を終了する'; btn.classList.add('running'); }
-  document.querySelectorAll('.btn-song-start').forEach((b, i) => { if (i !== idx) b.disabled = true; });
-  timerTick = setInterval(() => {
-    const el = document.getElementById(`timer-display-${idx}`);
-    if (el) el.textContent = formatTime(Math.floor((Date.now()-timerStartAt)/1000));
-  }, 500);
-  requestWakeLock();
-}
-
-function stopTimer() {
-  clearInterval(timerTick); timerRunning = false;
-  const elapsed  = Math.floor((Date.now()-timerStartAt)/1000);
-  const songName = runningSong;
-  const idx      = db.getSongs().indexOf(songName);
-  const card = document.getElementById(`song-card-${idx}`);
-  const btn  = document.getElementById(`btn-song-${idx}`);
-  const disp = document.getElementById(`timer-display-${idx}`);
-  if (card) card.classList.remove('running');
-  if (btn)  { btn.innerHTML = '練習を開始する'; btn.classList.remove('running'); btn.disabled = false; }
-  if (disp) disp.textContent = '00:00:00';
-  document.querySelectorAll('.btn-song-start').forEach(b => b.disabled = false);
-  releaseWakeLock();
-  const mins = db.addSession(songName, elapsed);
-  if (mins) {
-    showToast(`${mins}分を記録しました！`);
-    renderStats(); renderChart();
-    // カードのバッジだけ更新（フル再描画せずDOMを差し替え）
-    const metaEl = document.getElementById(`song-meta-${idx}`);
-    if (metaEl) {
-      const total   = totalMinsForSong(songName);
-      const lastLbl = lastPracticeLabel(songName);
-      let badges    = '';
-      if (total > 0) badges += `<span class="song-meta-badge badge-total">累計 ${total}分</span>`;
-      if (lastLbl)   badges += `<span class="song-meta-badge badge-new">✓ ${lastLbl}</span>`;
-      metaEl.innerHTML = badges;
-    }
-  } else {
-    showToast('1分未満は記録されません');
-  }
-  runningSong = null;
-}
-
 let wakeLock = null;
-async function requestWakeLock() { try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {} }
-function releaseWakeLock() { wakeLock?.release().catch(() => {}); wakeLock = null; }
-document.addEventListener('visibilitychange', async () => { if (timerRunning && document.visibilityState === 'visible') requestWakeLock(); });
+async function requestWakeLock() {
+  try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {}
+}
+function releaseWakeLock() { wakeLock?.release().catch(()=>{}); wakeLock = null; }
+document.addEventListener('visibilitychange', async () => {
+  if (swState === 'running' && document.visibilityState === 'visible') requestWakeLock();
+});
 
 /* =====================================================
-   STACKED BAR CHART（全曲まとめて・凡例付き）
+   STACKED BAR CHART
 ===================================================== */
+let chartInstance = null;
+
 function renderChart() {
   const days     = last7Days();
   const sessions = db.getSessions();
@@ -609,7 +711,6 @@ function renderChart() {
   const archived = db.getArchive().map(a => a.name);
   const archivedSet = new Set(archived);
 
-  // 直近7日に練習記録のある全曲（アクティブ + アーカイブ）
   const inRange   = sessions.filter(s => days.includes(s.date));
   const seenNames = [...new Set(inRange.map(s => s.songName))];
   const ordered   = [
@@ -630,12 +731,11 @@ function renderChart() {
   }
   canvas.style.display = '';
 
-  const labels   = days.map(dayLabel);
   const datasets = ordered.map(name => {
     const c = songColor(name);
     return {
       label: name,
-      data: days.map(d => inRange.filter(s => s.songName===name && s.date===d).reduce((t,s) => t+s.duration, 0)),
+      data: days.map(d => inRange.filter(s => s.songName===name && s.date===d).reduce((t,s)=>t+s.duration,0)),
       backgroundColor: c.bg, borderColor: c.bd,
       borderWidth: 0, borderRadius: 4, borderSkipped: false,
     };
@@ -643,7 +743,7 @@ function renderChart() {
 
   chartInstance = new Chart(ctx, {
     type: 'bar',
-    data: { labels, datasets },
+    data: { labels: days.map(dayLabel), datasets },
     options: {
       responsive: true, maintainAspectRatio: false, animation: { duration: 400 },
       plugins: {
@@ -651,7 +751,7 @@ function renderChart() {
         tooltip: {
           backgroundColor: '#1a1a1a', borderColor: '#3a3a3a', borderWidth: 1,
           titleColor: '#f5f2e8', bodyColor: '#f0d080',
-          titleFont: { size: 14, weight: '700' }, bodyFont: { size: 14, weight: '700' }, padding: 12,
+          titleFont: {size:14,weight:'700'}, bodyFont: {size:14,weight:'700'}, padding: 12,
           callbacks: {
             title: items => items[0].label,
             label: item => ` ${item.dataset.label}：${item.parsed.y}分`,
@@ -661,31 +761,30 @@ function renderChart() {
       scales: {
         x: {
           stacked: true,
-          grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' },
-          ticks: { color: '#b0ada0', font: { size: 12, family: '-apple-system,sans-serif', weight: '700' }, maxRotation: 0 }
+          grid: {color:'rgba(255,255,255,0.04)'}, border: {color:'rgba(255,255,255,0.08)'},
+          ticks: {color:'#b0ada0', font:{size:12,family:'-apple-system,sans-serif',weight:'700'}, maxRotation:0}
         },
         y: {
           stacked: true, beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' },
-          ticks: { color: '#b0ada0', font: { size: 12, family: '-apple-system,sans-serif', weight: '700' },
-                   stepSize: 10, callback: v => v + '分' }
+          grid: {color:'rgba(255,255,255,0.04)'}, border: {color:'rgba(255,255,255,0.08)'},
+          ticks: {color:'#b0ada0', font:{size:12,family:'-apple-system,sans-serif',weight:'700'},
+                  stepSize:10, callback: v => v+'分'}
         }
       }
     }
   });
 
-  // カスタム凡例
   legend.innerHTML = ordered.map(name => {
     const c      = songColor(name);
-    const total7 = inRange.filter(s => s.songName === name).reduce((t,s) => t+s.duration, 0);
+    const total7 = inRange.filter(s=>s.songName===name).reduce((t,s)=>t+s.duration,0);
     const isArc  = archivedSet.has(name);
     return `
       <div class="legend-item">
         <div class="legend-swatch" style="background:${c.bg};border:1.5px solid ${c.bd};"></div>
         <div class="legend-text">
           <span class="legend-name">${esc(name)}</span>
-          ${isArc ? '<span class="legend-arc">🎓</span>' : ''}
-          ${total7 > 0 ? `<span class="legend-mins">${total7}分</span>` : ''}
+          ${isArc?'<span class="legend-arc">🎓</span>':''}
+          ${total7>0?`<span class="legend-mins">${total7}分</span>`:''}
         </div>
       </div>`;
   }).join('');
@@ -694,31 +793,32 @@ function renderChart() {
 /* =====================================================
    STATISTICS
 ===================================================== */
+let currentTab = 'today';
 function getRange(tab) {
   const t = todayStr();
-  if (tab === 'today') return [t, t];
-  if (tab === 'week')  return [getWeekStart(), t];
-  if (tab === 'month') return [getMonthStart(), t];
+  if (tab==='today') return [t,t];
+  if (tab==='week')  return [getWeekStart(),t];
+  if (tab==='month') return [getMonthStart(),t];
 }
 function renderStats() {
-  const [start, end] = getRange(currentTab);
+  const [start,end] = getRange(currentTab);
   const sessions = db.getSessions(), songs = db.getSongs(), totals = {};
-  sessions.forEach(s => { if (s.date >= start && s.date <= end) totals[s.songName] = (totals[s.songName]||0) + s.duration; });
-  const extra  = Object.keys(totals).filter(n => !songs.includes(n));
-  const active = [...songs, ...extra].filter(n => totals[n]);
+  sessions.forEach(s => { if(s.date>=start&&s.date<=end) totals[s.songName]=(totals[s.songName]||0)+s.duration; });
+  const extra  = Object.keys(totals).filter(n=>!songs.includes(n));
+  const active = [...songs,...extra].filter(n=>totals[n]);
   const list   = document.getElementById('statsList');
   const totEl  = document.getElementById('statsTotal');
   const totV   = document.getElementById('statsTotalVal');
-  if (!active.length) { list.innerHTML = '<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display = 'none'; return; }
-  const rows = active.map(n => ({ name: n, mins: totals[n] })).sort((a,b) => b.mins - a.mins);
-  list.innerHTML = rows.map(r => `<div class="stat-row"><span class="stat-song">${esc(r.name)}</span><span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span></div>`).join('');
-  totV.textContent = rows.reduce((t,r) => t+r.mins, 0);
+  if (!active.length) { list.innerHTML='<p class="empty-msg">この期間の練習記録はありません</p>'; totEl.style.display='none'; return; }
+  const rows = active.map(n=>({name:n,mins:totals[n]})).sort((a,b)=>b.mins-a.mins);
+  list.innerHTML = rows.map(r=>`<div class="stat-row"><span class="stat-song">${esc(r.name)}</span><span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span></div>`).join('');
+  totV.textContent = rows.reduce((t,r)=>t+r.mins,0);
   totEl.style.display = 'flex';
 }
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     currentTab = btn.dataset.tab;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     btn.classList.add('active'); renderStats();
   });
 });
@@ -726,6 +826,7 @@ document.querySelectorAll('.tab').forEach(btn => {
 /* =====================================================
    GRADUATION MODAL
 ===================================================== */
+let pendingGrad = null;
 function openGradModal(idx) {
   const name = db.getSongs()[idx]; if (!name) return;
   pendingGrad = name;
@@ -735,22 +836,22 @@ function openGradModal(idx) {
   document.getElementById('gradModal').classList.add('show');
   setTimeout(() => document.getElementById('modalDate').focus(), 100);
 }
-function closeGradModal() { document.getElementById('gradModal').classList.remove('show'); pendingGrad = null; }
+function closeGradModal() { document.getElementById('gradModal').classList.remove('show'); pendingGrad=null; }
 function confirmGrad() {
   if (!pendingGrad) return;
   const date    = document.getElementById('modalDate').value || todayStr();
   const memo    = document.getElementById('modalMemo').value.trim();
   const archive = db.getArchive();
-  archive.unshift({ id: Date.now(), name: pendingGrad, archivedDate: date, memo });
+  archive.unshift({id:Date.now(), name:pendingGrad, archivedDate:date, memo});
   db.saveArchive(archive);
-  db.saveSongs(db.getSongs().filter(n => n !== pendingGrad));
+  db.saveSongs(db.getSongs().filter(n=>n!==pendingGrad));
   closeGradModal();
   renderSongs(); renderStats(); renderArchive(); renderChart();
   showToast(`「${pendingGrad}」を練習終了しました 🎓`);
 }
 document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
 document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
-document.getElementById('gradModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGradModal(); });
+document.getElementById('gradModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeGradModal(); });
 
 /* =====================================================
    ARCHIVE
@@ -759,10 +860,9 @@ function renderArchive() {
   const archive = db.getArchive();
   const card    = document.getElementById('archiveCard');
   const list    = document.getElementById('archiveList');
-  if (!archive.length) { card.style.display = 'none'; return; }
+  if (!archive.length) { card.style.display='none'; return; }
   card.style.display = 'block';
   document.getElementById('archiveCount').textContent = archive.length;
-
   list.innerHTML = archive.map(item => {
     const total = totalMinsForSong(item.name);
     return `
@@ -770,7 +870,7 @@ function renderArchive() {
       <div class="archive-card-header">
         <span class="archive-icon">🎓</span>
         <span class="archive-name">${esc(item.name)}</span>
-        ${total > 0 ? `<span class="archive-stats-badge">累計 ${total}分</span>` : ''}
+        ${total>0?`<span class="archive-stats-badge">累計 ${total}分</span>`:''}
       </div>
       <div class="archive-body">
         <div class="archive-date-row">
@@ -787,20 +887,19 @@ function renderArchive() {
     </div>`;
   }).join('');
 }
-
 document.getElementById('archiveList').addEventListener('click', e => {
   const saveBtn = e.target.closest('.btn-memo-save');
   const delBtn  = e.target.closest('.btn-archive-del');
   if (saveBtn) {
-    const id      = parseInt(saveBtn.dataset.aid, 10);
-    const arc     = saveBtn.closest('.archive-card');
-    const date    = arc.querySelector('[data-field="date"]').value;
-    const memo    = arc.querySelector('[data-field="memo"]').value.trim();
-    const archive = db.getArchive(); const item = archive.find(a => a.id === id);
-    if (item) { item.archivedDate = date; item.memo = memo; db.saveArchive(archive); renderArchive(); showToast('メモを保存しました ✓'); }
+    const id   = parseInt(saveBtn.dataset.aid, 10);
+    const arc  = saveBtn.closest('.archive-card');
+    const date = arc.querySelector('[data-field="date"]').value;
+    const memo = arc.querySelector('[data-field="memo"]').value.trim();
+    const archive = db.getArchive(); const item = archive.find(a=>a.id===id);
+    if (item) { item.archivedDate=date; item.memo=memo; db.saveArchive(archive); renderArchive(); showToast('メモを保存しました ✓'); }
   } else if (delBtn) {
     const id = parseInt(delBtn.dataset.adel, 10);
-    db.saveArchive(db.getArchive().filter(a => a.id !== id));
+    db.saveArchive(db.getArchive().filter(a=>a.id!==id));
     renderArchive(); renderChart(); showToast('アーカイブから削除しました');
   }
 });
@@ -809,13 +908,13 @@ document.getElementById('archiveList').addEventListener('click', e => {
    PWA
 ===================================================== */
 (function() {
-  const m = { name:'ピアノ練習記録', short_name:'ピアノ練習', start_url:'.', display:'standalone', background_color:'#0a0a0a', theme_color:'#0a0a0a', orientation:'portrait-primary',
+  const m={name:'ピアノ練習記録',short_name:'ピアノ練習',start_url:'.',display:'standalone',background_color:'#0a0a0a',theme_color:'#0a0a0a',orientation:'portrait-primary',
     icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
-  try { const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'}); const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(b); document.head.appendChild(l); } catch(_) {}
+  try{const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'});const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);document.head.appendChild(l);}catch(_){}
 })();
-if ('serviceWorker' in navigator) {
-  const sw = `const C='piano-sw-v5';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
-  try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{}); } catch(_) {}
+if('serviceWorker'in navigator){
+  const sw=`const C='piano-sw-v6';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
+  try{navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{});}catch(_){}
 }
 
 /* =====================================================

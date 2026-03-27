@@ -12,38 +12,33 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg:        #080808;
-      --bg-card:   #141414;
-      --bg-card2:  #1e1e1e;
-      --bg-card3:  #161616;
-      --bg-input:  #111111;
-      --gold:      #d4ae52;
-      --gold-lt:   #f0d080;
-      --gold-dim:  rgba(212,174,82,0.18);
-      --text:      #f5f2e8;
-      --text-dim:  #8a877c;
-      --border:    #2a2a2a;
-      --border-lt: #3a3a3a;
-      --danger:    #c03535;
-      --grad-clr:  #5ec080;
-      --grad-dim:  rgba(94,192,128,0.15);
-      --grad-bdr:  rgba(94,192,128,0.45);
+      --bg:       #080808;
+      --bg-card:  #141414;
+      --bg-card2: #1e1e1e;
+      --bg-input: #111111;
+      --gold:     #d4ae52;
+      --gold-lt:  #f0d080;
+      --gold-dim: rgba(212,174,82,0.18);
+      --text:     #f5f2e8;
+      --text-dim: #8a877c;
+      --border:   #2a2a2a;
+      --bdr-lt:   #3a3a3a;
+      --danger:   #c03535;
+      --grn:      #5ec080;
+      --grn-dim:  rgba(94,192,128,0.15);
+      --grn-bdr:  rgba(94,192,128,0.45);
     }
-
-    *, *::before, *::after {
-      box-sizing: border-box; margin: 0; padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
     body {
       background: var(--bg); color: var(--text);
       font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
       font-weight: 500; min-height: 100vh; overflow-x: hidden;
-      padding-bottom: env(safe-area-inset-bottom, 20px);
+      padding-bottom: env(safe-area-inset-bottom, 24px);
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── HEADER ─── */
+    /* ── HEADER ── */
     .header {
       background: linear-gradient(180deg, #1a1a18 0%, #0a0a0a 100%);
       border-bottom: 1px solid #2a2a20;
@@ -51,355 +46,226 @@
       position: sticky; top: 0; z-index: 100;
       box-shadow: 0 4px 24px rgba(0,0,0,0.8);
     }
-    .header h1 {
-      font-size: 32px; font-weight: 800; letter-spacing: 6px;
-      color: var(--gold-lt); text-transform: uppercase;
-      font-family: 'Georgia', serif;
-    }
-    .header p {
-      font-size: 16px; color: var(--text-dim); letter-spacing: 3px;
-      margin: 6px 0 0; font-weight: 600; text-transform: uppercase;
-    }
+    .header h1 { font-size: 32px; font-weight: 800; letter-spacing: 6px; color: var(--gold-lt); text-transform: uppercase; font-family: 'Georgia', serif; }
+    .header p  { font-size: 16px; color: var(--text-dim); letter-spacing: 3px; margin: 6px 0 0; font-weight: 600; text-transform: uppercase; }
     .piano-svg { display: block; width: 100%; max-width: 420px; margin: 12px auto 0; }
 
-    /* ─── LAYOUT ─── */
-    .container {
-      max-width: 580px; margin: 0 auto;
-      padding: 16px 14px; display: flex; flex-direction: column; gap: 14px;
-    }
+    /* ── LAYOUT ── */
+    .container { max-width: 580px; margin: 0 auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* ─── CARD ─── */
-    .card {
-      background: var(--bg-card); border: 1px solid var(--border-lt);
-      border-radius: 16px; padding: 20px 18px;
-    }
-    .card-title {
-      font-size: 16px; font-weight: 700; letter-spacing: 3px;
-      color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px;
-    }
+    /* ── OUTER CARD ── */
+    .card { background: var(--bg-card); border: 1px solid var(--bdr-lt); border-radius: 16px; padding: 20px 18px; }
+    .card-title { font-size: 16px; font-weight: 700; letter-spacing: 3px; color: var(--gold-lt); text-transform: uppercase; margin-bottom: 18px; }
 
-    /* ─── 曲追加行 ─── */
+    /* ── 曲追加行 ── */
     .add-row { display: flex; gap: 8px; margin-bottom: 14px; }
     .song-input {
-      flex: 1; background: var(--bg-input); border: 1px solid var(--border-lt);
-      border-radius: 10px; color: #fff; font-size: 22px; font-weight: 600;
-      padding: 16px; font-family: inherit; outline: none;
-      transition: border-color 0.2s; min-width: 0;
+      flex: 1; background: var(--bg-input); border: 1px solid var(--bdr-lt); border-radius: 10px;
+      color: #fff; font-size: 22px; font-weight: 600; padding: 16px; font-family: inherit;
+      outline: none; transition: border-color 0.2s; min-width: 0;
     }
     .song-input::placeholder { color: var(--text-dim); font-weight: 400; }
     .song-input:focus { border-color: var(--gold); }
     .btn-add {
       background: var(--gold); border: none; border-radius: 10px;
-      color: #000; font-size: 34px; font-weight: 800;
-      width: 62px; flex-shrink: 0; cursor: pointer; transition: background 0.15s;
+      color: #000; font-size: 34px; font-weight: 800; width: 62px;
+      flex-shrink: 0; cursor: pointer; transition: background 0.15s;
     }
     .btn-add:active { background: var(--gold-lt); }
 
-    /* ─── 曲リスト（song-list） ─── */
-    .song-list { display: flex; flex-direction: column; gap: 10px; }
+    /* ── 曲リスト ── */
+    .song-list { display: flex; flex-direction: column; gap: 12px; }
 
-    /* ─── 1曲ごとのカード ─── */
+    /* ═══════════════════════════════════
+       曲カード  ── 1曲ごとの自己完結ユニット
+       ① 曲名行
+       ② タイマー＋開始ボタン
+       ③ 7日間グラフ
+    ═══════════════════════════════════ */
     .song-card {
-      background: var(--bg-card2); border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden; transition: border-color 0.2s;
+      background: var(--bg-card2); border: 2px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: border-color 0.25s;
     }
-    .song-card.selected { border-color: var(--gold); }
+    .song-card.running { border-color: var(--danger); }
 
-    /* 曲名行 */
-    .song-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 12px; cursor: pointer; user-select: none;
-      transition: background 0.15s; min-height: 64px;
+    /* ① 曲名行 */
+    .song-name-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 14px 12px; background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid var(--border);
     }
-    .song-card.selected .song-row { background: var(--gold-dim); }
-
-    .radio-dot {
-      width: 22px; height: 22px; border: 2px solid var(--border-lt);
-      border-radius: 50%; flex-shrink: 0; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .song-card.selected .radio-dot { border-color: var(--gold); background: var(--gold); }
-    .radio-dot::after {
-      content: ''; width: 8px; height: 8px;
-      border-radius: 50%; background: #000; opacity: 0; transition: opacity 0.2s;
-    }
-    .song-card.selected .radio-dot::after { opacity: 1; }
-
     .song-name {
-      flex: 1; font-size: 22px; font-weight: 700; color: var(--text);
+      flex: 1; font-size: 22px; font-weight: 800; color: var(--text);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .song-card.selected .song-name { color: var(--gold-lt); }
+    .song-card.running .song-name { color: var(--gold-lt); }
 
     .btn-grad {
-      background: var(--grad-dim); border: 1px solid var(--grad-bdr);
-      border-radius: 8px; color: var(--grad-clr);
-      font-size: 14px; font-weight: 800; padding: 8px 10px;
-      cursor: pointer; flex-shrink: 0; white-space: nowrap;
-      transition: all 0.2s; line-height: 1.2;
+      background: var(--grn-dim); border: 1px solid var(--grn-bdr);
+      border-radius: 8px; color: var(--grn); font-size: 13px; font-weight: 800;
+      padding: 8px 10px; cursor: pointer; flex-shrink: 0;
+      white-space: nowrap; transition: all 0.2s; line-height: 1.2;
     }
-    .btn-grad:active { background: rgba(94,192,128,0.3); border-color: var(--grad-clr); }
-
+    .btn-grad:active { background: rgba(94,192,128,0.3); }
     .btn-del {
       background: none; border: none; color: var(--text-dim);
       font-size: 22px; padding: 6px 8px; cursor: pointer;
-      flex-shrink: 0; border-radius: 8px; transition: all 0.15s; line-height: 1;
+      flex-shrink: 0; border-radius: 8px; transition: all 0.15s;
     }
     .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
-    /* ─── 曲ごとのグラフエリア ─── */
-    .song-chart-area {
-      border-top: 1px solid var(--border);
-      background: rgba(0,0,0,0.18); padding: 10px 12px 12px;
-    }
-    .song-chart-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;
-    }
-    .song-chart-wrap { position: relative; height: 160px; }
-
-    .empty-msg {
-      text-align: center; color: var(--text-dim);
-      font-size: 18px; font-weight: 500; padding: 20px 0 8px;
+    /* ② タイマーエリア */
+    .song-timer-area {
+      padding: 18px 16px 16px; text-align: center;
+      border-bottom: 1px solid var(--border);
     }
 
-    /* ─── TIMER ─── */
-    .timer-display { text-align: center; padding: 12px 0 24px; }
-    .timer-time {
-      font-size: 72px; font-weight: 800; color: #ffffff;
-      letter-spacing: 2px; font-variant-numeric: tabular-nums;
-      line-height: 1; transition: color 0.3s, text-shadow 0.3s;
-      font-family: -apple-system, 'SF Mono', 'Helvetica Neue', Arial, sans-serif;
+    /* HH:MM:SS 大型表示 */
+    .song-timer-display {
+      font-size: 58px; font-weight: 800; color: #444;
+      font-variant-numeric: tabular-nums; letter-spacing: 3px;
+      line-height: 1; margin-bottom: 16px;
+      font-family: -apple-system, 'SF Mono', monospace;
+      transition: color 0.3s, text-shadow 0.3s;
     }
-    .timer-time.running {
+    .song-card.running .song-timer-display {
       color: var(--gold-lt);
-      text-shadow: 0 0 60px rgba(212,174,82,0.55), 0 0 20px rgba(212,174,82,0.3);
+      text-shadow: 0 0 40px rgba(212,174,82,0.45), 0 0 14px rgba(212,174,82,0.25);
     }
-    .timer-song-label {
-      margin-top: 14px; font-size: 26px; font-weight: 700;
-      color: var(--gold-lt); letter-spacing: 1px; min-height: 34px;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 12px;
-    }
-    .btn-start {
-      width: 100%;
+
+    /* 開始/終了ボタン */
+    .btn-song-start {
+      width: 100%; height: 76px;
       background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
-      border: none; border-radius: 14px; color: #000000;
-      font-size: 24px; font-weight: 800; letter-spacing: 3px;
-      padding: 0 20px; height: 82px; cursor: pointer; text-transform: uppercase;
-      transition: all 0.2s; position: relative; overflow: hidden;
-      box-shadow: 0 4px 20px rgba(212,174,82,0.25);
+      border: none; border-radius: 12px; color: #000;
+      font-size: 22px; font-weight: 800; letter-spacing: 2px;
+      cursor: pointer; text-transform: uppercase; position: relative; overflow: hidden;
+      transition: all 0.2s; box-shadow: 0 4px 18px rgba(212,174,82,0.22);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .btn-start::before {
+    .btn-song-start::before {
       content: ''; position: absolute; inset: 0;
       background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.15s;
     }
-    .btn-start:active::before { opacity: 1; }
-    .btn-start:active { transform: scale(0.97); }
-    .btn-start.running {
+    .btn-song-start:active::before { opacity: 1; }
+    .btn-song-start:active { transform: scale(0.97); }
+    .btn-song-start.running {
       background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%);
-      color: #fff; box-shadow: 0 4px 20px rgba(192,53,53,0.35);
+      color: #fff; box-shadow: 0 4px 18px rgba(192,53,53,0.3);
     }
-    .btn-start:disabled {
-      background: var(--bg-card2); color: var(--text-dim);
-      cursor: not-allowed; border: 1px solid var(--border-lt);
-      box-shadow: none; font-size: 22px;
+    .btn-song-start:disabled {
+      background: var(--bg-input); color: var(--text-dim);
+      box-shadow: none; cursor: not-allowed; border: 1px solid var(--border);
     }
-    .timer-ring {
-      width: 14px; height: 14px; border-radius: 50%; background: var(--gold);
-      display: inline-block; margin-right: 10px; vertical-align: middle;
-      animation: pulse 1.2s ease-in-out infinite;
+
+    /* パルスリング */
+    .pulse-dot {
+      width: 12px; height: 12px; border-radius: 50%; background: #ff8080;
+      animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0;
     }
-    .btn-start:not(.running) .timer-ring { display: none; }
-    .btn-start.running .timer-ring { display: inline-block; background: #ff8080; }
     @keyframes pulse {
       0%,100% { opacity:1; transform:scale(1); }
-      50%      { opacity:0.4; transform:scale(0.65); }
+      50%      { opacity:0.4; transform:scale(0.6); }
     }
 
-    /* ─── STATS ─── */
-    .tabs {
-      display: flex; background: var(--bg-input);
-      border-radius: 12px; padding: 5px; gap: 5px; margin-bottom: 16px;
+    /* ③ グラフエリア */
+    .song-chart-area { padding: 12px 12px 14px; background: rgba(0,0,0,0.15); }
+    .song-chart-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 8px; color: var(--text-dim);
     }
-    .tab {
-      flex: 1; background: none; border: none; color: var(--text-dim);
-      font-size: 20px; font-weight: 700; padding: 14px 6px; border-radius: 8px;
-      cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
-    }
-    .tab.active { background: var(--bg-card2); color: var(--gold-lt); border: 1px solid var(--border-lt); }
+    .song-chart-wrap { position: relative; height: 165px; }
+
+    .empty-msg { text-align: center; color: var(--text-dim); font-size: 18px; font-weight: 500; padding: 20px 0 8px; }
+
+    /* ── STATS ── */
+    .tabs { display: flex; background: var(--bg-input); border-radius: 12px; padding: 5px; gap: 5px; margin-bottom: 16px; }
+    .tab { flex: 1; background: none; border: none; color: var(--text-dim); font-size: 20px; font-weight: 700; padding: 14px 6px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .tab.active { background: var(--bg-card2); color: var(--gold-lt); border: 1px solid var(--bdr-lt); }
     .stats-list { display: flex; flex-direction: column; gap: 8px; }
-    .stat-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 16px; background: var(--bg-card2);
-      border: 1px solid var(--border); border-radius: 12px; min-height: 72px;
-    }
-    .stat-song {
-      font-size: 22px; font-weight: 700; color: var(--text);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      flex: 1; padding-right: 12px;
-    }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 16px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 12px; min-height: 72px; }
+    .stat-song { font-size: 22px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; padding-right: 12px; }
     .stat-mins { font-size: 36px; font-weight: 700; color: var(--gold-lt); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
     .stat-unit { font-size: 18px; font-weight: 600; color: var(--text-dim); margin-left: 4px; }
-    .stats-total {
-      display: flex; justify-content: flex-end; align-items: baseline;
-      gap: 6px; padding: 14px 4px 0; border-top: 1px solid var(--border); margin-top: 12px;
-    }
-    .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); letter-spacing: 1px; }
+    .stats-total { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; padding: 14px 4px 0; border-top: 1px solid var(--border); margin-top: 12px; }
+    .stats-total-label { font-size: 18px; font-weight: 600; color: var(--text-dim); }
     .stats-total-val   { font-size: 30px; font-weight: 800; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
 
-    /* ─── ARCHIVE ─── */
+    /* ── ARCHIVE ── */
     .archive-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
     .archive-header .card-title { margin-bottom: 0; flex: 1; }
-    .archive-count {
-      background: var(--grad-dim); border: 1px solid var(--grad-bdr);
-      color: var(--grad-clr); font-size: 15px; font-weight: 800;
-      padding: 4px 12px; border-radius: 20px;
-    }
+    .archive-count { background: var(--grn-dim); border: 1px solid var(--grn-bdr); color: var(--grn); font-size: 15px; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
     .archive-list { display: flex; flex-direction: column; gap: 16px; }
-    .archive-card {
-      background: var(--bg-card2); border: 1px solid rgba(94,192,128,0.25);
-      border-radius: 14px; overflow: hidden;
-    }
-    .archive-card-header {
-      display: flex; align-items: center; gap: 10px; padding: 16px 16px 0;
-    }
+    .archive-card { background: var(--bg-card2); border: 1px solid rgba(94,192,128,0.25); border-radius: 14px; overflow: hidden; }
+    .archive-card-header { display: flex; align-items: center; gap: 10px; padding: 16px 16px 0; }
     .archive-icon { font-size: 24px; flex-shrink: 0; }
-    .archive-name {
-      flex: 1; font-size: 22px; font-weight: 700; color: var(--text);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .archive-stats-badge {
-      background: rgba(212,174,82,0.12); border: 1px solid rgba(212,174,82,0.3);
-      border-radius: 8px; padding: 4px 10px;
-      font-size: 14px; font-weight: 700; color: var(--gold-lt);
-      white-space: nowrap; flex-shrink: 0;
-    }
+    .archive-name { flex: 1; font-size: 22px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .archive-stats-badge { background: rgba(212,174,82,0.12); border: 1px solid rgba(212,174,82,0.3); border-radius: 8px; padding: 4px 10px; font-size: 14px; font-weight: 700; color: var(--gold-lt); white-space: nowrap; flex-shrink: 0; }
     .archive-body { padding: 14px 16px 16px; }
     .archive-date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
     .archive-date-label { font-size: 16px; font-weight: 700; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
-    .archive-date-input {
-      flex: 1; background: var(--bg-input); border: 1px solid var(--border-lt);
-      border-radius: 8px; color: var(--gold-lt); font-size: 17px; font-weight: 700;
-      padding: 10px 12px; font-family: inherit; outline: none; transition: border-color 0.2s;
-    }
+    .archive-date-input { flex: 1; background: var(--bg-input); border: 1px solid var(--bdr-lt); border-radius: 8px; color: var(--gold-lt); font-size: 17px; font-weight: 700; padding: 10px 12px; font-family: inherit; outline: none; transition: border-color 0.2s; }
     .archive-date-input:focus { border-color: var(--gold); }
     .archive-memo-label { font-size: 16px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
-    .archive-memo {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
-      border-radius: 10px; color: var(--text); font-size: 18px; font-weight: 600;
-      padding: 14px; font-family: inherit; outline: none;
-      resize: vertical; min-height: 80px; transition: border-color 0.2s; line-height: 1.5;
-    }
+    .archive-memo { width: 100%; background: var(--bg-input); border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text); font-size: 18px; font-weight: 600; padding: 14px; font-family: inherit; outline: none; resize: vertical; min-height: 80px; transition: border-color 0.2s; line-height: 1.5; }
     .archive-memo::placeholder { color: var(--text-dim); font-weight: 400; }
-    .archive-memo:focus { border-color: var(--grad-clr); }
-    .archive-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
-    .btn-memo-save {
-      flex: 1; background: var(--grad-dim); border: 1px solid var(--grad-bdr);
-      border-radius: 10px; color: var(--grad-clr); font-size: 18px; font-weight: 800;
-      padding: 14px; cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
-    }
-    .btn-memo-save:active { background: rgba(94,192,128,0.3); border-color: var(--grad-clr); }
-    .btn-archive-del {
-      background: none; border: 1px solid var(--border-lt); border-radius: 10px;
-      color: var(--text-dim); font-size: 18px; font-weight: 700;
-      padding: 14px 18px; cursor: pointer; transition: all 0.2s;
-    }
+    .archive-memo:focus { border-color: var(--grn); }
+    .archive-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .btn-memo-save { flex: 1; background: var(--grn-dim); border: 1px solid var(--grn-bdr); border-radius: 10px; color: var(--grn); font-size: 18px; font-weight: 800; padding: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-memo-save:active { background: rgba(94,192,128,0.3); }
+    .btn-archive-del { background: none; border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text-dim); font-size: 18px; font-weight: 700; padding: 14px 18px; cursor: pointer; transition: all 0.2s; }
     .btn-archive-del:active { color: var(--danger); border-color: var(--danger); background: rgba(192,53,53,0.1); }
+    .archive-chart-section { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+    .archive-chart-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+    .archive-chart-wrap { position: relative; height: 165px; }
 
-    /* ─── アーカイブ内グラフ ─── */
-    .archive-chart-section {
-      margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border);
-    }
-    .archive-chart-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;
-    }
-    .archive-chart-wrap { position: relative; height: 160px; }
-
-    /* ─── MODAL ─── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85); z-index: 500;
-      align-items: center; justify-content: center; padding: 20px;
-    }
+    /* ── MODAL ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.show { display: flex; }
-    .modal {
-      background: var(--bg-card); border: 1px solid var(--grad-bdr);
-      border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 480px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    }
-    .modal-title { font-size: 26px; font-weight: 800; color: var(--grad-clr); text-align: center; margin-bottom: 8px; }
-    .modal-song {
-      font-size: 22px; font-weight: 700; color: var(--gold-lt); text-align: center;
-      margin-bottom: 24px; padding: 10px 16px; background: var(--gold-dim);
-      border-radius: 10px; word-break: break-all;
-    }
+    .modal { background: var(--bg-card); border: 1px solid var(--grn-bdr); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+    .modal-title { font-size: 26px; font-weight: 800; color: var(--grn); text-align: center; margin-bottom: 8px; }
+    .modal-song  { font-size: 22px; font-weight: 700; color: var(--gold-lt); text-align: center; margin-bottom: 24px; padding: 10px 16px; background: var(--gold-dim); border-radius: 10px; word-break: break-all; }
     .modal-label { font-size: 17px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; margin-top: 16px; }
-    .modal-input {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
-      border-radius: 10px; color: var(--gold-lt); font-size: 19px; font-weight: 700;
-      padding: 14px; font-family: inherit; outline: none; transition: border-color 0.2s;
-    }
-    .modal-input:focus { border-color: var(--grad-clr); }
-    .modal-textarea {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border-lt);
-      border-radius: 10px; color: var(--text); font-size: 19px; font-weight: 600;
-      padding: 14px; font-family: inherit; outline: none;
-      resize: vertical; min-height: 100px; transition: border-color 0.2s; line-height: 1.5;
-    }
+    .modal-input { width: 100%; background: var(--bg-input); border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--gold-lt); font-size: 19px; font-weight: 700; padding: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .modal-input:focus { border-color: var(--grn); }
+    .modal-textarea { width: 100%; background: var(--bg-input); border: 1px solid var(--bdr-lt); border-radius: 10px; color: var(--text); font-size: 19px; font-weight: 600; padding: 14px; font-family: inherit; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s; line-height: 1.5; }
     .modal-textarea::placeholder { color: var(--text-dim); font-weight: 400; }
-    .modal-textarea:focus { border-color: var(--grad-clr); }
+    .modal-textarea:focus { border-color: var(--grn); }
     .modal-btns { display: flex; gap: 10px; margin-top: 24px; }
-    .btn-modal-ok {
-      flex: 2;
-      background: linear-gradient(135deg, #3a9055 0%, #5ec080 50%, #3a9055 100%);
-      border: none; border-radius: 12px; color: #000;
-      font-size: 20px; font-weight: 800; padding: 18px; cursor: pointer;
-      transition: all 0.2s; letter-spacing: 1px;
-    }
+    .btn-modal-ok { flex: 2; background: linear-gradient(135deg, #3a9055 0%, #5ec080 50%, #3a9055 100%); border: none; border-radius: 12px; color: #000; font-size: 20px; font-weight: 800; padding: 18px; cursor: pointer; transition: all 0.2s; }
     .btn-modal-ok:active { transform: scale(0.97); }
-    .btn-modal-cancel {
-      flex: 1; background: none; border: 1px solid var(--border-lt);
-      border-radius: 12px; color: var(--text-dim);
-      font-size: 20px; font-weight: 700; padding: 18px; cursor: pointer; transition: all 0.2s;
-    }
+    .btn-modal-cancel { flex: 1; background: none; border: 1px solid var(--bdr-lt); border-radius: 12px; color: var(--text-dim); font-size: 20px; font-weight: 700; padding: 18px; cursor: pointer; transition: all 0.2s; }
     .btn-modal-cancel:active { background: var(--bg-card2); }
 
-    /* ─── TOAST ─── */
+    /* ── TOAST ── */
     .toast {
-      position: fixed;
-      bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 50%;
+      position: fixed; bottom: calc(28px + env(safe-area-inset-bottom,0px)); left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--gold); color: #000000;
-      padding: 14px 28px; border-radius: 28px;
+      background: var(--gold); color: #000; padding: 14px 28px; border-radius: 28px;
       font-size: 19px; font-weight: 800; letter-spacing: 1px; z-index: 999;
       transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
-      white-space: nowrap; pointer-events: none;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      white-space: nowrap; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ─── SCROLLBAR ─── */
+    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border-lt); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--bdr-lt); border-radius: 2px; }
 
-    /* ─── RESPONSIVE ─── */
+    /* ── RESPONSIVE ── */
     @media (max-width: 390px) {
-      .timer-time       { font-size: 60px; }
-      .btn-start        { height: 76px; font-size: 21px; }
-      .timer-song-label { font-size: 21px; }
-      .song-name        { font-size: 19px; }
-      .stat-song        { font-size: 19px; }
-      .stat-mins        { font-size: 30px; }
-      .btn-grad         { font-size: 12px; padding: 7px 8px; }
-      .song-chart-wrap  { height: 140px; }
-      .archive-chart-wrap { height: 140px; }
+      .song-timer-display { font-size: 48px; }
+      .btn-song-start     { height: 68px; font-size: 19px; }
+      .song-name          { font-size: 19px; }
+      .stat-song          { font-size: 19px; }
+      .stat-mins          { font-size: 30px; }
+      .song-chart-wrap    { height: 145px; }
+      .archive-chart-wrap { height: 145px; }
     }
     @media (max-width: 340px) {
-      .timer-time  { font-size: 52px; }
-      .btn-start   { height: 70px; font-size: 19px; }
-      .song-name   { font-size: 17px; }
+      .song-timer-display { font-size: 40px; }
+      .song-name          { font-size: 17px; }
     }
   </style>
 </head>
@@ -446,7 +312,7 @@
 
 <div class="container">
 
-  <!-- ① 曲の選択（各曲に専用グラフ付き） -->
+  <!-- ① 曲の選択（各曲カード＝曲名＋タイマー＋グラフ） -->
   <div class="card">
     <div class="card-title">♩ 曲の選択</div>
     <div class="add-row">
@@ -460,20 +326,7 @@
     </div>
   </div>
 
-  <!-- ② タイマー -->
-  <div class="card">
-    <div class="card-title">♩ タイマー</div>
-    <div class="timer-display">
-      <div class="timer-time" id="timerDisplay">00:00:00</div>
-      <div class="timer-song-label" id="timerSongLabel"></div>
-    </div>
-    <button class="btn-start" id="btnStart" disabled>
-      <span class="timer-ring" id="timerRing"></span>
-      <span id="btnLabel">練習を開始する</span>
-    </button>
-  </div>
-
-  <!-- ③ 練習時間の集計 -->
+  <!-- ② 練習時間の集計 -->
   <div class="card">
     <div class="card-title">♩ 練習時間</div>
     <div class="tabs">
@@ -489,7 +342,7 @@
     </div>
   </div>
 
-  <!-- ④ 練習終了した曲（各曲に専用グラフ付き） -->
+  <!-- ③ 練習終了した曲（アーカイブ） -->
   <div class="card" id="archiveCard" style="display:none">
     <div class="archive-header">
       <div class="card-title">🎓 練習終了した曲</div>
@@ -538,9 +391,9 @@ const db = {
   addSession(songName, totalSeconds) {
     const mins = Math.ceil(totalSeconds / 60);
     if (mins < 1) return false;
-    const sessions = this.getSessions();
-    sessions.push({ id: Date.now(), songName, date: todayStr(), duration: mins });
-    this.saveSessions(sessions);
+    const s = this.getSessions();
+    s.push({ id: Date.now(), songName, date: todayStr(), duration: mins });
+    this.saveSessions(s);
     return mins;
   }
 };
@@ -552,16 +405,14 @@ function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-function pad(n) { return String(n).padStart(2, '0'); }
-
+function pad(n) { return String(n).padStart(2,'0'); }
 function daysAgo(n) {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
+  const d = new Date(); d.setDate(d.getDate() - n);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 function getWeekStart() {
   const d = new Date();
-  const diff = (d.getDay() === 0) ? 6 : d.getDay() - 1;
+  const diff = d.getDay() === 0 ? 6 : d.getDay() - 1;
   d.setDate(d.getDate() - diff);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
@@ -574,88 +425,75 @@ function esc(str) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-function totalMinsForSong(songName) {
-  return db.getSessions()
-    .filter(s => s.songName === songName)
-    .reduce((sum, s) => sum + s.duration, 0);
+function totalMinsForSong(n) {
+  return db.getSessions().filter(s => s.songName === n).reduce((t,s) => t + s.duration, 0);
 }
-
-/* ─── 直近7日（基準日から遡る） ─── */
-function last7Days(baseDate) {
-  const base = baseDate ? new Date(baseDate + 'T12:00:00') : new Date();
-  return Array.from({length: 7}, (_, i) => {
-    const d = new Date(base);
-    d.setDate(d.getDate() - (6 - i));
+function last7Days(base) {
+  const b = base ? new Date(base + 'T12:00:00') : new Date();
+  return Array.from({length:7}, (_,i) => {
+    const d = new Date(b); d.setDate(d.getDate() - (6 - i));
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   });
 }
-function dayLabel(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  const w = ['日','月','火','水','木','金','土'];
-  return `${d.getMonth()+1}/${d.getDate()}(${w[d.getDay()]})`;
+function dayLabel(s) {
+  const d = new Date(s + 'T12:00:00');
+  return `${d.getMonth()+1}/${d.getDate()}(${'日月火水木金土'[d.getDay()]})`;
+}
+function formatTime(sec) {
+  return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
 }
 
 /* =====================================================
-   COLOR SYSTEM（曲ごとに色を永続割り当て）
+   COLOR SYSTEM
 ===================================================== */
 const PALETTE = [
-  { bg:'rgba(212,174, 82,0.90)', bd:'#d4ae52' },  // ゴールド
-  { bg:'rgba( 94,156,220,0.90)', bd:'#5e9cdc' },  // ブルー
-  { bg:'rgba(220, 94, 94,0.90)', bd:'#dc5e5e' },  // レッド
-  { bg:'rgba( 80,200,140,0.90)', bd:'#50c88c' },  // グリーン
-  { bg:'rgba(210,130, 55,0.90)', bd:'#d28237' },  // オレンジ
-  { bg:'rgba(165,110,210,0.90)', bd:'#a56ed2' },  // パープル
-  { bg:'rgba( 65,185,185,0.90)', bd:'#41b9b9' },  // ティール
-  { bg:'rgba(220,170, 85,0.90)', bd:'#dcaa55' },  // アンバー
-  { bg:'rgba(130,190, 70,0.90)', bd:'#82be46' },  // ライム
-  { bg:'rgba(210, 85,160,0.90)', bd:'#d255a0' },  // ピンク
-  { bg:'rgba( 95,150,210,0.90)', bd:'#5f96d2' },  // インディゴ
-  { bg:'rgba(185,185, 70,0.90)', bd:'#b9b946' },  // イエロー
+  {bg:'rgba(212,174, 82,0.90)',bd:'#d4ae52'},
+  {bg:'rgba( 94,156,220,0.90)',bd:'#5e9cdc'},
+  {bg:'rgba(220, 94, 94,0.90)',bd:'#dc5e5e'},
+  {bg:'rgba( 80,200,140,0.90)',bd:'#50c88c'},
+  {bg:'rgba(210,130, 55,0.90)',bd:'#d28237'},
+  {bg:'rgba(165,110,210,0.90)',bd:'#a56ed2'},
+  {bg:'rgba( 65,185,185,0.90)',bd:'#41b9b9'},
+  {bg:'rgba(220,170, 85,0.90)',bd:'#dcaa55'},
+  {bg:'rgba(130,190, 70,0.90)',bd:'#82be46'},
+  {bg:'rgba(210, 85,160,0.90)',bd:'#d255a0'},
+  {bg:'rgba( 95,150,210,0.90)',bd:'#5f96d2'},
+  {bg:'rgba(185,185, 70,0.90)',bd:'#b9b946'},
 ];
-
 function getColorMap()   { return JSON.parse(localStorage.getItem(COLORS_KEY) || '{}'); }
 function saveColorMap(m) { localStorage.setItem(COLORS_KEY, JSON.stringify(m)); }
-
-function getOrAssignColor(songName) {
-  const map  = getColorMap();
-  if (map[songName] !== undefined) return map[songName];
+function getOrAssignColor(name) {
+  const map = getColorMap();
+  if (map[name] !== undefined) return map[name];
   const used = new Set(Object.values(map));
-  let idx = 0;
-  while (used.has(idx)) idx++;
-  map[songName] = idx;
-  saveColorMap(map);
-  return idx;
+  let idx = 0; while (used.has(idx)) idx++;
+  map[name] = idx; saveColorMap(map); return idx;
 }
-
-function songColor(songName) {
-  return PALETTE[getOrAssignColor(songName) % PALETTE.length];
-}
+function songColor(name) { return PALETTE[getOrAssignColor(name) % PALETTE.length]; }
 
 /* =====================================================
-   CHART INSTANCES（song名 / archive id をキーに管理）
+   CHART INSTANCES
 ===================================================== */
-const activeSongCharts  = {};  // songName → Chart
-const archiveSongCharts = {};  // archiveId (number) → Chart
+const activeSongCharts  = {};
+const archiveSongCharts = {};
 
 function destroyActiveSongCharts() {
-  Object.values(activeSongCharts).forEach(c => { try { c.destroy(); } catch(_){} });
+  Object.values(activeSongCharts).forEach(c => { try{c.destroy();}catch(_){} });
   for (const k in activeSongCharts) delete activeSongCharts[k];
 }
 function destroyArchiveSongCharts() {
-  Object.values(archiveSongCharts).forEach(c => { try { c.destroy(); } catch(_){} });
+  Object.values(archiveSongCharts).forEach(c => { try{c.destroy();}catch(_){} });
   for (const k in archiveSongCharts) delete archiveSongCharts[k];
 }
 
-/* ─── Chart.js 設定を組み立てる共通関数 ─── */
 function buildChartConfig(songName, days) {
   const sessions = db.getSessions();
-  const color    = songColor(songName);
-  const data     = days.map(d =>
+  const color = songColor(songName);
+  const data  = days.map(d =>
     sessions.filter(s => s.songName === songName && s.date === d)
-            .reduce((sum, s) => sum + s.duration, 0)
+            .reduce((t,s) => t + s.duration, 0)
   );
   const maxVal = Math.max(...data, 1);
-
   return {
     type: 'bar',
     data: {
@@ -664,51 +502,32 @@ function buildChartConfig(songName, days) {
         data,
         backgroundColor: color.bg,
         borderColor:     color.bd,
-        borderWidth: 0,
-        borderRadius: 5,
-        borderSkipped: false,
+        borderWidth: 0, borderRadius: 5, borderSkipped: false,
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 400 },
+      responsive: true, maintainAspectRatio: false, animation: {duration:400},
       plugins: {
-        legend: { display: false },
+        legend: {display: false},
         tooltip: {
-          backgroundColor: '#1a1a1a',
-          borderColor: color.bd, borderWidth: 1,
-          titleColor: '#f5f2e8',
-          bodyColor:  color.bd,
-          titleFont: { size: 13, weight: '700' },
-          bodyFont:  { size: 15, weight: '800' },
-          padding: 10,
-          callbacks: {
-            title: items => items[0].label,
-            label: item  => ` ${item.parsed.y}分`,
-          }
+          backgroundColor:'#1a1a1a', borderColor: color.bd, borderWidth:1,
+          titleColor:'#f5f2e8', bodyColor: color.bd,
+          titleFont:{size:13,weight:'700'}, bodyFont:{size:15,weight:'800'}, padding:10,
+          callbacks: { title: i=>i[0].label, label: i=>` ${i.parsed.y}分` }
         }
       },
       scales: {
         x: {
-          grid:   { color: 'rgba(255,255,255,0.04)' },
-          border: { color: 'rgba(255,255,255,0.08)' },
-          ticks:  {
-            color: '#a0a098',
-            font:  { size: 11, family: '-apple-system,sans-serif', weight: '700' },
-            maxRotation: 0,
-          }
+          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
+          ticks:{color:'#a0a098', font:{size:11,family:'-apple-system,sans-serif',weight:'700'}, maxRotation:0}
         },
         y: {
-          beginAtZero: true,
-          suggestedMax: Math.ceil(maxVal * 1.25) || 10,
-          grid:   { color: 'rgba(255,255,255,0.04)' },
-          border: { color: 'rgba(255,255,255,0.08)' },
-          ticks:  {
-            color: '#a0a098',
-            font:  { size: 11, family: '-apple-system,sans-serif', weight: '700' },
-            stepSize: Math.max(5, Math.ceil(maxVal / 4 / 5) * 5),
-            callback: v => v === 0 ? '0' : v + '分',
+          beginAtZero:true, suggestedMax: Math.ceil(maxVal*1.3)||10,
+          grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.08)'},
+          ticks:{
+            color:'#a0a098', font:{size:11,family:'-apple-system,sans-serif',weight:'700'},
+            stepSize: Math.max(5, Math.ceil(maxVal/4/5)*5),
+            callback: v => v===0 ? '0' : v+'分'
           }
         }
       }
@@ -716,26 +535,23 @@ function buildChartConfig(songName, days) {
   };
 }
 
-/* ─── アクティブ曲のチャートを全再描画 ─── */
 function renderActiveSongCharts(songs) {
   destroyActiveSongCharts();
-  const days = last7Days();   // 基準日 = 今日
+  const days = last7Days();
   songs.forEach((name, i) => {
     const canvas = document.getElementById(`song-canvas-${i}`);
-    if (!canvas) return;
-    activeSongCharts[name] = new Chart(canvas.getContext('2d'), buildChartConfig(name, days));
+    if (canvas) activeSongCharts[name] = new Chart(canvas.getContext('2d'), buildChartConfig(name, days));
   });
 }
 
-/* ─── アーカイブ曲のチャートを全再描画 ─── */
 function renderArchiveSongCharts(archive) {
   destroyArchiveSongCharts();
   archive.forEach(item => {
     const canvas = document.getElementById(`archive-canvas-${item.id}`);
-    if (!canvas) return;
-    // 基準日 = archivedDate（終了日前後7日間を表示）
-    const days = last7Days(item.archivedDate || todayStr());
-    archiveSongCharts[item.id] = new Chart(canvas.getContext('2d'), buildChartConfig(item.name, days));
+    if (canvas) {
+      const days = last7Days(item.archivedDate || todayStr());
+      archiveSongCharts[item.id] = new Chart(canvas.getContext('2d'), buildChartConfig(item.name, days));
+    }
   });
 }
 
@@ -745,8 +561,7 @@ function renderArchiveSongCharts(archive) {
 let toastTid;
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTid);
   toastTid = setTimeout(() => t.classList.remove('show'), 2800);
 }
@@ -754,15 +569,15 @@ function showToast(msg) {
 /* =====================================================
    STATE
 ===================================================== */
-let selectedSong  = null;
-let timerRunning  = false;
-let timerStartAt  = 0;
-let timerTick     = null;
-let currentTab    = 'today';
-let pendingGradSong = null;
+let runningSong  = null;   // 現在タイマー計測中の曲名
+let timerRunning = false;
+let timerStartAt = 0;
+let timerTick    = null;
+let currentTab   = 'today';
+let pendingGrad  = null;
 
 /* =====================================================
-   SONG LIST（1曲ごとのカード＋専用グラフ）
+   SONG LIST  ── renderSongs は曲リスト変化時のみ呼ぶ
 ===================================================== */
 function renderSongs() {
   const songs = db.getSongs();
@@ -770,45 +585,61 @@ function renderSongs() {
 
   if (songs.length === 0) {
     el.innerHTML = '<p class="empty-msg">曲を追加してください</p>';
-    destroyActiveSongCharts();
-    return;
+    destroyActiveSongCharts(); return;
   }
 
   el.innerHTML = songs.map((name, i) => {
-    const color = songColor(name);
+    const color   = songColor(name);
+    const isRun   = timerRunning && runningSong === name;
+    const otherRun = timerRunning && runningSong !== name;
+    const elapsed = isRun ? Math.floor((Date.now() - timerStartAt) / 1000) : 0;
+
     return `
-      <div class="song-card${selectedSong === name ? ' selected' : ''}" data-card="${i}">
-        <!-- 曲名行（タップで選択） -->
-        <div class="song-row" data-idx="${i}" role="button" tabindex="0">
-          <div class="radio-dot"></div>
-          <span class="song-name">${esc(name)}</span>
-          <button class="btn-grad" data-grad="${i}" title="練習終了にする">🎓&nbsp;終了</button>
-          <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
+    <div class="song-card${isRun ? ' running' : ''}" id="song-card-${i}">
+
+      <!-- ① 曲名 + 操作ボタン -->
+      <div class="song-name-row">
+        <span class="song-name">${esc(name)}</span>
+        <button class="btn-grad" data-grad="${i}" title="練習終了">🎓&nbsp;終了</button>
+        <button class="btn-del"  data-del="${i}"  aria-label="削除">✕</button>
+      </div>
+
+      <!-- ② タイマー表示 + 開始/終了ボタン -->
+      <div class="song-timer-area">
+        <div class="song-timer-display" id="timer-display-${i}">
+          ${isRun ? formatTime(elapsed) : '00:00:00'}
         </div>
-        <!-- 専用グラフ -->
-        <div class="song-chart-area">
-          <div class="song-chart-label" style="color:${color.bd}">
-            ▎ 直近7日間の練習推移
-          </div>
-          <div class="song-chart-wrap">
-            <canvas id="song-canvas-${i}"></canvas>
-          </div>
+        <button class="btn-song-start${isRun ? ' running' : ''}"
+                id="btn-song-${i}"
+                data-song-idx="${i}"
+                ${otherRun ? 'disabled' : ''}>
+          ${isRun ? '<span class="pulse-dot"></span> 練習を終了する' : '練習を開始する'}
+        </button>
+      </div>
+
+      <!-- ③ 専用グラフ（直近7日間） -->
+      <div class="song-chart-area">
+        <div class="song-chart-label" style="color:${color.bd}">
+          ▎ 直近7日間の練習推移
         </div>
-      </div>`;
+        <div class="song-chart-wrap">
+          <canvas id="song-canvas-${i}"></canvas>
+        </div>
+      </div>
+    </div>`;
   }).join('');
 
-  // DOMが確定してからチャートを描画
   renderActiveSongCharts(songs);
 }
 
+/* ─ 曲追加 ─ */
 function addSong() {
   const input = document.getElementById('songInput');
   const name  = input.value.trim();
   if (!name) { input.focus(); return; }
   const songs = db.getSongs();
   if (songs.includes(name)) { showToast('同じ曲名が既にあります'); return; }
-  // 色を先に割り当てておく
-  getOrAssignColor(name);
+  getOrAssignColor(name);    // 先に色を確定
   songs.push(name);
   db.saveSongs(songs);
   input.value = '';
@@ -816,155 +647,118 @@ function addSong() {
   showToast(`「${name}」を追加しました`);
 }
 
+/* ─ 曲削除 ─ */
 function deleteSong(idx) {
   const songs = db.getSongs();
   const name  = songs[idx];
   if (!name) return;
-  if (timerRunning && selectedSong === name) { showToast('練習中の曲は削除できません'); return; }
-  if (selectedSong === name) { selectedSong = null; updateTimerControls(); }
+  if (timerRunning && runningSong === name) { showToast('練習中の曲は削除できません'); return; }
   songs.splice(idx, 1);
   db.saveSongs(songs);
-  renderSongs();
-  renderStats();
+  renderSongs(); renderStats();
   showToast(`「${name}」を削除しました`);
 }
 
-function selectSong(idx) {
-  if (timerRunning) return;
-  const songs = db.getSongs();
-  const name  = songs[idx];
-  if (!name) return;
-  selectedSong = (selectedSong === name) ? null : name;
-  // カードのselectedクラスだけ差し替える（チャートは維持）
-  document.querySelectorAll('.song-card').forEach((card, i) => {
-    card.classList.toggle('selected', songs[i] === selectedSong);
-    const row = card.querySelector('.song-row');
-    row && row.querySelector('.radio-dot') &&
-      (card.querySelector('.song-name').style.color = songs[i] === selectedSong ? 'var(--gold-lt)' : '');
-  });
-  updateTimerControls();
-}
-
-// イベント委任（song-list内）
+/* ─ イベント委任 ─ */
 document.getElementById('songList').addEventListener('click', e => {
-  const gradBtn = e.target.closest('.btn-grad');
-  const delBtn  = e.target.closest('.btn-del');
-  const row     = e.target.closest('.song-row');
-  if (gradBtn) {
+  const startBtn = e.target.closest('.btn-song-start');
+  const gradBtn  = e.target.closest('.btn-grad');
+  const delBtn   = e.target.closest('.btn-del');
+
+  if (startBtn && !startBtn.disabled) {
+    const idx  = parseInt(startBtn.dataset.songIdx, 10);
+    const name = db.getSongs()[idx];
+    if (timerRunning && runningSong === name) {
+      stopTimer();
+    } else if (!timerRunning) {
+      startTimer(name, idx);
+    }
+  } else if (gradBtn) {
     e.stopPropagation();
+    if (timerRunning) { showToast('練習中は終了できません'); return; }
     openGradModal(parseInt(gradBtn.dataset.grad, 10));
   } else if (delBtn) {
     e.stopPropagation();
     deleteSong(parseInt(delBtn.dataset.del, 10));
-  } else if (row) {
-    selectSong(parseInt(row.dataset.idx, 10));
   }
 });
 
 document.getElementById('btnAdd').addEventListener('click', addSong);
-document.getElementById('songInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addSong();
-});
+document.getElementById('songInput').addEventListener('keydown', e => { if (e.key === 'Enter') addSong(); });
 
 /* =====================================================
-   GRADUATION MODAL
+   TIMER  ── DOM直接操作でチャートを破壊しない
 ===================================================== */
-function openGradModal(idx) {
-  const songs = db.getSongs();
-  const name  = songs[idx];
-  if (!name) return;
-  if (timerRunning && selectedSong === name) { showToast('練習中の曲は終了できません'); return; }
-  pendingGradSong = name;
-  document.getElementById('modalSongName').textContent = name;
-  document.getElementById('modalDate').value  = todayStr();
-  document.getElementById('modalMemo').value  = '';
-  document.getElementById('gradModal').classList.add('show');
-  setTimeout(() => document.getElementById('modalDate').focus(), 100);
-}
-function closeGradModal() {
-  document.getElementById('gradModal').classList.remove('show');
-  pendingGradSong = null;
-}
-function confirmGrad() {
-  if (!pendingGradSong) return;
-  const date = document.getElementById('modalDate').value || todayStr();
-  const memo = document.getElementById('modalMemo').value.trim();
-  const archive = db.getArchive();
-  archive.unshift({ id: Date.now(), name: pendingGradSong, archivedDate: date, memo });
-  db.saveArchive(archive);
-  const songs = db.getSongs().filter(n => n !== pendingGradSong);
-  if (selectedSong === pendingGradSong) { selectedSong = null; updateTimerControls(); }
-  db.saveSongs(songs);
-  closeGradModal();
-  renderSongs();
-  renderStats();
-  renderArchive();
-  showToast(`「${pendingGradSong}」を練習終了しました 🎓`);
-}
+function startTimer(songName, idx) {
+  runningSong  = songName;
+  timerStartAt = Date.now();
+  timerRunning = true;
 
-document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
-document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
-document.getElementById('gradModal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeGradModal();
-});
+  // カードを running 状態に
+  const card = document.getElementById(`song-card-${idx}`);
+  const btn  = document.getElementById(`btn-song-${idx}`);
+  const disp = document.getElementById(`timer-display-${idx}`);
+  if (card) card.classList.add('running');
+  if (btn)  { btn.innerHTML = '<span class="pulse-dot"></span> 練習を終了する'; btn.classList.add('running'); }
 
-/* =====================================================
-   TIMER
-===================================================== */
-function updateTimerControls() {
-  const btn     = document.getElementById('btnStart');
-  const label   = document.getElementById('btnLabel');
-  const ring    = document.getElementById('timerRing');
-  const songLbl = document.getElementById('timerSongLabel');
-  const display = document.getElementById('timerDisplay');
-  btn.disabled = (!timerRunning && !selectedSong);
-  if (timerRunning) {
-    btn.classList.add('running'); label.textContent = '練習を終了する';
-    ring.style.display = 'inline-block'; display.classList.add('running');
-    songLbl.textContent = selectedSong || '';
-  } else {
-    btn.classList.remove('running'); label.textContent = '練習を開始する';
-    ring.style.display = 'none'; display.classList.remove('running');
-    songLbl.textContent = selectedSong ? `— ${selectedSong} —` : '';
-  }
-}
-function formatTime(sec) {
-  return `${pad(Math.floor(sec/3600))}:${pad(Math.floor((sec%3600)/60))}:${pad(sec%60)}`;
-}
-function startTimer() {
-  if (!selectedSong) return;
-  timerStartAt = Date.now(); timerRunning = true;
+  // 他の曲ボタンを無効化
+  document.querySelectorAll('.btn-song-start').forEach((b, i) => {
+    if (i !== idx) b.disabled = true;
+  });
+
+  // タイマー tick
   timerTick = setInterval(() => {
-    document.getElementById('timerDisplay').textContent =
-      formatTime(Math.floor((Date.now() - timerStartAt) / 1000));
+    const el = document.getElementById(`timer-display-${idx}`);
+    if (el) el.textContent = formatTime(Math.floor((Date.now() - timerStartAt) / 1000));
   }, 500);
-  updateTimerControls(); requestWakeLock();
+
+  requestWakeLock();
 }
+
 function stopTimer() {
-  clearInterval(timerTick); timerRunning = false;
-  const elapsed = Math.floor((Date.now() - timerStartAt) / 1000);
-  const mins    = db.addSession(selectedSong, elapsed);
-  document.getElementById('timerDisplay').textContent = '00:00:00';
+  clearInterval(timerTick);
+  timerRunning = false;
+
+  const elapsed  = Math.floor((Date.now() - timerStartAt) / 1000);
+  const songName = runningSong;
+  const songs    = db.getSongs();
+  const idx      = songs.indexOf(songName);
+
+  // カードをリセット
+  const card = document.getElementById(`song-card-${idx}`);
+  const btn  = document.getElementById(`btn-song-${idx}`);
+  const disp = document.getElementById(`timer-display-${idx}`);
+  if (card) card.classList.remove('running');
+  if (btn)  { btn.innerHTML = '練習を開始する'; btn.classList.remove('running'); btn.disabled = false; }
+  if (disp) disp.textContent = '00:00:00';
+
+  // 全ボタンを再有効化
+  document.querySelectorAll('.btn-song-start').forEach(b => b.disabled = false);
+
   releaseWakeLock();
+
+  const mins = db.addSession(songName, elapsed);
   if (mins) {
     showToast(`${mins}分を記録しました！`);
     renderStats();
-    // 対象曲のグラフだけ更新（全再描画）
-    renderSongs();
+    // その曲のグラフだけ更新（他は触らない）
+    if (idx >= 0) {
+      const canvas = document.getElementById(`song-canvas-${idx}`);
+      if (canvas) {
+        if (activeSongCharts[songName]) { activeSongCharts[songName].destroy(); delete activeSongCharts[songName]; }
+        activeSongCharts[songName] = new Chart(canvas.getContext('2d'), buildChartConfig(songName, last7Days()));
+      }
+    }
   } else {
     showToast('30秒未満は記録されません');
   }
-  updateTimerControls();
 }
-document.getElementById('btnStart').addEventListener('click', () => {
-  if (timerRunning) stopTimer(); else startTimer();
-});
 
 let wakeLock = null;
 async function requestWakeLock() {
   try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(_) {}
 }
-function releaseWakeLock() { wakeLock?.release().catch(() => {}); wakeLock = null; }
+function releaseWakeLock() { wakeLock?.release().catch(()=>{}); wakeLock = null; }
 document.addEventListener('visibilitychange', async () => {
   if (timerRunning && document.visibilityState === 'visible') requestWakeLock();
 });
@@ -973,16 +767,16 @@ document.addEventListener('visibilitychange', async () => {
    STATISTICS
 ===================================================== */
 function getRange(tab) {
-  const today = todayStr();
-  if (tab === 'today') return [today, today];
-  if (tab === 'week')  return [getWeekStart(), today];
-  if (tab === 'month') return [getMonthStart(), today];
+  const t = todayStr();
+  if (tab === 'today') return [t, t];
+  if (tab === 'week')  return [getWeekStart(), t];
+  if (tab === 'month') return [getMonthStart(), t];
 }
 function renderStats() {
   const [start, end] = getRange(currentTab);
-  const sessions     = db.getSessions();
-  const songs        = db.getSongs();
-  const totals = {};
+  const sessions = db.getSessions();
+  const songs    = db.getSongs();
+  const totals   = {};
   sessions.forEach(s => {
     if (s.date >= start && s.date <= end)
       totals[s.songName] = (totals[s.songName] || 0) + s.duration;
@@ -992,7 +786,7 @@ function renderStats() {
   const list   = document.getElementById('statsList');
   const totEl  = document.getElementById('statsTotal');
   const totV   = document.getElementById('statsTotalVal');
-  if (active.length === 0) {
+  if (!active.length) {
     list.innerHTML = '<p class="empty-msg">この期間の練習記録はありません</p>';
     totEl.style.display = 'none'; return;
   }
@@ -1002,7 +796,7 @@ function renderStats() {
       <span class="stat-song">${esc(r.name)}</span>
       <span class="stat-mins">${r.mins}<span class="stat-unit">分</span></span>
     </div>`).join('');
-  totV.textContent = rows.reduce((s, r) => s + r.mins, 0);
+  totV.textContent = rows.reduce((t,r) => t + r.mins, 0);
   totEl.style.display = 'flex';
 }
 document.querySelectorAll('.tab').forEach(btn => {
@@ -1015,24 +809,54 @@ document.querySelectorAll('.tab').forEach(btn => {
 });
 
 /* =====================================================
-   ARCHIVE（各曲に終了日前後7日間のグラフ付き）
+   GRADUATION MODAL
+===================================================== */
+function openGradModal(idx) {
+  const name = db.getSongs()[idx];
+  if (!name) return;
+  pendingGrad = name;
+  document.getElementById('modalSongName').textContent = name;
+  document.getElementById('modalDate').value = todayStr();
+  document.getElementById('modalMemo').value = '';
+  document.getElementById('gradModal').classList.add('show');
+  setTimeout(() => document.getElementById('modalDate').focus(), 100);
+}
+function closeGradModal() {
+  document.getElementById('gradModal').classList.remove('show');
+  pendingGrad = null;
+}
+function confirmGrad() {
+  if (!pendingGrad) return;
+  const date = document.getElementById('modalDate').value || todayStr();
+  const memo = document.getElementById('modalMemo').value.trim();
+  const archive = db.getArchive();
+  archive.unshift({ id: Date.now(), name: pendingGrad, archivedDate: date, memo });
+  db.saveArchive(archive);
+  db.saveSongs(db.getSongs().filter(n => n !== pendingGrad));
+  closeGradModal();
+  renderSongs(); renderStats(); renderArchive();
+  showToast(`「${pendingGrad}」を練習終了しました 🎓`);
+}
+document.getElementById('btnModalOk').addEventListener('click', confirmGrad);
+document.getElementById('btnModalCancel').addEventListener('click', closeGradModal);
+document.getElementById('gradModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGradModal(); });
+
+/* =====================================================
+   ARCHIVE
 ===================================================== */
 function renderArchive() {
   const archive = db.getArchive();
   const card    = document.getElementById('archiveCard');
   const list    = document.getElementById('archiveList');
-  const count   = document.getElementById('archiveCount');
-  if (archive.length === 0) {
-    card.style.display = 'none'; destroyArchiveSongCharts(); return;
-  }
+  if (!archive.length) { card.style.display = 'none'; destroyArchiveSongCharts(); return; }
   card.style.display = 'block';
-  count.textContent  = archive.length;
+  document.getElementById('archiveCount').textContent = archive.length;
 
   list.innerHTML = archive.map(item => {
     const total = totalMinsForSong(item.name);
     const color = songColor(item.name);
     return `
-    <div class="archive-card" data-aid="${item.id}">
+    <div class="archive-card">
       <div class="archive-card-header">
         <span class="archive-icon">🎓</span>
         <span class="archive-name">${esc(item.name)}</span>
@@ -1041,23 +865,16 @@ function renderArchive() {
       <div class="archive-body">
         <div class="archive-date-row">
           <span class="archive-date-label">終了日</span>
-          <input type="date" class="archive-date-input"
-                 value="${esc(item.archivedDate || '')}"
-                 data-aid="${item.id}" data-field="date">
+          <input type="date" class="archive-date-input" value="${esc(item.archivedDate||'')}" data-aid="${item.id}" data-field="date">
         </div>
         <div class="archive-memo-label">感想・メモ</div>
-        <textarea class="archive-memo" rows="3"
-                  placeholder="感想や思い出を入力…"
-                  data-aid="${item.id}" data-field="memo">${esc(item.memo || '')}</textarea>
+        <textarea class="archive-memo" rows="3" placeholder="感想や思い出を入力…" data-aid="${item.id}" data-field="memo">${esc(item.memo||'')}</textarea>
         <div class="archive-actions">
-          <button class="btn-memo-save" data-aid="${item.id}">保存する</button>
-          <button class="btn-archive-del" data-adel="${item.id}">削除</button>
+          <button class="btn-memo-save"    data-aid="${item.id}">保存する</button>
+          <button class="btn-archive-del"  data-adel="${item.id}">削除</button>
         </div>
-        <!-- 専用グラフ（終了日前後7日間） -->
         <div class="archive-chart-section">
-          <div class="archive-chart-label" style="color:${color.bd}">
-            ▎ 終了日前後7日間の練習推移
-          </div>
+          <div class="archive-chart-label" style="color:${color.bd}">▎ 終了日前後7日間の練習推移</div>
           <div class="archive-chart-wrap">
             <canvas id="archive-canvas-${item.id}"></canvas>
           </div>
@@ -1069,58 +886,35 @@ function renderArchive() {
   renderArchiveSongCharts(archive);
 }
 
-// アーカイブ保存・削除イベント
 document.getElementById('archiveList').addEventListener('click', e => {
   const saveBtn = e.target.closest('.btn-memo-save');
   const delBtn  = e.target.closest('.btn-archive-del');
   if (saveBtn) {
-    const id      = parseInt(saveBtn.dataset.aid, 10);
-    const card    = saveBtn.closest('.archive-card');
-    const dateInp = card.querySelector('[data-field="date"]');
-    const memoInp = card.querySelector('[data-field="memo"]');
+    const id   = parseInt(saveBtn.dataset.aid, 10);
+    const arc  = saveBtn.closest('.archive-card');
+    const date = arc.querySelector('[data-field="date"]').value;
+    const memo = arc.querySelector('[data-field="memo"]').value.trim();
     const archive = db.getArchive();
-    const item    = archive.find(a => a.id === id);
-    if (item) {
-      item.archivedDate = dateInp.value;
-      item.memo         = memoInp.value.trim();
-      db.saveArchive(archive);
-      // 日付変更によりグラフの範囲が変わる可能性があるため再描画
-      renderArchive();
-      showToast('メモを保存しました ✓');
-    }
+    const item = archive.find(a => a.id === id);
+    if (item) { item.archivedDate = date; item.memo = memo; db.saveArchive(archive); renderArchive(); showToast('メモを保存しました ✓'); }
   } else if (delBtn) {
     const id = parseInt(delBtn.dataset.adel, 10);
     db.saveArchive(db.getArchive().filter(a => a.id !== id));
-    renderArchive();
-    showToast('アーカイブから削除しました');
+    renderArchive(); showToast('アーカイブから削除しました');
   }
 });
 
 /* =====================================================
    PWA
 ===================================================== */
-(function setupManifest() {
-  const m = {
-    name: 'ピアノ練習記録', short_name: 'ピアノ練習',
-    start_url: '.', display: 'standalone',
-    background_color: '#0a0a0a', theme_color: '#0a0a0a',
-    orientation: 'portrait-primary',
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",
-      sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable'
-    }]
-  };
-  try {
-    const blob = new Blob([JSON.stringify(m)], {type:'application/manifest+json'});
-    const link = document.createElement('link');
-    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
-    document.head.appendChild(link);
-  } catch(_) {}
+(function(){
+  const m = { name:'ピアノ練習記録', short_name:'ピアノ練習', start_url:'.', display:'standalone', background_color:'#0a0a0a', theme_color:'#0a0a0a', orientation:'portrait-primary',
+    icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0a0a'/%3E%3Crect x='40' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='104' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='168' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='232' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='296' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='360' y='160' width='58' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='424' y='160' width='48' height='200' rx='6' fill='%23ede9d8'/%3E%3Crect x='88' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='152' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='280' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='344' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3Crect x='408' y='160' width='38' height='126' rx='4' fill='%23181818'/%3E%3C/svg%3E",sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
+  try { const b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'}); const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(b); document.head.appendChild(l); } catch(_){}
 })();
-
-if ('serviceWorker' in navigator) {
-  const sw = `const C='piano-sw-v2';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
-  try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{}); } catch(_) {}
+if('serviceWorker'in navigator){
+  const sw=`const C='piano-sw-v3';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const c=res.clone();caches.open(C).then(ca=>ca.put(e.request,c));return res;}).catch(()=>caches.match(e.request)))));`;
+  try{navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{});}catch(_){}
 }
 
 /* =====================================================
@@ -1129,7 +923,6 @@ if ('serviceWorker' in navigator) {
 renderSongs();
 renderStats();
 renderArchive();
-updateTimerControls();
 </script>
 </body>
 </html>

@@ -12,21 +12,21 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg:        #0a0a0a;
+      --bg:        #080808;
       --bg-card:   #141414;
-      --bg-card2:  #1c1c1c;
+      --bg-card2:  #1e1e1e;
       --bg-input:  #111111;
-      --gold:      #c9a84c;
-      --gold-lt:   #e4c97e;
-      --gold-dim:  rgba(201,168,76,0.15);
-      --ivory:     #f0ede0;
-      --ivory-dim: #a8a59a;
-      --text:      #e0ddd0;
-      --text-dim:  #666660;
-      --border:    #252525;
-      --border-lt: #333;
-      --danger:    #b03030;
-      --running:   #a02828;
+      --gold:      #d4ae52;
+      --gold-lt:   #f0d080;
+      --gold-dim:  rgba(212,174,82,0.18);
+      --ivory:     #ffffff;
+      --ivory-dim: #c8c5b8;
+      --text:      #f5f2e8;
+      --text-dim:  #8a877c;
+      --border:    #2a2a2a;
+      --border-lt: #3a3a3a;
+      --danger:    #c03535;
+      --running:   #a82828;
     }
 
     *, *::before, *::after {
@@ -40,10 +40,12 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Georgia', 'Times New Roman', serif;
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 500;
       min-height: 100vh;
       overflow-x: hidden;
       padding-bottom: env(safe-area-inset-bottom, 16px);
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ─── HEADER ─── */
@@ -59,19 +61,20 @@
     }
 
     .header h1 {
-      font-size: 20px;
-      font-weight: normal;
+      font-size: 32px;
+      font-weight: 800;
       letter-spacing: 6px;
-      color: var(--gold);
+      color: var(--gold-lt);
       text-transform: uppercase;
+      font-family: 'Georgia', serif;
     }
 
     .header p {
-      font-size: 10px;
+      font-size: 16px;
       color: var(--text-dim);
       letter-spacing: 3px;
-      margin: 4px 0 0;
-      font-family: sans-serif;
+      margin: 6px 0 0;
+      font-weight: 600;
       text-transform: uppercase;
     }
 
@@ -96,18 +99,18 @@
     /* ─── CARD ─── */
     .card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 16px;
+      border: 1px solid var(--border-lt);
+      border-radius: 16px;
+      padding: 20px 18px;
     }
 
     .card-title {
-      font-size: 10px;
+      font-size: 16px;
+      font-weight: 700;
       letter-spacing: 3px;
-      color: var(--gold);
+      color: var(--gold-lt);
       text-transform: uppercase;
-      font-family: sans-serif;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
     }
 
     /* ─── SONG SECTION ─── */
@@ -122,15 +125,16 @@
       background: var(--bg-input);
       border: 1px solid var(--border-lt);
       border-radius: 10px;
-      color: var(--ivory);
-      font-size: 16px;
-      padding: 13px 14px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 600;
+      padding: 16px 16px;
       font-family: inherit;
       outline: none;
       transition: border-color 0.2s;
       min-width: 0;
     }
-    .song-input::placeholder { color: var(--text-dim); }
+    .song-input::placeholder { color: var(--text-dim); font-weight: 400; }
     .song-input:focus { border-color: var(--gold); }
 
     .btn-add {
@@ -138,10 +142,10 @@
       border: none;
       border-radius: 10px;
       color: #000;
-      font-size: 24px;
+      font-size: 34px;
       line-height: 1;
-      font-weight: 700;
-      width: 50px;
+      font-weight: 800;
+      width: 62px;
       flex-shrink: 0;
       cursor: pointer;
       transition: background 0.15s;
@@ -157,14 +161,15 @@
     .song-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       background: var(--bg-card2);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 14px;
+      border-radius: 12px;
+      padding: 18px 16px;
       cursor: pointer;
       transition: all 0.2s;
       user-select: none;
+      min-height: 68px;
     }
     .song-item.selected {
       border-color: var(--gold);
@@ -172,7 +177,7 @@
     }
 
     .radio-dot {
-      width: 18px; height: 18px;
+      width: 22px; height: 22px;
       border: 2px solid var(--border-lt);
       border-radius: 50%;
       flex-shrink: 0;
@@ -185,7 +190,7 @@
     }
     .radio-dot::after {
       content: '';
-      width: 6px; height: 6px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: #000;
       opacity: 0;
@@ -195,7 +200,8 @@
 
     .song-name {
       flex: 1;
-      font-size: 16px;
+      font-size: 24px;
+      font-weight: 700;
       color: var(--text);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -207,143 +213,153 @@
       background: none;
       border: none;
       color: var(--text-dim);
-      font-size: 16px;
-      padding: 4px 6px;
+      font-size: 24px;
+      padding: 6px 10px;
       cursor: pointer;
       flex-shrink: 0;
-      border-radius: 6px;
+      border-radius: 8px;
       transition: all 0.15s;
       line-height: 1;
     }
-    .btn-del:active { color: var(--danger); background: rgba(176,48,48,0.1); }
+    .btn-del:active { color: var(--danger); background: rgba(192,53,53,0.12); }
 
     .empty-msg {
       text-align: center;
       color: var(--text-dim);
-      font-size: 13px;
-      font-family: sans-serif;
+      font-size: 18px;
+      font-weight: 500;
       padding: 16px 0 4px;
     }
 
     /* ─── TIMER SECTION ─── */
     .timer-display {
       text-align: center;
-      padding: 8px 0 20px;
+      padding: 12px 0 24px;
     }
 
     .timer-time {
-      font-size: 68px;
-      font-weight: normal;
-      color: var(--ivory);
+      font-size: 92px;
+      font-weight: 800;
+      color: #ffffff;
       letter-spacing: 2px;
       font-variant-numeric: tabular-nums;
       line-height: 1;
       transition: color 0.3s, text-shadow 0.3s;
+      /* System font for crisp number rendering on iPhone */
+      font-family: -apple-system, 'SF Mono', 'Helvetica Neue', Arial, sans-serif;
     }
     .timer-time.running {
       color: var(--gold-lt);
-      text-shadow: 0 0 40px rgba(201,168,76,0.4);
+      text-shadow: 0 0 60px rgba(212,174,82,0.55), 0 0 20px rgba(212,174,82,0.3);
     }
 
     .timer-song-label {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--gold);
-      letter-spacing: 2px;
-      font-family: sans-serif;
-      min-height: 18px;
+      margin-top: 14px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 1px;
+      min-height: 36px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      padding: 0 8px;
+      padding: 0 12px;
+    }
+    /* When not running, dim the song label slightly */
+    .timer-song-label:not(:empty) {
+      color: var(--gold-lt);
     }
 
     .btn-start {
       width: 100%;
-      background: linear-gradient(135deg, #b89038 0%, #c9a84c 50%, #b89038 100%);
+      background: linear-gradient(135deg, #b08828 0%, #d4ae52 40%, #e0c060 60%, #b08828 100%);
       border: none;
-      border-radius: 12px;
-      color: #0a0a0a;
-      font-size: 17px;
-      font-weight: 700;
+      border-radius: 14px;
+      color: #000000;
+      font-size: 24px;
+      font-weight: 800;
       letter-spacing: 3px;
       padding: 0 20px;
-      height: 62px;
+      height: 82px;
       cursor: pointer;
-      font-family: sans-serif;
       text-transform: uppercase;
       transition: all 0.2s;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(212,174,82,0.25);
     }
     .btn-start::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.1);
       opacity: 0;
       transition: opacity 0.15s;
     }
     .btn-start:active::before { opacity: 1; }
-    .btn-start:active { transform: scale(0.98); }
+    .btn-start:active { transform: scale(0.97); }
 
     .btn-start.running {
-      background: linear-gradient(135deg, #8a2020 0%, #c03030 50%, #8a2020 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #7a1818 0%, #c03535 40%, #d84040 60%, #7a1818 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(192,53,53,0.35);
     }
     .btn-start:disabled {
       background: var(--bg-card2);
       color: var(--text-dim);
       cursor: not-allowed;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-lt);
+      box-shadow: none;
+      font-size: 22px;
     }
 
     /* pulse ring when running */
     .timer-ring {
       display: none;
-      width: 12px; height: 12px;
+      width: 14px; height: 14px;
       border-radius: 50%;
       background: var(--gold);
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 10px;
+      vertical-align: middle;
       animation: pulse 1.2s ease-in-out infinite;
     }
     .btn-start:not(.running) .timer-ring { display: none; }
     .btn-start.running .timer-ring {
       display: inline-block;
-      background: #ff6666;
+      background: #ff8080;
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(0.7); }
+      50%       { opacity: 0.4; transform: scale(0.65); }
     }
 
     /* ─── STATS ─── */
     .tabs {
       display: flex;
       background: var(--bg-input);
-      border-radius: 10px;
-      padding: 4px;
-      gap: 4px;
-      margin-bottom: 14px;
+      border-radius: 12px;
+      padding: 5px;
+      gap: 5px;
+      margin-bottom: 16px;
     }
     .tab {
       flex: 1;
       background: none;
       border: none;
       color: var(--text-dim);
-      font-size: 14px;
-      padding: 10px 6px;
-      border-radius: 7px;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 14px 6px;
+      border-radius: 8px;
       cursor: pointer;
-      font-family: sans-serif;
       transition: all 0.2s;
       letter-spacing: 1px;
     }
     .tab.active {
       background: var(--bg-card2);
-      color: var(--gold);
+      color: var(--gold-lt);
       border: 1px solid var(--border-lt);
     }
 
@@ -357,13 +373,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 13px 14px;
+      padding: 18px 16px;
       background: var(--bg-card2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
+      min-height: 72px;
     }
     .stat-song {
-      font-size: 15px;
+      font-size: 22px;
+      font-weight: 700;
       color: var(--text);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -372,7 +390,8 @@
       padding-right: 12px;
     }
     .stat-mins {
-      font-size: 22px;
+      font-size: 36px;
+      font-weight: 700;
       color: var(--gold-lt);
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
@@ -380,58 +399,58 @@
       flex-shrink: 0;
     }
     .stat-unit {
-      font-size: 11px;
+      font-size: 18px;
+      font-weight: 600;
       color: var(--text-dim);
-      font-family: sans-serif;
-      margin-left: 3px;
+      margin-left: 4px;
     }
 
     .stats-total {
       display: flex;
       justify-content: flex-end;
       align-items: baseline;
-      gap: 4px;
-      padding: 10px 4px 0;
+      gap: 6px;
+      padding: 14px 4px 0;
       border-top: 1px solid var(--border);
-      margin-top: 10px;
+      margin-top: 12px;
     }
     .stats-total-label {
-      font-size: 11px;
+      font-size: 18px;
+      font-weight: 600;
       color: var(--text-dim);
-      font-family: sans-serif;
       letter-spacing: 1px;
     }
     .stats-total-val {
-      font-size: 18px;
-      color: var(--gold);
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--gold-lt);
       font-variant-numeric: tabular-nums;
     }
 
     /* ─── CHART ─── */
     .chart-wrap {
       position: relative;
-      height: 210px;
+      height: 220px;
     }
 
     /* ─── TOAST ─── */
     .toast {
       position: fixed;
-      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(28px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: var(--gold);
-      color: #0a0a0a;
-      padding: 12px 24px;
-      border-radius: 24px;
-      font-size: 14px;
-      font-family: sans-serif;
-      font-weight: 700;
+      color: #000000;
+      padding: 14px 28px;
+      border-radius: 28px;
+      font-size: 19px;
+      font-weight: 800;
       letter-spacing: 1px;
       z-index: 999;
       transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275);
       white-space: nowrap;
       pointer-events: none;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -441,9 +460,19 @@
     ::-webkit-scrollbar-thumb { background: var(--border-lt); border-radius: 2px; }
 
     /* ─── RESPONSIVE ─── */
-    @media (max-width: 380px) {
-      .timer-time { font-size: 56px; }
-      .btn-start  { height: 58px; font-size: 15px; }
+    @media (max-width: 390px) {
+      .timer-time        { font-size: 76px; }
+      .btn-start         { height: 76px; font-size: 21px; }
+      .timer-song-label  { font-size: 23px; }
+      .song-name         { font-size: 21px; }
+      .stat-song         { font-size: 19px; }
+      .stat-mins         { font-size: 32px; }
+    }
+    @media (max-width: 340px) {
+      .timer-time        { font-size: 64px; }
+      .btn-start         { height: 70px; font-size: 19px; }
+      .timer-song-label  { font-size: 20px; }
+      .song-name         { font-size: 19px; }
     }
   </style>
 </head>
@@ -931,18 +960,21 @@ function renderChart() {
         legend: {
           position: 'top',
           labels: {
-            color: '#a0a098',
-            font: { size: 11, family: 'sans-serif' },
-            boxWidth: 10, boxHeight: 10,
-            padding: 10,
+            color: '#c8c5b8',
+            font: { size: 15, family: '-apple-system, sans-serif', weight: '700' },
+            boxWidth: 12, boxHeight: 12,
+            padding: 12,
           }
         },
         tooltip: {
-          backgroundColor: '#1c1c1c',
-          borderColor: '#333',
+          backgroundColor: '#1e1e1e',
+          borderColor: '#3a3a3a',
           borderWidth: 1,
-          titleColor: '#e0ddd0',
-          bodyColor: '#c9a84c',
+          titleColor: '#f5f2e8',
+          bodyColor: '#f0d080',
+          titleFont: { size: 14, weight: '700' },
+          bodyFont:  { size: 14, weight: '600' },
+          padding: 10,
           callbacks: {
             label: ctx => ` ${ctx.dataset.label}：${ctx.parsed.y}分`
           }
@@ -951,18 +983,18 @@ function renderChart() {
       scales: {
         x: {
           stacked: true,
-          grid:   { color: 'rgba(255,255,255,0.04)' },
-          border: { color: 'rgba(255,255,255,0.08)' },
-          ticks:  { color: '#706d62', font: { size: 10, family: 'sans-serif' }, maxRotation: 0 }
+          grid:   { color: 'rgba(255,255,255,0.05)' },
+          border: { color: 'rgba(255,255,255,0.1)' },
+          ticks:  { color: '#c0bdb0', font: { size: 14, family: '-apple-system, sans-serif', weight: '600' }, maxRotation: 0 }
         },
         y: {
           stacked: true,
           beginAtZero: true,
-          grid:   { color: 'rgba(255,255,255,0.04)' },
-          border: { color: 'rgba(255,255,255,0.08)' },
+          grid:   { color: 'rgba(255,255,255,0.05)' },
+          border: { color: 'rgba(255,255,255,0.1)' },
           ticks:  {
-            color: '#706d62',
-            font: { size: 10, family: 'sans-serif' },
+            color: '#c0bdb0',
+            font: { size: 14, family: '-apple-system, sans-serif', weight: '600' },
             stepSize: 10,
             callback: v => v + '分'
           }
